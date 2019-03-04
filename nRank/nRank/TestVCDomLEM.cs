@@ -1,4 +1,5 @@
-﻿using NSubstitute;
+﻿using nRank.VCDomLEMAbstractions;
+using NSubstitute;
 using NUnit.Framework;
 using Shouldly;
 using System;
@@ -10,30 +11,33 @@ using System.Threading.Tasks;
 namespace nRank
 {
     [TestFixture]
-    class TestDOMLEM
+    class TestVCDomLEM
     {
         [Test]
         public void GenerateDecisionRules()
         {
             var decisionRuleGenerator = Substitute.For<IDecisionRuleGenerator>();
-            var roughSetGenerator = Substitute.For<IRoughSetGenerator>();
+            var roughSetGenerator = Substitute.For<IUnionGenerator>();
             var informationTable = Substitute.For<IInformationTable>();
-            var lowerApproximation1 = Substitute.For<ILowerApproximation>();
-            var lowerApproximation2 = Substitute.For<ILowerApproximation>();
+            var objectFilter = Substitute.For<IObjectFilter>();
+            var lowerApproximation1 = Substitute.For<IUnion>();
+            var lowerApproximation2 = Substitute.For<IUnion>();
             roughSetGenerator
-                .GenerateLowerApproximations(informationTable)
-                .Returns(new List<ILowerApproximation> { lowerApproximation1, lowerApproximation2 });
+                .GenerateUnions(informationTable)
+                .Returns(new List<IUnion> { lowerApproximation1, lowerApproximation2 });
             var rule1 = Substitute.For<IDecisionRule>();
             var rule2 = Substitute.For<IDecisionRule>();
             var rule3 = Substitute.For<IDecisionRule>();
+            objectFilter.GetAllowedObjects(lowerApproximation1).Returns(lowerApproximation1);
+            objectFilter.GetAllowedObjects(lowerApproximation2).Returns(lowerApproximation2);
             decisionRuleGenerator
-                .GenerateMinimalRulesFrom(lowerApproximation1)
+                .GenerateRulesFrom(lowerApproximation1)
                 .Returns(new List<IDecisionRule> { rule1, rule2 });
             decisionRuleGenerator
-                .GenerateMinimalRulesFrom(lowerApproximation2)
+                .GenerateRulesFrom(lowerApproximation2)
                 .Returns(new List<IDecisionRule> { rule2, rule3 });
 
-            var domlem = new DOMLEM(roughSetGenerator, decisionRuleGenerator);
+            var domlem = new VCDomLEM(roughSetGenerator, decisionRuleGenerator, objectFilter);
             var generatedRules = domlem.GenerateDecisionRules(informationTable);
 
             generatedRules.ShouldBe(new HashSet<IDecisionRule> { rule1, rule2, rule3 });

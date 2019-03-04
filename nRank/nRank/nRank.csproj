@@ -63,14 +63,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DOMLEM.cs" />
-    <Compile Include="IDecisionRule.cs" />
-    <Compile Include="IDecisionRuleGenerator.cs" />
-    <Compile Include="IInformationTable.cs" />
-    <Compile Include="ILowerApproximation.cs" />
-    <Compile Include="IRoughSetGenerator.cs" />
+    <Compile Include="VCDomLEMAbstractions\IObjectFilter.cs" />
+    <Compile Include="VCDomLEM.cs" />
+    <Compile Include="VCDomLEMAbstractions\IDecisionRule.cs" />
+    <Compile Include="VCDomLEMAbstractions\IDecisionRuleGenerator.cs" />
+    <Compile Include="VCDomLEMAbstractions\IInformationTable.cs" />
+    <Compile Include="VCDomLEMAbstractions\IUnion.cs" />
+    <Compile Include="VCDomLEMAbstractions\IUnionGenerator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TestDOMLEM.cs" />
+    <Compile Include="TestVCDomLEM.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
