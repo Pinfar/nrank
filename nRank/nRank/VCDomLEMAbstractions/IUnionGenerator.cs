@@ -4,6 +4,6 @@ namespace nRank.VCDomLEMAbstractions
 {
     internal interface IUnionGenerator
     {
-        IEnumerable<IUnion> GenerateUnions(IInformationTable informationTable);
+        IEnumerable<IInformationTable> GenerateUnions(IInformationTable informationTable);
     }
 }

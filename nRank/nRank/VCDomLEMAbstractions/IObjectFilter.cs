@@ -2,6 +2,6 @@
 {
     internal interface IObjectFilter
     {
-        IUnion GetAllowedObjects(IUnion approximation);
+        IInformationTable GetAllowedObjects(IInformationTable approximation);
     }
 }

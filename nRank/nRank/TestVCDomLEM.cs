@@ -20,11 +20,11 @@ namespace nRank
             var roughSetGenerator = Substitute.For<IUnionGenerator>();
             var informationTable = Substitute.For<IInformationTable>();
             var objectFilter = Substitute.For<IObjectFilter>();
-            var lowerApproximation1 = Substitute.For<IUnion>();
-            var lowerApproximation2 = Substitute.For<IUnion>();
+            var lowerApproximation1 = Substitute.For<IInformationTable>();
+            var lowerApproximation2 = Substitute.For<IInformationTable>();
             roughSetGenerator
                 .GenerateUnions(informationTable)
-                .Returns(new List<IUnion> { lowerApproximation1, lowerApproximation2 });
+                .Returns(new List<IInformationTable> { lowerApproximation1, lowerApproximation2 });
             var rule1 = Substitute.For<IDecisionRule>();
             var rule2 = Substitute.For<IDecisionRule>();
             var rule3 = Substitute.For<IDecisionRule>();

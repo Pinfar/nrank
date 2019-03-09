@@ -63,12 +63,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataStructures\InformationAttribute.cs" />
+    <Compile Include="DataStructures\InformationTable.cs" />
+    <Compile Include="DataStructures\TestInformationTable.cs" />
+    <Compile Include="Extensions\IEnumerableExtensions.cs" />
+    <Compile Include="Extensions\TestIEnumerableExtensions.cs" />
+    <Compile Include="UnionGenerators\TestUpwardUnionGenerator.cs" />
+    <Compile Include="UnionGenerators\UpwardUnionGenerator.cs" />
     <Compile Include="VCDomLEMAbstractions\IObjectFilter.cs" />
     <Compile Include="VCDomLEM.cs" />
     <Compile Include="VCDomLEMAbstractions\IDecisionRule.cs" />
     <Compile Include="VCDomLEMAbstractions\IDecisionRuleGenerator.cs" />
     <Compile Include="VCDomLEMAbstractions\IInformationTable.cs" />
-    <Compile Include="VCDomLEMAbstractions\IUnion.cs" />
     <Compile Include="VCDomLEMAbstractions\IUnionGenerator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestVCDomLEM.cs" />

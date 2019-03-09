@@ -33,9 +33,7 @@ namespace nRank
                 var allowedObjects = objectFilter.GetAllowedObjects(union);
                 var generatedRules = decisionRuleGenerator.GenerateRulesFrom(allowedObjects);
                 rules.UnionWith(generatedRules);
-
             }
-
             return rules;
         }
     }
