@@ -11,12 +11,12 @@ namespace nRank
     {
         readonly IUnionGenerator unionGenerator;
         readonly IDecisionRuleGenerator decisionRuleGenerator;
-        readonly IObjectFilter objectFilter;
+        readonly IApproximationsGenerator objectFilter;
 
         internal VCDomLEM(
             IUnionGenerator unionGenerator, 
             IDecisionRuleGenerator decisionRuleGenerator, 
-            IObjectFilter objectFilter
+            IApproximationsGenerator objectFilter
         )
         {
             this.unionGenerator = unionGenerator;
@@ -30,7 +30,7 @@ namespace nRank
             var unions = unionGenerator.GenerateUnions(informationTable);
             foreach(var union in unions)
             {
-                var allowedObjects = objectFilter.GetAllowedObjects(union);
+                var allowedObjects = objectFilter.GetApproximation(union, informationTable);
                 var generatedRules = decisionRuleGenerator.GenerateRulesFrom(allowedObjects);
                 rules.UnionWith(generatedRules);
             }

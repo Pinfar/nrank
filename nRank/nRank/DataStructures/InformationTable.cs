@@ -98,6 +98,11 @@ namespace nRank.DataStructures
             return ObjectsStorage.Select(x => x.Value.Attributes[name]).ToList();
         }
 
+        public IEnumerable<string> GetAllObjectIdentifiers()
+        {
+            return ObjectsStorage.Keys;
+        }
+
         public IInformationTable Filter(Dictionary<string, bool> pattern)
         {
             var filteredObjects = ObjectsStorage.Where(x => pattern[x.Key]).ToDictionary(x => x.Key, x => x.Value);
@@ -116,7 +121,20 @@ namespace nRank.DataStructures
 
         public bool Outranks(string identifier1, string identifier2)
         {
-            throw new NotImplementedException();
+            if (!ObjectsStorage.ContainsKey(identifier1)) throw new InvalidOperationException($"{identifier1} - information table does not contain this object!");
+            if (!ObjectsStorage.ContainsKey(identifier2)) throw new InvalidOperationException($"{identifier2} - information table does not contain this object!");
+            var object1 = ObjectsStorage[identifier1];
+            var object2 = ObjectsStorage[identifier2];            
+            return _isAttributeCost.All(x => IsBetterOnAttribute(object1, object2, x.Key));
+        }
+
+        private bool IsBetterOnAttribute(InformationObject object1, InformationObject object2, string attributeName)
+        {
+            var attributeValue1 = object1.Attributes[attributeName];
+            var attributeValue2 = object2.Attributes[attributeName];
+            return _isAttributeCost[attributeName] ? 
+                attributeValue1 <= attributeValue2 : 
+                attributeValue1 >= attributeValue2;
         }
     }
 }

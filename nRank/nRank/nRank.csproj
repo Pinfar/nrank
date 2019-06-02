@@ -63,15 +63,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ApproximationsGenerators\LowerApproximationGenerator.cs" />
+    <Compile Include="ApproximationsGenerators\LowerApproximationOfUpwardUnionGenerator.cs" />
+    <Compile Include="ApproximationsGenerators\TestApproximationGenerators.cs" />
+    <Compile Include="DSetGenerators\DDominatedSetGenerator.cs" />
+    <Compile Include="DSetGenerators\DDominatingSetGenerator.cs" />
     <Compile Include="DataStructures\InformationObject.cs" />
     <Compile Include="DataStructures\InformationTable.cs" />
     <Compile Include="DataStructures\TestInformationTable.cs" />
+    <Compile Include="DSetGenerators\TestDDSetGenerators.cs" />
     <Compile Include="Extensions\IEnumerableExtensions.cs" />
     <Compile Include="Extensions\TestIEnumerableExtensions.cs" />
     <Compile Include="UnionGenerators\TestUpwardUnionGenerator.cs" />
     <Compile Include="UnionGenerators\UpwardUnionGenerator.cs" />
-    <Compile Include="VCDomLEMAbstractions\IObjectFilter.cs" />
+    <Compile Include="VCDomLEMAbstractions\IApproximationsGenerator.cs" />
     <Compile Include="VCDomLEM.cs" />
     <Compile Include="VCDomLEMAbstractions\IDecisionRule.cs" />
     <Compile Include="VCDomLEMAbstractions\IDecisionRuleGenerator.cs" />

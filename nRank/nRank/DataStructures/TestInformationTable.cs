@@ -111,5 +111,51 @@ namespace nRank.DataStructures
             }
             table.GetDecicionClassesWorstFirst().ShouldBe(new[] { 4, 3, 2, 1 });
         }
+
+        [Test]
+        public void TestOutrankingRelationOnCost()
+        {
+            var attributeName = "decisionAttribute";
+            var table = new InformationTable(new Dictionary<string, bool> { {"att1", true } }, attributeName, true);
+            var attributeValues = new[] { 1,2 }.ToDictionary();
+            foreach (var attribute in attributeValues)
+            {
+                table.AddObject(attribute.Key, new Dictionary<string, float> { { "att1", attribute.Value } }, 1);
+            }
+            table.Outranks("0", "1").ShouldBeTrue();
+            table.Outranks("1", "0").ShouldBeFalse();
+        }
+
+        [Test]
+        public void TestOutrankingRelationOnGain()
+        {
+            var attributeName = "decisionAttribute";
+            var table = new InformationTable(new Dictionary<string, bool> { { "att1", false } }, attributeName, true);
+            var attributeValues = new[] { 1, 2 }.ToDictionary();
+            foreach (var attribute in attributeValues)
+            {
+                table.AddObject(attribute.Key, new Dictionary<string, float> { { "att1", attribute.Value } }, 1);
+            }
+            table.Outranks("0", "1").ShouldBeFalse();
+            table.Outranks("1", "0").ShouldBeTrue();
+        }
+
+        [Test]
+        public void TestOutrankingRelationOnUncomparable()
+        {
+            var attributeName = "decisionAttribute";
+            var table = new InformationTable(new Dictionary<string, bool> { { "att1", true }, { "att2", true } }, attributeName, true);
+            var objects = new[]
+            {
+                new { Key = "0", Attributes = new Dictionary<string, float> { { "att1", 1 }, { "att2", 2 } } },
+                new { Key = "1", Attributes = new Dictionary<string, float> { { "att1", 2 }, { "att2", 1 } } },
+            };
+            foreach (var obj in objects)
+            {
+                table.AddObject(obj.Key, obj.Attributes, 1);
+            }
+            table.Outranks("0", "1").ShouldBeFalse();
+            table.Outranks("1", "0").ShouldBeFalse();
+        }
     }
 }

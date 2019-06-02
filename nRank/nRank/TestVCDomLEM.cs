@@ -19,7 +19,7 @@ namespace nRank
             var decisionRuleGenerator = Substitute.For<IDecisionRuleGenerator>();
             var roughSetGenerator = Substitute.For<IUnionGenerator>();
             var informationTable = Substitute.For<IInformationTable>();
-            var objectFilter = Substitute.For<IObjectFilter>();
+            var objectFilter = Substitute.For<IApproximationsGenerator>();
             var lowerApproximation1 = Substitute.For<IInformationTable>();
             var lowerApproximation2 = Substitute.For<IInformationTable>();
             roughSetGenerator
@@ -28,8 +28,8 @@ namespace nRank
             var rule1 = Substitute.For<IDecisionRule>();
             var rule2 = Substitute.For<IDecisionRule>();
             var rule3 = Substitute.For<IDecisionRule>();
-            objectFilter.GetAllowedObjects(lowerApproximation1).Returns(lowerApproximation1);
-            objectFilter.GetAllowedObjects(lowerApproximation2).Returns(lowerApproximation2);
+            objectFilter.GetApproximation(lowerApproximation1, informationTable).Returns(lowerApproximation1);
+            objectFilter.GetApproximation(lowerApproximation2, informationTable).Returns(lowerApproximation2);
             decisionRuleGenerator
                 .GenerateRulesFrom(lowerApproximation1)
                 .Returns(new List<IDecisionRule> { rule1, rule2 });
