@@ -1,4 +1,5 @@
 ﻿using nRank.DataStructures;
+using nRank.Extensions;
 using NUnit.Framework;
 using Shouldly;
 using System;
@@ -17,12 +18,15 @@ namespace nRank.UnionGenerators
         {
             var attributeName = "Attribute1";
             var attributeValues = new[] { 1f, 2f, 3f, 4f, 5f, 6f };
+            var isAttributeCost = attributeValues.Select(x => false).ToDictionary();
             var decisionAttributeName = "Decision";
             var decisionAttributeValues = new[] { 1, 2, 3, 1, 2, 3 };
 
-            var informationTable = new InformationTable();
-            informationTable.AddAttribute(attributeName, attributeValues);
-            informationTable.AddDecisionAttribute(decisionAttributeName, decisionAttributeValues, true);
+            var informationTable = new InformationTable(isAttributeCost, decisionAttributeName, true);
+            foreach(var i in Enumerable.Range(0, 6))
+            {
+                informationTable.AddObject(i.ToString(), CreateSingleAttributeDict(attributeName, attributeValues[i]), decisionAttributeValues[i]);
+            }
 
             var generator = new UpwardUnionGenerator();
             var unions = generator.GenerateUnions(informationTable).ToList();
@@ -30,10 +34,18 @@ namespace nRank.UnionGenerators
             unions.Count.ShouldBe(2);
 
             unions[0].GetAttribute(attributeName).ShouldBe(new[] { 1f, 2f, 4f, 5f });
-            unions[0].GetDecisionAttribute().ShouldBe(new[] { 1, 2, 1, 2 });
+            var expectedDecisionAttributeDict1 = new Dictionary<string, int>
+            {
+                { "0",1 },{"1", 2 },{"3", 1 },{"4", 2 }
+            };
+            unions[0].GetDecisionAttribute().ShouldBe(expectedDecisionAttributeDict1);
 
             unions[1].GetAttribute(attributeName).ShouldBe(new[] { 1f, 4f });
-            unions[1].GetDecisionAttribute().ShouldBe(new[] { 1, 1 });
+            var expectedDecisionAttributeDict2 = new Dictionary<string, int>
+            {
+                { "0",1 },{"3", 1 }
+            };
+            unions[1].GetDecisionAttribute().ShouldBe(expectedDecisionAttributeDict2);
         }
 
         [Test]
@@ -41,12 +53,15 @@ namespace nRank.UnionGenerators
         {
             var attributeName = "Attribute1";
             var attributeValues = new[] { 1f, 2f, 3f, 4f, 5f, 6f };
+            var isAttributeCost = attributeValues.Select(x => false).ToDictionary();
             var decisionAttributeName = "Decision";
             var decisionAttributeValues = new[] { 1, 2, 3, 1, 2, 3 };
 
-            var informationTable = new InformationTable();
-            informationTable.AddAttribute(attributeName, attributeValues);
-            informationTable.AddDecisionAttribute(decisionAttributeName, decisionAttributeValues, false);
+            var informationTable = new InformationTable(isAttributeCost, decisionAttributeName, false);
+            foreach (var i in Enumerable.Range(0, 6))
+            {
+                informationTable.AddObject(i.ToString(), CreateSingleAttributeDict(attributeName, attributeValues[i]), decisionAttributeValues[i]);
+            }
 
             var generator = new UpwardUnionGenerator();
             var unions = generator.GenerateUnions(informationTable).ToList();
@@ -54,10 +69,26 @@ namespace nRank.UnionGenerators
             unions.Count.ShouldBe(2);
 
             unions[0].GetAttribute(attributeName).ShouldBe(new[] { 2f, 3f, 5f, 6f });
-            unions[0].GetDecisionAttribute().ShouldBe(new[] { 2, 3, 2, 3 });
+            var expectedDecisionAttributeDict1 = new Dictionary<string, int>
+            {
+                { "1",2 },{"2", 3 },{"4", 2 },{"5", 3 }
+            };
+            unions[0].GetDecisionAttribute().ShouldBe(expectedDecisionAttributeDict1);
 
             unions[1].GetAttribute(attributeName).ShouldBe(new[] { 3f, 6f });
-            unions[1].GetDecisionAttribute().ShouldBe(new[] { 3, 3 });
+            var expectedDecisionAttributeDict2 = new Dictionary<string, int>
+            {
+                { "2",3 },{"5", 3 }
+            };
+            unions[1].GetDecisionAttribute().ShouldBe(expectedDecisionAttributeDict2);
+        }
+
+        private Dictionary<string, float> CreateSingleAttributeDict(string key, float value)
+        {
+            return new Dictionary<string, float>
+            {
+                {key, value }
+            };
         }
     }
 }

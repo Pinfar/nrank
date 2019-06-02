@@ -52,74 +52,71 @@ namespace nRank.DataStructures
 {
     class InformationTable : IInformationTable
     {
-        public string DecisionAttributeName => DecisionAttributeStorage.Name;
+        public string DecisionAttributeName { get; }
+        private readonly bool _isDecisionAttributeCost;
 
-        Dictionary<string, InformationAttribute<float>> AttributesStorage = new Dictionary<string, InformationAttribute<float>>();
-        InformationAttribute<int> DecisionAttributeStorage;
+        Dictionary<string, InformationObject> ObjectsStorage = new Dictionary<string, InformationObject>();
+        private readonly Dictionary<string, bool> _isAttributeCost;
 
-        public InformationTable() { }
-
-        private InformationTable(
-            Dictionary<string, InformationAttribute<float>> attributesStorage,
-            InformationAttribute<int> decisionAttributeStorage
-        )
+        public InformationTable(Dictionary<string, bool> isAttributeCost, string decisionAttributeName, bool isDecisionAttributeCost)
         {
-            AttributesStorage = attributesStorage;
-            DecisionAttributeStorage = decisionAttributeStorage;
+            _isAttributeCost = isAttributeCost;
+            _isDecisionAttributeCost = isDecisionAttributeCost;
+            DecisionAttributeName = decisionAttributeName;
         }
 
-        public void AddDecisionAttribute(string name, IEnumerable<int> values, bool isCost = true)
+        private InformationTable(Dictionary<string, bool> isAttributeCost, string decisionAttributeName, bool isDecisionAttributeCost, Dictionary<string, InformationObject> objectsStorage)
+            :this(isAttributeCost, decisionAttributeName, isDecisionAttributeCost)
         {
-            if (DecisionAttributeStorage != null)
-            {
-                throw new InvalidOperationException("Multiple decision attributes not supported");
-            }
-            DecisionAttributeStorage = new InformationAttribute<int>
-            {
-                Name = name,
-                IsCost = isCost,
-                Values = values.ToList()
-            };
+            ObjectsStorage = objectsStorage;
         }
 
-        public IEnumerable<int> GetDecisionAttribute()
-        {
-            return DecisionAttributeStorage.Values;
-        }
 
-        public void AddAttribute(string name, IEnumerable<float> values, bool isCost = true)
+        public void AddObject(string identifier, Dictionary<string, float> attributes, int decisionAttributeValue)
         {
-            AttributesStorage.Add(name, new InformationAttribute<float>
+            if (ObjectsStorage.ContainsKey(identifier)) throw new InvalidOperationException("Object identifiers must be unique!");
+
+            ObjectsStorage.Add(identifier, new InformationObject
             {
-                Name = name,
-                IsCost = isCost,
-                Values = values.ToList()
+                Identifier = identifier,
+                DecisionAttributeName = DecisionAttributeName,
+                DecisionAttributeValue = decisionAttributeValue,
+                Attributes = attributes.ToDictionary(
+                    x => x.Key, 
+                    x => x.Value
+                )
             });
+        }
+
+        public Dictionary<string, int> GetDecisionAttribute()
+        {
+            return ObjectsStorage.ToDictionary(x=>x.Key, x => x.Value.DecisionAttributeValue);
         }
 
         public IEnumerable<float> GetAttribute(string name)
         {
-            return AttributesStorage[name].Values;
+            return ObjectsStorage.Select(x => x.Value.Attributes[name]).ToList();
         }
 
-        public IInformationTable Filter(IEnumerable<bool> pattern)
+        public IInformationTable Filter(Dictionary<string, bool> pattern)
         {
-            var filteredAttributesStorage = AttributesStorage.ToDictionary(
-                x => x.Key,
-                x => x.Value.WhereIsTrue(pattern)
-            );
-            var filteredDecisionAttributeStorage = DecisionAttributeStorage.WhereIsTrue(pattern);
-            var table = new InformationTable(filteredAttributesStorage, filteredDecisionAttributeStorage);
+            var filteredObjects = ObjectsStorage.Where(x => pattern[x.Key]).ToDictionary(x => x.Key, x => x.Value);
+            var table = new InformationTable(_isAttributeCost, DecisionAttributeName, _isDecisionAttributeCost, filteredObjects);
             return table;
         }
 
         public IEnumerable<int> GetDecicionClassesWorstFirst()
         {
-            return DecisionAttributeStorage
+            return GetDecisionAttribute()
                 .Values
                 .Distinct()
-                .OrderBy(x => DecisionAttributeStorage.IsCost? -x : x)
+                .OrderBy(x => _isDecisionAttributeCost ? -x : x)
                 .ToList();
+        }
+
+        public bool Outranks(string identifier1, string identifier2)
+        {
+            throw new NotImplementedException();
         }
     }
 }

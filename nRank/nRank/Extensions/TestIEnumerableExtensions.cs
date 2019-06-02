@@ -19,5 +19,20 @@ namespace nRank.Extensions
             var expectedFilteredTable = new[] { 1, 10 };
             table.WhereIsTrue(pattern).ShouldBe(expectedFilteredTable);
         }
+
+        [Test]
+        public void TestToDictionary()
+        {
+            var values = new[] { 1, 5, 6, 3, 5 };
+            var expectedDictionary = new Dictionary<string, int>
+            {
+                {"0", 1 },
+                {"1", 5 },
+                {"2", 6 },
+                {"3", 3 },
+                {"4", 5 }
+            };
+            values.ToDictionary().ShouldBe(expectedDictionary);
+        }
     }
 }

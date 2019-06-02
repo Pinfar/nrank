@@ -6,11 +6,11 @@ namespace nRank.VCDomLEMAbstractions
     {
         string DecisionAttributeName { get; }
 
-        void AddAttribute(string name, IEnumerable<float> values, bool isCost = true);
-        void AddDecisionAttribute(string name, IEnumerable<int> values, bool isCost = true);
-        IInformationTable Filter(IEnumerable<bool> pattern);
+        void AddObject(string identifier, Dictionary<string, float> attributes, int decisionAttributeValue);
+        Dictionary<string, int> GetDecisionAttribute();
         IEnumerable<float> GetAttribute(string name);
-        IEnumerable<int> GetDecisionAttribute();
+        IInformationTable Filter(Dictionary<string, bool> pattern);
         IEnumerable<int> GetDecicionClassesWorstFirst();
+        bool Outranks(string identifier1, string identifier2);
     }
 }

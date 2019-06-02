@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using nRank.Extensions;
+using NUnit.Framework;
 using Shouldly;
 using System;
 using System.Collections.Generic;
@@ -14,12 +15,14 @@ namespace nRank.DataStructures
         [Test]
         public void TestGetSetMultipleAttributes()
         {
-            var table = new InformationTable();
             var attributeNames = new[] { "attribute1", "attribute2" };
             var attributesValues = new[] { new[] { 1f, 2f, 3f, 4f }, new[] { 2f, 3f, 4f, 8f } };
-            foreach (var i in Enumerable.Range(0, 2))
+            var isAttributeCost = attributeNames.ToDictionary(x => x, x => false);
+            var table = new InformationTable(isAttributeCost, "noDecisionAttribute", false);
+            foreach (var i in Enumerable.Range(0, 4))
             {
-                table.AddAttribute(attributeNames[i], attributesValues[i]);
+                var attributes = Enumerable.Range(0, 2).ToDictionary(x => attributeNames[x], x => attributesValues[x][i]);
+                table.AddObject(i.ToString(), attributes, 0);
             }
 
             foreach (var i in Enumerable.Range(0, 2))
@@ -31,46 +34,47 @@ namespace nRank.DataStructures
         [Test]
         public void TestGetSetDecisionAttribute()
         {
-            var table = new InformationTable();
             var attributeName = "decisionAttribute";
-            var decisionAttributeValues = new[] { 5, 3, 26, 1 };
-            table.AddDecisionAttribute(attributeName, decisionAttributeValues);
+            var decisionAttributeValues = new[] { 5, 3, 26, 1 }.ToDictionary();
+            var table = new InformationTable(new Dictionary<string, bool>(), attributeName, false);
+            foreach(var objectData in decisionAttributeValues)
+            {
+                table.AddObject(objectData.Key, new Dictionary<string, float>(), objectData.Value);
+            }
             table.GetDecisionAttribute().ShouldBe(decisionAttributeValues);
             table.DecisionAttributeName.ShouldBe(attributeName);
         }
 
         [Test]
-        public void TestSetMultipleDecisionAttribute()
+        public void TestSetMultipleObjectWithTheSameKey()
         {
-            var table = new InformationTable();
-            var attributeName = "decisionAttribute";
-            var decisionAttributeValues = new[] { 5, 3, 26, 1 };
-            table.AddDecisionAttribute(attributeName, decisionAttributeValues);
-            var secondDecisionAttributeName = "secondDecisionAttribute";
-            var secondDecisionAttributeValues = new[] { 5, 3, 26, 1 };
+            var table = new InformationTable(new Dictionary<string, bool>(), "decisionAttribute", false);
+            table.AddObject("1", new Dictionary<string, float>(), 2);
             Should.Throw<InvalidOperationException>(() =>
-                table.AddDecisionAttribute(secondDecisionAttributeName, secondDecisionAttributeValues)
+               table.AddObject("1", new Dictionary<string, float>(), 2)
             );
         }
 
         [Test]
         public void TestTableFiltering()
         {
-            var table = new InformationTable();
             var attributeNames = new[] { "attribute1", "attribute2" };
             var attributesValues = new[] { new[] { 1f, 2f, 3f, 4f }, new[] { 2f, 3f, 4f, 8f } };
-            foreach (var i in Enumerable.Range(0, 2))
-            {
-                table.AddAttribute(attributeNames[i], attributesValues[i]);
-            }
-
+            var isAttributeCost = attributeNames.ToDictionary(x => x, x => false);
             var decisionAttributeName = "decisionAttribute";
             var decisionAttributeValues = new[] { 5, 3, 26, 1 };
-            table.AddDecisionAttribute(decisionAttributeName, decisionAttributeValues);
+            var table = new InformationTable(isAttributeCost, decisionAttributeName, false);
+            foreach (var i in Enumerable.Range(0, 4))
+            {
+                var attributes = Enumerable.Range(0, 2).ToDictionary(x => attributeNames[x], x => attributesValues[x][i]);
+                table.AddObject(i.ToString(), attributes, decisionAttributeValues[i]);
+            }
 
-            var filterPattern = new[] { true, false, true, false };
+
+            var filterPattern = new[] { true, false, true, false }.ToDictionary();
             var filteredAttributesValues = new[] { new[] { 1f, 3f }, new[] { 2f, 4f } };
-            var filteredDecisionAttributeValues = new[] { 5, 26 };
+            var filteredDecisionAttributeValues = new Dictionary<string, int>
+            { {"0",5 }, {"2", 26 } };
             var filteredTable = table.Filter(filterPattern);
 
             foreach (var i in Enumerable.Range(0, 2))
@@ -84,20 +88,27 @@ namespace nRank.DataStructures
         [Test]
         public void TestGetDecisionAttributeOrderedClassesAsGain()
         {
-            var table = new InformationTable();
+
             var attributeName = "decisionAttribute";
-            var decisionAttributeValues = new[] { 2, 1, 2, 4, 3, 2, 1 };
-            table.AddDecisionAttribute(attributeName, decisionAttributeValues, false);
+            var table = new InformationTable(new Dictionary<string, bool>(), attributeName, false);
+            var decisionAttributeValues = new[] { 2, 1, 2, 4, 3, 2, 1 }.ToDictionary();
+            foreach (var objectData in decisionAttributeValues)
+            {
+                table.AddObject(objectData.Key, new Dictionary<string, float>(), objectData.Value);
+            }
             table.GetDecicionClassesWorstFirst().ShouldBe(new[] { 1, 2, 3, 4 });
         }
 
         [Test]
         public void TestGetDecisionAttributeOrderedClassesAsCost()
         {
-            var table = new InformationTable();
             var attributeName = "decisionAttribute";
-            var decisionAttributeValues = new[] { 2, 1, 2, 4, 3, 2, 1 };
-            table.AddDecisionAttribute(attributeName, decisionAttributeValues, true);
+            var table = new InformationTable(new Dictionary<string, bool>(), attributeName, true);
+            var decisionAttributeValues = new[] { 2, 1, 2, 4, 3, 2, 1 }.ToDictionary();
+            foreach (var objectData in decisionAttributeValues)
+            {
+                table.AddObject(objectData.Key, new Dictionary<string, float>(), objectData.Value);
+            }
             table.GetDecicionClassesWorstFirst().ShouldBe(new[] { 4, 3, 2, 1 });
         }
     }

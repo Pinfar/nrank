@@ -63,7 +63,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DataStructures\InformationAttribute.cs" />
+    <Compile Include="ApproximationsGenerators\LowerApproximationGenerator.cs" />
+    <Compile Include="DataStructures\InformationObject.cs" />
     <Compile Include="DataStructures\InformationTable.cs" />
     <Compile Include="DataStructures\TestInformationTable.cs" />
     <Compile Include="Extensions\IEnumerableExtensions.cs" />

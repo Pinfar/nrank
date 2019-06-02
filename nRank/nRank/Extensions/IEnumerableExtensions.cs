@@ -15,5 +15,12 @@ namespace nRank.Extensions
                 .Where(x => x.includeInResult)
                 .Select(x => x.item);
         }
+
+        public static Dictionary<string, T> ToDictionary<T>(this IEnumerable<T> source)
+        {
+            return source
+                .Select((x, i) => new { Key = i.ToString(), Value = x })
+                .ToDictionary(x => x.Key, x => x.Value);
+        }
     }
 }

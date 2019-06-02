@@ -12,7 +12,7 @@ namespace nRank.UnionGenerators
         public IEnumerable<IInformationTable> GenerateUnions(IInformationTable informationTable)
         {
             var classes = informationTable.GetDecicionClassesWorstFirst();
-            var decisionAttributeValues = informationTable.GetDecisionAttribute().ToList();
+            var decisionAttributeValues = informationTable.GetDecisionAttribute();
             var classesDict = classes
                 .Select((classNr, position) => new { classNr, position })
                 .ToDictionary(x => x.classNr, x => x.position);
@@ -20,7 +20,7 @@ namespace nRank.UnionGenerators
             foreach(var classNr in classes.Skip(1))
             {
                 var minPosition = classesDict[classNr];
-                var filterPattern = decisionAttributeValues.Select(x => classesDict[x] >= minPosition);
+                var filterPattern = decisionAttributeValues.ToDictionary( x=> x.Key, x => classesDict[x.Value] >= minPosition);
                 yield return informationTable.Filter(filterPattern);
             }
         }
