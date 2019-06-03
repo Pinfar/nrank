@@ -63,16 +63,25 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ApproximationsGenerators\AbstractLowerApproximationGenerator.cs" />
+    <Compile Include="ApproximationsGenerators\AbstractUpperApproximationGenerator.cs" />
+    <Compile Include="ApproximationsGenerators\LowerApproximationOfDownwardUnionGenerator.cs" />
     <Compile Include="ApproximationsGenerators\LowerApproximationOfUpwardUnionGenerator.cs" />
     <Compile Include="ApproximationsGenerators\TestApproximationGenerators.cs" />
+    <Compile Include="ApproximationsGenerators\UpperApproximationOfDownwardUnionGenerator.cs" />
+    <Compile Include="ApproximationsGenerators\UpperApproximationOfUpwardUnionGenerator.cs" />
     <Compile Include="DSetGenerators\DDominatedSetGenerator.cs" />
     <Compile Include="DSetGenerators\DDominatingSetGenerator.cs" />
     <Compile Include="DataStructures\InformationObject.cs" />
     <Compile Include="DataStructures\InformationTable.cs" />
     <Compile Include="DataStructures\TestInformationTable.cs" />
+    <Compile Include="DSetGenerators\IDDSetGenerator.cs" />
     <Compile Include="DSetGenerators\TestDDSetGenerators.cs" />
     <Compile Include="Extensions\IEnumerableExtensions.cs" />
     <Compile Include="Extensions\TestIEnumerableExtensions.cs" />
+    <Compile Include="TestCommons\InformationTableGenerator.cs" />
+    <Compile Include="UnionGenerators\DownwardUnionGenerator.cs" />
+    <Compile Include="UnionGenerators\TestDownwardUnionGenerator.cs" />
     <Compile Include="UnionGenerators\TestUpwardUnionGenerator.cs" />
     <Compile Include="UnionGenerators\UpwardUnionGenerator.cs" />
     <Compile Include="VCDomLEMAbstractions\IApproximationsGenerator.cs" />
@@ -87,6 +96,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

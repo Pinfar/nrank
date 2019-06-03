@@ -8,8 +8,7 @@ using System.Threading.Tasks;
 
 namespace nRank.ApproximationsGenerators
 {
-    //B_(Clt>=)
-    class LowerApproximationOfUpwardUnionGenerator : AbstractLowerApproximationGenerator<DDominatingSetGenerator>
+    class UpperApproximationOfUpwardUnionGenerator : AbstractUpperApproximationGenerator<DDominatingSetGenerator>
     {
     }
 }

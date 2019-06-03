@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace nRank.DSetGenerators
 {
     //D-B(x)
-    class DDominatedSetGenerator
+    class DDominatedSetGenerator : IDDSetGenerator
     {
         public IInformationTable Generate(IInformationTable informationTable, string objectIdentifier)
         {
