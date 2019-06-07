@@ -144,5 +144,17 @@ namespace nRank.DecisionRules
             var dr1 = new ImmutableDecisionRule("a1", "<=", 1f, "1<=");
             dr1.IsCreatingSubsetOf(table, f1table);
         }
+
+        [Test]
+        public void TestCreateOptimizedRule()
+        {
+            var generator = new InformationTableGenerator();
+            var table = generator.GetInformationTable();
+            var dr = new ImmutableDecisionRule("a1", "<=", 1f, "1<=");
+            var f1table = table.Filter(dr);
+            var dr1 = new ImmutableDecisionRule("a1", "<=", 1.5f, "1<=");
+            var optimizedRule = dr.And(dr1).CreateOptimizedRule(table, f1table);
+            optimizedRule.ToString().ShouldBe("if (f(a1, x) <= 1) then x E Cl1<=");
+        }
     }
 }

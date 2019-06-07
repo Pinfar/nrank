@@ -78,5 +78,23 @@ namespace nRank.DecisionRules
             var currentCoverage = Satisfy(source).Where(x => x.Value).Select(x => x.Key);
             return currentCoverage.IsSubsetOf(target.GetAllObjectIdentifiers());
         }
+
+        public IDecisionRule CreateOptimizedRule(IInformationTable source, IInformationTable target)
+        {
+            var resultList = new List<IConditionalPart>();
+            var rule = new ImmutableDecisionRule(_approximation);
+            rule._conditionalParts.AddRange(_conditionalParts);
+            foreach (var part in _conditionalParts)
+            {
+                rule._conditionalParts.Remove(part);
+                if(!rule.IsCreatingSubsetOf(source, target))
+                {
+                    rule._conditionalParts.Add(part);
+                    resultList.Add(part);
+                }
+            }
+            rule._conditionalParts = resultList;
+            return rule;
+        }
     }
 }

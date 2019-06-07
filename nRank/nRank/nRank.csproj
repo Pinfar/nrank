@@ -71,6 +71,7 @@
     <Compile Include="ApproximationsGenerators\UpperApproximationOfDownwardUnionGenerator.cs" />
     <Compile Include="ApproximationsGenerators\UpperApproximationOfUpwardUnionGenerator.cs" />
     <Compile Include="DecisionRulesGenerator\DecisionRuleGenerator.cs" />
+    <Compile Include="DecisionRulesGenerator\TestDecisionRuleGenerator.cs" />
     <Compile Include="DecisionRules\AlwaysTruePart.cs" />
     <Compile Include="DecisionRules\ConditionalPart.cs" />
     <Compile Include="DecisionRules\IConditionalPart.cs" />

@@ -149,5 +149,10 @@ namespace nRank.DataStructures
             var pattern = rule.Satisfy(this);
             return Filter(pattern);
         }
+
+        public IEnumerable<string> GetAllAttributes()
+        {
+            return _isAttributeCost.Keys;
+        }
     }
 }

@@ -11,6 +11,7 @@ namespace nRank.VCDomLEMAbstractions
         IEnumerable<float> GetAttribute(string name);
         Dictionary<string, float> GetObjectAttributes(string identifier);
         IEnumerable<string> GetAllObjectIdentifiers();
+        IEnumerable<string> GetAllAttributes();
         IInformationTable Filter(Dictionary<string, bool> pattern);
         IEnumerable<int> GetDecicionClassesWorstFirst();
         bool Outranks(string identifier1, string identifier2);

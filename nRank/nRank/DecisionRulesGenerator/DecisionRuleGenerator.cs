@@ -21,20 +21,60 @@ namespace nRank.DecisionRulesGenerator
                 var objectsCoveredByCurrentRule = notCoveredYet;
                 while(currentRule.IsEmpty() || !currentRule.IsCreatingSubsetOf(informationTable, approximation) )
                 {
-                    var bestLocalRule = new ImmutableDecisionRule(null, null, 0, null);
-
+                    var allPossibleRules = GetAllPossibleDecisionRules(objectsCoveredByCurrentRule, approximationSymbol);
+                    var bestLocalRule = FindBestRule(currentRule, allPossibleRules, notCoveredYet, informationTable);
 
                     currentRule = currentRule.And(bestLocalRule);
                     objectsCoveredByCurrentRule = objectsCoveredByCurrentRule.Filter(currentRule);
                 }
 
-
+                currentRule = currentRule.CreateOptimizedRule(informationTable, approximation);
                 rules.Add(currentRule);
-                notCoveredYet = notCoveredYet.Filter(currentRule);
+                var pattern = currentRule.Satisfy(notCoveredYet).ToDictionary(x => x.Key, x => !x.Value);
+                notCoveredYet = notCoveredYet.Filter(pattern);
             }
 
 
             return rules;
+        }
+
+        private IEnumerable<IDecisionRule> GetAllPossibleDecisionRules(IInformationTable objectsCoveredByCurrentRule, string approximation)
+        {
+            var attributes = objectsCoveredByCurrentRule
+                .GetAllAttributes()
+                .SelectMany(x => 
+                    objectsCoveredByCurrentRule
+                        .GetAttribute(x)
+                        .Distinct()
+                        .Select(y => new { AttributeName = x, AttributeValue = y } )
+                );
+            return attributes.Select(x => new ImmutableDecisionRule(x.AttributeName, "<=", x.AttributeValue, approximation));
+        }
+
+        private IDecisionRule FindBestRule(IDecisionRule currentRule, IEnumerable<IDecisionRule> rules, IInformationTable notCoveredYet, IInformationTable informationTable)
+        {
+            var best = rules.First();
+            var notCovered = notCoveredYet.GetAllObjectIdentifiers();
+            var bestScore = EvaluateRule(currentRule.And(best), notCovered, informationTable);
+            foreach (var rule in rules)
+            {
+                var ruleScore = EvaluateRule(currentRule.And(rule), notCovered, informationTable);
+                if(ruleScore.Item1 > bestScore.Item1 || ruleScore.Item1 == bestScore.Item1 && ruleScore.Item2 > bestScore.Item2)
+                {
+                    best = rule;
+                    bestScore = ruleScore;
+                }
+            }
+            return best;
+        }
+
+        private Tuple<double, double> EvaluateRule(IDecisionRule rule, IEnumerable<string> notCoveredYet, IInformationTable informationTable)
+        {
+            var coveredByRule = informationTable.Filter(rule).GetAllObjectIdentifiers();
+            var common = coveredByRule.Intersect(notCoveredYet);
+            double commonCount = common.Count();
+            double coveredByRuleCount = coveredByRule.Count();
+            return Tuple.Create(commonCount / coveredByRuleCount, commonCount);
         }
     }
 }

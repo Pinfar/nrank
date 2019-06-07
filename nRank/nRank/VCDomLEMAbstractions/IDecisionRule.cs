@@ -9,5 +9,6 @@ namespace nRank.VCDomLEMAbstractions
         Dictionary<string, bool> Satisfy(IInformationTable informationTable);
         bool IsEmpty();
         bool IsCreatingSubsetOf(IInformationTable source, IInformationTable target);
+        IDecisionRule CreateOptimizedRule(IInformationTable source, IInformationTable target);
     }
 }
