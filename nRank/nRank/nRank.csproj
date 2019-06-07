@@ -70,6 +70,12 @@
     <Compile Include="ApproximationsGenerators\TestApproximationGenerators.cs" />
     <Compile Include="ApproximationsGenerators\UpperApproximationOfDownwardUnionGenerator.cs" />
     <Compile Include="ApproximationsGenerators\UpperApproximationOfUpwardUnionGenerator.cs" />
+    <Compile Include="DecisionRulesGenerator\DecisionRuleGenerator.cs" />
+    <Compile Include="DecisionRules\AlwaysTruePart.cs" />
+    <Compile Include="DecisionRules\ConditionalPart.cs" />
+    <Compile Include="DecisionRules\IConditionalPart.cs" />
+    <Compile Include="DecisionRules\ImmutableDecisionRule.cs" />
+    <Compile Include="DecisionRules\TestDecisionRule.cs" />
     <Compile Include="DSetGenerators\DDominatedSetGenerator.cs" />
     <Compile Include="DSetGenerators\DDominatingSetGenerator.cs" />
     <Compile Include="DataStructures\InformationObject.cs" />

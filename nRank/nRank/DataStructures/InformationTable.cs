@@ -98,6 +98,11 @@ namespace nRank.DataStructures
             return ObjectsStorage.Select(x => x.Value.Attributes[name]).ToList();
         }
 
+        public Dictionary<string, float> GetObjectAttributes(string identifier)
+        {
+            return ObjectsStorage[identifier].Attributes;
+        }
+
         public IEnumerable<string> GetAllObjectIdentifiers()
         {
             return ObjectsStorage.Keys;
@@ -105,7 +110,9 @@ namespace nRank.DataStructures
 
         public IInformationTable Filter(Dictionary<string, bool> pattern)
         {
-            var filteredObjects = ObjectsStorage.Where(x => pattern[x.Key]).ToDictionary(x => x.Key, x => x.Value);
+            var filteredObjects = ObjectsStorage
+                .Where(x => pattern.ContainsKey(x.Key) && pattern[x.Key])
+                .ToDictionary(x => x.Key, x => x.Value);
             var table = new InformationTable(_isAttributeCost, DecisionAttributeName, _isDecisionAttributeCost, filteredObjects);
             return table;
         }
@@ -135,6 +142,12 @@ namespace nRank.DataStructures
             return _isAttributeCost[attributeName] ? 
                 attributeValue1 <= attributeValue2 : 
                 attributeValue1 >= attributeValue2;
+        }
+
+        public IInformationTable Filter(IDecisionRule rule)
+        {
+            var pattern = rule.Satisfy(this);
+            return Filter(pattern);
         }
     }
 }

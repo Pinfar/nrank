@@ -22,5 +22,11 @@ namespace nRank.Extensions
                 .Select((x, i) => new { Key = i.ToString(), Value = x })
                 .ToDictionary(x => x.Key, x => x.Value);
         }
+
+        public static bool IsSubsetOf<T>( this IEnumerable<T> first, IEnumerable<T> second )
+        {
+            var set = new HashSet<T>(second);
+            return first.All(x => set.Contains(x));
+        }
     }
 }

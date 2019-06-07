@@ -34,5 +34,13 @@ namespace nRank.Extensions
             };
             values.ToDictionary().ShouldBe(expectedDictionary);
         }
+
+        [Test]
+        public void TestIsSubsetOf()
+        {
+            new[] { 1, 2, 3 }.IsSubsetOf(new[] { 1, 2, 3 }).ShouldBeTrue();
+            new[] { 1, 2 }.IsSubsetOf(new[] { 1, 2, 3 }).ShouldBeTrue();
+            new[] { 1, 2, 3 }.IsSubsetOf(new[] { 1, 2 }).ShouldBeFalse();
+        }
     }
 }
