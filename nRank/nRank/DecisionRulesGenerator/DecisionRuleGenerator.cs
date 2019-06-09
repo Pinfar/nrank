@@ -11,6 +11,21 @@ namespace nRank.DecisionRulesGenerator
 {
     class DecisionRuleGenerator
     {
+        private readonly List<string> AllowedOperators;
+
+        public DecisionRuleGenerator() : this("<=")
+        {
+        }
+
+        public DecisionRuleGenerator(string operatorStr) : this(new List<string> { operatorStr })
+        {
+        }
+
+        public DecisionRuleGenerator(IEnumerable<string> operatorStrs)
+        {
+            AllowedOperators = operatorStrs.ToList();
+        }
+
         public IEnumerable<IDecisionRule> GenerateRulesFrom(IInformationTable approximation, IInformationTable informationTable, string approximationSymbol)
         {
             var notCoveredYet = approximation;
@@ -48,15 +63,19 @@ namespace nRank.DecisionRulesGenerator
                         .Distinct()
                         .Select(y => new { AttributeName = x, AttributeValue = y } )
                 );
-            return attributes.Select(x => new ImmutableDecisionRule(x.AttributeName, "<=", x.AttributeValue, approximation));
+            return attributes.SelectMany(
+                x => AllowedOperators, 
+                (x, y) => new ImmutableDecisionRule(x.AttributeName, y, x.AttributeValue, approximation)
+            );
         }
 
         private IDecisionRule FindBestRule(IDecisionRule currentRule, IEnumerable<IDecisionRule> rules, IInformationTable notCoveredYet, IInformationTable informationTable)
         {
-            var best = rules.First();
+            var filteredRules = rules.Where(x => !currentRule.Contains(x)).ToList();
+            var best = filteredRules.First();
             var notCovered = notCoveredYet.GetAllObjectIdentifiers();
             var bestScore = EvaluateRule(currentRule.And(best), notCovered, informationTable);
-            foreach (var rule in rules)
+            foreach (var rule in filteredRules)
             {
                 var ruleScore = EvaluateRule(currentRule.And(rule), notCovered, informationTable);
                 if(ruleScore.Item1 > bestScore.Item1 || ruleScore.Item1 == bestScore.Item1 && ruleScore.Item2 > bestScore.Item2)

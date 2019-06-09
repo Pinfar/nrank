@@ -16,5 +16,6 @@ namespace nRank.VCDomLEMAbstractions
         IEnumerable<int> GetDecicionClassesWorstFirst();
         bool Outranks(string identifier1, string identifier2);
         IInformationTable Filter(IDecisionRule rule);
+        IInformationTable Intersect(IInformationTable table);
     }
 }

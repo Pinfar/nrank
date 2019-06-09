@@ -10,5 +10,6 @@ namespace nRank.VCDomLEMAbstractions
         bool IsEmpty();
         bool IsCreatingSubsetOf(IInformationTable source, IInformationTable target);
         IDecisionRule CreateOptimizedRule(IInformationTable source, IInformationTable target);
+        bool Contains(IDecisionRule rule);
     }
 }

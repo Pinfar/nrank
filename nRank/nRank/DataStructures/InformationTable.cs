@@ -154,5 +154,11 @@ namespace nRank.DataStructures
         {
             return _isAttributeCost.Keys;
         }
+
+        public IInformationTable Intersect(IInformationTable table)
+        {
+            var pattern = ObjectsStorage.Keys.ToDictionary(x => x, x => true);
+            return table.Filter(pattern);
+        }
     }
 }

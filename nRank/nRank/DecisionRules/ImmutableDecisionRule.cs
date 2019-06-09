@@ -39,7 +39,7 @@ namespace nRank.DecisionRules
         public override string ToString()
         {
             var conditions = string.Join(" and ", _conditionalParts);
-            return $"if {conditions} then x E Cl{_approximation}";
+            return $"if {conditions} then x E {_approximation}";
         }
 
         public IDecisionRule And(string attribute, string operatorStr, float value)
@@ -95,6 +95,14 @@ namespace nRank.DecisionRules
             }
             rule._conditionalParts = resultList;
             return rule;
+        }
+
+        public bool Contains(IDecisionRule rule)
+        {
+            if (!(rule is ImmutableDecisionRule)) return false;
+            var immutableRule = (ImmutableDecisionRule)rule;
+            var selfRules = _conditionalParts.Select(x => x.ToString()).ToList();
+            return immutableRule._conditionalParts.All(x => selfRules.Contains(x.ToString()));
         }
     }
 }
