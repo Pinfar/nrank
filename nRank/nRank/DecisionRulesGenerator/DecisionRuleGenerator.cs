@@ -11,19 +11,17 @@ namespace nRank.DecisionRulesGenerator
 {
     class DecisionRuleGenerator
     {
-        private readonly List<string> AllowedOperators;
-
-        public DecisionRuleGenerator() : this("<=")
+        public List<string> AllowedOperators { get; set; } = new List<string> { "<=" };
+        public string AllowedOperator
         {
+            set
+            {
+                AllowedOperators = new List<string> { value };
+            }
         }
 
-        public DecisionRuleGenerator(string operatorStr) : this(new List<string> { operatorStr })
+        public DecisionRuleGenerator()
         {
-        }
-
-        public DecisionRuleGenerator(IEnumerable<string> operatorStrs)
-        {
-            AllowedOperators = operatorStrs.ToList();
         }
 
         public IEnumerable<IDecisionRule> GenerateRulesFrom(IInformationTable approximation, IInformationTable informationTable, string approximationSymbol)
