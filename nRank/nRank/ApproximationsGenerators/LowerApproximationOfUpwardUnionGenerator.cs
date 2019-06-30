@@ -11,5 +11,6 @@ namespace nRank.ApproximationsGenerators
     //B_(Clt>=)
     class LowerApproximationOfUpwardUnionGenerator : AbstractLowerApproximationGenerator<DDominatingSetGenerator>
     {
+        protected override IEnumerable<string> _allowedOperators => new[] { ">=" };
     }
 }

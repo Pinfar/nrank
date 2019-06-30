@@ -1,4 +1,5 @@
-﻿using nRank.VCDomLEMAbstractions;
+﻿using nRank.DataStructures;
+using nRank.VCDomLEMAbstractions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,17 +19,17 @@ namespace nRank.ApproximationsGenerators
             UpperApproximationGenerator = upperApproximationGenerator;
         }
 
-        public IInformationTable GetApproximation(IUnion union, IInformationTable originalTable)
+        public IApproximation GetApproximation(IUnion union, IInformationTable originalTable)
         {
             var lowerApproximation = LowerApproximationGenerator
                 .GetApproximation(union, originalTable);
             var upperApproximation = UpperApproximationGenerator
                 .GetApproximation(union, originalTable);
 
-            var lowerItems = lowerApproximation.GetAllObjectIdentifiers();
-            var mask = upperApproximation.GetAllObjectIdentifiers().ToDictionary(x => x, x => !lowerItems.Contains(x));
+            var lowerItems = lowerApproximation.ApproximatedInformationTable.GetAllObjectIdentifiers();
+            var mask = upperApproximation.ApproximatedInformationTable.GetAllObjectIdentifiers().ToDictionary(x => x, x => !lowerItems.Contains(x));
 
-            return upperApproximation.Filter(mask);
+            return new Approximation(upperApproximation.ApproximatedInformationTable.Filter(mask), originalTable, new int[] { }, new string[] {">=", "<=" });
         }
     }
 }

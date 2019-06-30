@@ -4,6 +4,6 @@ namespace nRank.VCDomLEMAbstractions
 {
     internal interface IDecisionRuleGenerator
     {
-        IEnumerable<IDecisionRule> GenerateRulesFrom(IInformationTable approximation);
+        IEnumerable<IDecisionRule> GenerateRulesFrom(IApproximation approximation);
     }
 }

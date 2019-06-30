@@ -10,5 +10,6 @@ namespace nRank.ApproximationsGenerators
 {
     class UpperApproximationOfUpwardUnionGenerator : AbstractUpperApproximationGenerator<DDominatingSetGenerator>
     {
+        protected override IEnumerable<string> _allowedOperators => new[] { ">=" };
     }
 }

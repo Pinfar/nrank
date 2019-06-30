@@ -23,14 +23,14 @@ namespace nRank.ApproximationsGenerators
             var table = GetInformationTable();
             var upwardUnions = UUGenerator.GenerateUnions(table).ToList();
             upwardUnions.Count.ShouldBe(2);
-            lAOUGenerator
-                .GetApproximation(upwardUnions[0], table)
-                .GetAllObjectIdentifiers()
-                .ShouldBe(new[] { "1", "2", "5", "8", "10", "11", "12", "13", "15", "16", "17" }, true);
-            lAOUGenerator
-                .GetApproximation(upwardUnions[1], table)
-                .GetAllObjectIdentifiers()
-                .ShouldBe(new[] { "5", "16", "17" }, true);
+
+            var approximation0 = lAOUGenerator
+                .GetApproximation(upwardUnions[0], table);
+            ShouldHave(approximation0, new[] { "1", "2", "5", "8", "10", "11", "12", "13", "15", "16", "17" }, table, ">=");
+
+            var approximation1 = lAOUGenerator
+                .GetApproximation(upwardUnions[1], table);
+            ShouldHave(approximation1, new[] { "5", "16", "17" }, table, ">=");
         }
 
         [Test]
@@ -41,14 +41,15 @@ namespace nRank.ApproximationsGenerators
             var table = GetInformationTable();
             var upwardUnions = UUGenerator.GenerateUnions(table).ToList();
             upwardUnions.Count.ShouldBe(2);
-            uAOUGenerator
-                .GetApproximation(upwardUnions[0], table)
-                .GetAllObjectIdentifiers()
-                .ShouldBe(new[] { "1", "2", "5", "6", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17" }, true);
-            uAOUGenerator
-                .GetApproximation(upwardUnions[1], table)
-                .GetAllObjectIdentifiers()
-                .ShouldBe(new[] { "5", "8", "11", "16", "17" }, true);
+
+
+            var approximation0 = uAOUGenerator
+                .GetApproximation(upwardUnions[0], table);
+            ShouldHave(approximation0, new[] { "1", "2", "5", "6", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17" }, table, ">=");
+
+            var approximation1 = uAOUGenerator
+                .GetApproximation(upwardUnions[1], table);
+            ShouldHave(approximation1, new[] { "5", "8", "11", "16", "17" }, table, ">=");
         }
 
         [Test]
@@ -59,14 +60,14 @@ namespace nRank.ApproximationsGenerators
             var table = GetInformationTable();
             var upwardUnions = UUGenerator.GenerateUnions(table).ToList();
             upwardUnions.Count.ShouldBe(2);
-            lAOUGenerator
-                .GetApproximation(upwardUnions[0], table)
-                .GetAllObjectIdentifiers()
-                .ShouldBe(new[] { "3", "4", "7" }, true);
-            lAOUGenerator
-                .GetApproximation(upwardUnions[1], table)
-                .GetAllObjectIdentifiers()
-                .ShouldBe(new[] { "1", "2", "3", "4", "6", "7", "9", "10", "12", "13", "14", "15" }, true);
+
+            var approximation0 = lAOUGenerator
+                .GetApproximation(upwardUnions[0], table);
+            ShouldHave(approximation0, new[] { "3", "4", "7" }, table, "<=");
+
+            var approximation1 = lAOUGenerator
+                .GetApproximation(upwardUnions[1], table);
+            ShouldHave(approximation1, new[] { "1", "2", "3", "4", "6", "7", "9", "10", "12", "13", "14", "15" }, table, "<=");
         }
 
         [Test]
@@ -77,14 +78,15 @@ namespace nRank.ApproximationsGenerators
             var table = GetInformationTable();
             var upwardUnions = UUGenerator.GenerateUnions(table).ToList();
             upwardUnions.Count.ShouldBe(2);
-            lAOUGenerator
-                .GetApproximation(upwardUnions[0], table)
-                .GetAllObjectIdentifiers()
-                .ShouldBe(new[] { "3", "4","6", "7","9","14" }, true);
-            lAOUGenerator
-                .GetApproximation(upwardUnions[1], table)
-                .GetAllObjectIdentifiers()
-                .ShouldBe(new[] { "1", "2", "3", "4", "6", "7","8", "9", "10","11", "12", "13", "14", "15" }, true);
+
+            var approximation0 = lAOUGenerator
+                .GetApproximation(upwardUnions[0], table);
+            ShouldHave(approximation0, new[] { "3", "4", "6", "7", "9", "14" }, table, "<=");
+
+            var approximation1 = lAOUGenerator
+                .GetApproximation(upwardUnions[1], table);
+            ShouldHave(approximation1, new[] { "1", "2", "3", "4", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15" }, table, "<=");
+
         }
 
         [Test]
@@ -98,21 +100,33 @@ namespace nRank.ApproximationsGenerators
             var upwardUnions = UUGenerator.GenerateUnions(table).ToList();
             upwardUnions.Count.ShouldBe(2);
 
+            var approximation0 = boundaryGenerator
+                .GetApproximation(upwardUnions[0], table);
+            ShouldHave(approximation0, new[] { "6", "9", "14" }, table, new [] { ">=", "<=" });
 
-            boundaryGenerator
-                .GetApproximation(upwardUnions[0], table)
-                .GetAllObjectIdentifiers()
-                .ShouldBe(new[] { "6", "9", "14" }, true);
-            boundaryGenerator
-                .GetApproximation(upwardUnions[1], table)
-                .GetAllObjectIdentifiers()
-                .ShouldBe(new[] { "8",  "11" }, true);
+            var approximation1 = boundaryGenerator
+                .GetApproximation(upwardUnions[1], table);
+            ShouldHave(approximation1, new[] { "8", "11" }, table, new[] { ">=", "<=" });
         }
 
         private IInformationTable GetInformationTable()
         {
             var generator = new InformationTableGenerator();
             return generator.GetInformationTable();
+        }
+        private void ShouldHave(IApproximation approximation, IEnumerable<string> identifiers, IInformationTable originalTable, string allowedOperator)
+        {
+            ShouldHave(approximation, identifiers, originalTable, new[] { allowedOperator });
+        }
+
+        private void ShouldHave(IApproximation approximation, IEnumerable<string> identifiers, IInformationTable originalTable, IEnumerable<string> allowedOperators)
+        {
+            approximation
+                .ApproximatedInformationTable
+                .GetAllObjectIdentifiers()
+                .ShouldBe(identifiers, true);
+            approximation.OriginalInformationTable.ShouldBe(originalTable);
+            approximation.AllowedOperators.ShouldBe(allowedOperators);
         }
     }
 }

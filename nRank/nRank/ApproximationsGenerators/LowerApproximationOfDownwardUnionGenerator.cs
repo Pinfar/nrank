@@ -9,5 +9,6 @@ namespace nRank.ApproximationsGenerators
 {
     class LowerApproximationOfDownwardUnionGenerator : AbstractLowerApproximationGenerator<DDominatedSetGenerator>
     {
+        protected override IEnumerable<string> _allowedOperators => new[] { "<=" };
     }
 }

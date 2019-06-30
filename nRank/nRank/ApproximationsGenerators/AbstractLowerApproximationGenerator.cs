@@ -1,4 +1,5 @@
-﻿using nRank.DSetGenerators;
+﻿using nRank.DataStructures;
+using nRank.DSetGenerators;
 using nRank.VCDomLEMAbstractions;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,9 @@ namespace nRank.ApproximationsGenerators
 {
     abstract class AbstractLowerApproximationGenerator<T> : IApproximationsGenerator where T : IDDSetGenerator, new ()
     {
-        public IInformationTable GetApproximation(IUnion union, IInformationTable originalTable)
+        abstract protected IEnumerable<string> _allowedOperators { get; }
+
+        public IApproximation GetApproximation(IUnion union, IInformationTable originalTable)
         {
             var dsetGenerator = new T();
             var objectsInUnion = union.InformationTable.GetAllObjectIdentifiers();
@@ -19,7 +22,7 @@ namespace nRank.ApproximationsGenerators
                     x => x,
                     x => dsetGenerator.Generate(originalTable, x).GetAllObjectIdentifiers().All(y => objectsInUnion.Contains(y))
                 );
-            return originalTable.Filter(pattern);
+            return new Approximation(originalTable.Filter(pattern), originalTable, new int[] { }, _allowedOperators);
         }
     }
 }
