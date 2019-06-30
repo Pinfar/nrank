@@ -26,10 +26,14 @@ namespace nRank.UnionGenerators
                 .GetAllObjectIdentifiers()
                 .ShouldBe(new[] {"3", "4", "7", "9", "14" }, true);
 
+            unions[0].IsUpward.ShouldBeFalse();
+
             unions[1]
                 .InformationTable
                 .GetAllObjectIdentifiers()
                 .ShouldBe(new[] {"1","2", "3", "4","6", "7", "9", "10", "11","12","13", "14","15" }, true);
+
+            unions[1].IsUpward.ShouldBeFalse();
         }
     }
 }
