@@ -87,6 +87,28 @@ namespace nRank.ApproximationsGenerators
                 .ShouldBe(new[] { "1", "2", "3", "4", "6", "7","8", "9", "10","11", "12", "13", "14", "15" }, true);
         }
 
+        [Test]
+        public void TestBoundaryGenerator()
+        {
+            var uAOUGenerator = new UpperApproximationOfDownwardUnionGenerator();
+            var lAOUGenerator = new LowerApproximationOfDownwardUnionGenerator();
+            var boundaryGenerator = new BoundaryApproximationGenerator(lAOUGenerator, uAOUGenerator);
+            var UUGenerator = new DownwardUnionGenerator();
+            var table = GetInformationTable();
+            var upwardUnions = UUGenerator.GenerateUnions(table).ToList();
+            upwardUnions.Count.ShouldBe(2);
+
+
+            boundaryGenerator
+                .GetApproximation(upwardUnions[0], table)
+                .GetAllObjectIdentifiers()
+                .ShouldBe(new[] { "6", "9", "14" }, true);
+            boundaryGenerator
+                .GetApproximation(upwardUnions[1], table)
+                .GetAllObjectIdentifiers()
+                .ShouldBe(new[] { "8",  "11" }, true);
+        }
+
         private IInformationTable GetInformationTable()
         {
             var generator = new InformationTableGenerator();

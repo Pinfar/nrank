@@ -94,18 +94,11 @@ namespace nRank.DecisionRulesGenerator
             var uAOUGenerator = new UpperApproximationOfUpwardUnionGenerator();
             var lAOUGenerator = new LowerApproximationOfUpwardUnionGenerator();
             var UUGenerator = new UpwardUnionGenerator();
+            var boundaryGenerator = new BoundaryApproximationGenerator(lAOUGenerator, uAOUGenerator);
             var table = generator.GetInformationTable();
             var upwardUnions = UUGenerator.GenerateUnions(table).ToList();
-            var lowerApproximation = lAOUGenerator
-                .GetApproximation(upwardUnions[0], table);
-            var upperApproximation = uAOUGenerator
-                .GetApproximation(upwardUnions[0], table);
 
-            var lowerItems = lowerApproximation.GetAllObjectIdentifiers();
-            var mask = upperApproximation.GetAllObjectIdentifiers().ToDictionary(x => x, x => !lowerItems.Contains(x));
-
-
-            var boundary = upperApproximation.Filter(mask);
+            var boundary = boundaryGenerator.GetApproximation(upwardUnions[0], table);
             var dRGenerator = new DecisionRuleGenerator();
             dRGenerator.AllowedOperators = new List<string> { ">=", "<=" };
             var rules = dRGenerator.GenerateRulesFrom(boundary, table, "Cl1 u Cl2").ToList();
@@ -121,18 +114,11 @@ namespace nRank.DecisionRulesGenerator
             var uAOUGenerator = new UpperApproximationOfUpwardUnionGenerator();
             var lAOUGenerator = new LowerApproximationOfUpwardUnionGenerator();
             var UUGenerator = new UpwardUnionGenerator();
+            var boundaryGenerator = new BoundaryApproximationGenerator(lAOUGenerator, uAOUGenerator);
             var table = generator.GetInformationTable();
             var upwardUnions = UUGenerator.GenerateUnions(table).ToList();
-            var lowerApproximation = lAOUGenerator
-                .GetApproximation(upwardUnions[1], table);
-            var upperApproximation = uAOUGenerator
-                .GetApproximation(upwardUnions[1], table);
 
-            var lowerItems = lowerApproximation.GetAllObjectIdentifiers();
-            var mask = upperApproximation.GetAllObjectIdentifiers().ToDictionary(x => x, x => !lowerItems.Contains(x));
-
-
-            var boundary = upperApproximation.Filter(mask);
+            var boundary = boundaryGenerator.GetApproximation(upwardUnions[1], table);
             var dRGenerator = new DecisionRuleGenerator();
             dRGenerator.AllowedOperators = new List<string> { ">=", "<=" };
             var rules = dRGenerator.GenerateRulesFrom(boundary, table, "Cl2 u Cl3").ToList();
