@@ -9,7 +9,7 @@ namespace nRank.VCDomLEMAbstractions
     interface IUnion
     {
         IInformationTable InformationTable { get; }
-        int[] Classes { get; }
+        ISet<int> Classes { get; }
         bool IsUpward { get; }
     }
 }

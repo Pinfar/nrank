@@ -22,7 +22,7 @@ namespace nRank.UnionGenerators
             {
                 var minPosition = classesDict[classNr];
                 var filterPattern = decisionAttributeValues.ToDictionary( x=> x.Key, x => classesDict[x.Value] >= minPosition);
-                yield return new Union(informationTable.Filter(filterPattern), null, true);
+                yield return new Union(informationTable.Filter(filterPattern), classes.Where(x => classesDict[x] >= minPosition) , true);
             }
         }
     }

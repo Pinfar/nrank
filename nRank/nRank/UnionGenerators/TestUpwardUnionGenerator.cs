@@ -40,6 +40,7 @@ namespace nRank.UnionGenerators
             };
             unions[0].InformationTable.GetDecisionAttribute().ShouldBe(expectedDecisionAttributeDict1);
             unions[0].IsUpward.ShouldBeTrue();
+            unions[0].Classes.ShouldBe(new[] { 1, 2 }, true);
 
             unions[1].InformationTable.GetAttribute(attributeName).ShouldBe(new[] { 1f, 4f });
             var expectedDecisionAttributeDict2 = new Dictionary<string, int>
@@ -48,6 +49,7 @@ namespace nRank.UnionGenerators
             };
             unions[1].InformationTable.GetDecisionAttribute().ShouldBe(expectedDecisionAttributeDict2);
             unions[1].IsUpward.ShouldBeTrue();
+            unions[1].Classes.ShouldBe(new[] { 1 }, true);
         }
 
         [Test]
@@ -77,6 +79,7 @@ namespace nRank.UnionGenerators
             };
             unions[0].InformationTable.GetDecisionAttribute().ShouldBe(expectedDecisionAttributeDict1);
             unions[0].IsUpward.ShouldBeTrue();
+            unions[0].Classes.ShouldBe(new[] { 2, 3 }, true);
 
             unions[1].InformationTable.GetAttribute(attributeName).ShouldBe(new[] { 3f, 6f });
             var expectedDecisionAttributeDict2 = new Dictionary<string, int>
@@ -85,6 +88,7 @@ namespace nRank.UnionGenerators
             };
             unions[1].InformationTable.GetDecisionAttribute().ShouldBe(expectedDecisionAttributeDict2);
             unions[1].IsUpward.ShouldBeTrue();
+            unions[1].Classes.ShouldBe(new[] { 3 }, true);
         }
 
         private Dictionary<string, float> CreateSingleAttributeDict(string key, float value)

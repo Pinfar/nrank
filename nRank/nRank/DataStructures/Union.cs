@@ -9,15 +9,15 @@ namespace nRank.DataStructures
 {
     class Union : IUnion
     {
-        public Union(IInformationTable informationTable, int[] classes, bool isUpward)
+        public Union(IInformationTable informationTable, IEnumerable<int> classes, bool isUpward)
         {
             InformationTable = informationTable;
-            Classes = classes;
+            Classes = new HashSet<int>(classes);
             IsUpward = isUpward;
         }
 
         public IInformationTable InformationTable { get; }
-        public int[] Classes { get; }
+        public ISet<int> Classes { get; }
         public bool IsUpward { get; }
     }
 }
