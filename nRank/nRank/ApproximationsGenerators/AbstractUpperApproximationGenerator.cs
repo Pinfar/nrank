@@ -10,10 +10,10 @@ namespace nRank.ApproximationsGenerators
 {
     abstract class AbstractUpperApproximationGenerator<T> : IApproximationsGenerator where T : IDDSetGenerator, new()
     {
-        public IInformationTable GetApproximation(IInformationTable union, IInformationTable originalTable)
+        public IInformationTable GetApproximation(IUnion union, IInformationTable originalTable)
         {
             var dsetGenerator = new T();
-            var objectsInUnion = union.GetAllObjectIdentifiers();
+            var objectsInUnion = union.InformationTable.GetAllObjectIdentifiers();
             var approximation = objectsInUnion
                 .SelectMany(x => dsetGenerator.Generate(originalTable, x).GetAllObjectIdentifiers())
                 .Distinct();

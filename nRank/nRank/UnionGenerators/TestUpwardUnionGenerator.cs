@@ -33,19 +33,19 @@ namespace nRank.UnionGenerators
 
             unions.Count.ShouldBe(2);
 
-            unions[0].GetAttribute(attributeName).ShouldBe(new[] { 1f, 2f, 4f, 5f });
+            unions[0].InformationTable.GetAttribute(attributeName).ShouldBe(new[] { 1f, 2f, 4f, 5f });
             var expectedDecisionAttributeDict1 = new Dictionary<string, int>
             {
                 { "0",1 },{"1", 2 },{"3", 1 },{"4", 2 }
             };
-            unions[0].GetDecisionAttribute().ShouldBe(expectedDecisionAttributeDict1);
+            unions[0].InformationTable.GetDecisionAttribute().ShouldBe(expectedDecisionAttributeDict1);
 
-            unions[1].GetAttribute(attributeName).ShouldBe(new[] { 1f, 4f });
+            unions[1].InformationTable.GetAttribute(attributeName).ShouldBe(new[] { 1f, 4f });
             var expectedDecisionAttributeDict2 = new Dictionary<string, int>
             {
                 { "0",1 },{"3", 1 }
             };
-            unions[1].GetDecisionAttribute().ShouldBe(expectedDecisionAttributeDict2);
+            unions[1].InformationTable.GetDecisionAttribute().ShouldBe(expectedDecisionAttributeDict2);
         }
 
         [Test]
@@ -68,19 +68,19 @@ namespace nRank.UnionGenerators
 
             unions.Count.ShouldBe(2);
 
-            unions[0].GetAttribute(attributeName).ShouldBe(new[] { 2f, 3f, 5f, 6f });
+            unions[0].InformationTable.GetAttribute(attributeName).ShouldBe(new[] { 2f, 3f, 5f, 6f });
             var expectedDecisionAttributeDict1 = new Dictionary<string, int>
             {
                 { "1",2 },{"2", 3 },{"4", 2 },{"5", 3 }
             };
-            unions[0].GetDecisionAttribute().ShouldBe(expectedDecisionAttributeDict1);
+            unions[0].InformationTable.GetDecisionAttribute().ShouldBe(expectedDecisionAttributeDict1);
 
-            unions[1].GetAttribute(attributeName).ShouldBe(new[] { 3f, 6f });
+            unions[1].InformationTable.GetAttribute(attributeName).ShouldBe(new[] { 3f, 6f });
             var expectedDecisionAttributeDict2 = new Dictionary<string, int>
             {
                 { "2",3 },{"5", 3 }
             };
-            unions[1].GetDecisionAttribute().ShouldBe(expectedDecisionAttributeDict2);
+            unions[1].InformationTable.GetDecisionAttribute().ShouldBe(expectedDecisionAttributeDict2);
         }
 
         private Dictionary<string, float> CreateSingleAttributeDict(string key, float value)

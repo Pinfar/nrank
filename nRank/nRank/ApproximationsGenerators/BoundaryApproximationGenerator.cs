@@ -18,7 +18,7 @@ namespace nRank.ApproximationsGenerators
             UpperApproximationGenerator = upperApproximationGenerator;
         }
 
-        public IInformationTable GetApproximation(IInformationTable union, IInformationTable originalTable)
+        public IInformationTable GetApproximation(IUnion union, IInformationTable originalTable)
         {
             var lowerApproximation = LowerApproximationGenerator
                 .GetApproximation(union, originalTable);

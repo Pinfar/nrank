@@ -10,10 +10,10 @@ namespace nRank.ApproximationsGenerators
 {
     abstract class AbstractLowerApproximationGenerator<T> : IApproximationsGenerator where T : IDDSetGenerator, new ()
     {
-        public IInformationTable GetApproximation(IInformationTable union, IInformationTable originalTable)
+        public IInformationTable GetApproximation(IUnion union, IInformationTable originalTable)
         {
             var dsetGenerator = new T();
-            var objectsInUnion = union.GetAllObjectIdentifiers();
+            var objectsInUnion = union.InformationTable.GetAllObjectIdentifiers();
             var pattern = originalTable.GetAllObjectIdentifiers()
                 .ToDictionary(
                     x => x,

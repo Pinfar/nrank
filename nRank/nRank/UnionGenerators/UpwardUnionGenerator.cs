@@ -1,4 +1,5 @@
-﻿using nRank.VCDomLEMAbstractions;
+﻿using nRank.DataStructures;
+using nRank.VCDomLEMAbstractions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace nRank.UnionGenerators
 {
     class UpwardUnionGenerator : IUnionGenerator
     {
-        public IEnumerable<IInformationTable> GenerateUnions(IInformationTable informationTable)
+        public IEnumerable<IUnion> GenerateUnions(IInformationTable informationTable)
         {
             var classes = informationTable.GetDecicionClassesWorstFirst();
             var decisionAttributeValues = informationTable.GetDecisionAttribute();
@@ -21,7 +22,7 @@ namespace nRank.UnionGenerators
             {
                 var minPosition = classesDict[classNr];
                 var filterPattern = decisionAttributeValues.ToDictionary( x=> x.Key, x => classesDict[x.Value] >= minPosition);
-                yield return informationTable.Filter(filterPattern);
+                yield return new Union(informationTable.Filter(filterPattern), null, true);
             }
         }
     }

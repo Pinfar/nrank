@@ -2,6 +2,6 @@
 {
     internal interface IApproximationsGenerator
     {
-        IInformationTable GetApproximation(IInformationTable union, IInformationTable originalTable);
+        IInformationTable GetApproximation(IUnion union, IInformationTable originalTable);
     }
 }
