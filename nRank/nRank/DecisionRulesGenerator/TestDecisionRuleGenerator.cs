@@ -26,10 +26,10 @@ namespace nRank.DecisionRulesGenerator
                 .GetApproximation(upwardUnions[0], table);
 
             var dRGenerator = new DecisionRuleGenerator();
-            var rules1 = dRGenerator.GenerateRulesFrom(approximation1, table, "Cl1<=").ToList();
+            var rules1 = dRGenerator.GenerateRulesFrom(approximation1).ToList();
             var approximation2 = lAOUGenerator
                 .GetApproximation(upwardUnions[1], table);
-            var rules2 = dRGenerator.GenerateRulesFrom(approximation2, table, "Cl2<=").ToList();
+            var rules2 = dRGenerator.GenerateRulesFrom(approximation2).ToList();
             rules1.Select(x => x.ToString()).ShouldBe(new[] { "if (f(a3, x) <= 2,5) then x E Cl1<=", "if (f(a2, x) <= 1,2) and (f(a1, x) <= 1) then x E Cl1<=" });
             rules2.Select(x => x.ToString()).ShouldBe(new[] { "if (f(a1, x) <= 2) then x E Cl2<=" });
 
@@ -47,10 +47,10 @@ namespace nRank.DecisionRulesGenerator
                 .GetApproximation(upwardUnions[0], table);
 
             var dRGenerator = new DecisionRuleGenerator();
-            var rules1 = dRGenerator.GenerateRulesFrom(approximation1, table, "Cl2>=").ToList();
+            var rules1 = dRGenerator.GenerateRulesFrom(approximation1).ToList();
             var approximation2 = lAOUGenerator
                 .GetApproximation(upwardUnions[1], table);
-            var rules2 = dRGenerator.GenerateRulesFrom(approximation2, table, "Cl3>=").ToList();
+            var rules2 = dRGenerator.GenerateRulesFrom(approximation2).ToList();
             rules1.Select(x => x.ToString()).ShouldBe(new[] {
                 "if (f(a3, x) >= 9) then x E Cl2>=",
                 "if (f(a1, x) >= 1,7) and (f(a2, x) >= 2,8) then x E Cl2>=",
@@ -76,10 +76,10 @@ namespace nRank.DecisionRulesGenerator
                 .GetApproximation(upwardUnions[0], table);
 
             var dRGenerator = new DecisionRuleGenerator();
-            var rules1 = dRGenerator.GenerateRulesFrom(approximation1, table, "Cl2>=").ToList();
+            var rules1 = dRGenerator.GenerateRulesFrom(approximation1).ToList();
             var approximation2 = lAOUGenerator
                 .GetApproximation(upwardUnions[1], table);
-            var rules2 = dRGenerator.GenerateRulesFrom(approximation2, table, "Cl3>=").ToList();
+            var rules2 = dRGenerator.GenerateRulesFrom(approximation2).ToList();
             rules1.Select(x => x.ToString()).ShouldBe(new[] { "if (f(a2, x) >= 2,4) then x E Cl2>=", "if (f(a1, x) >= 1,2) then x E Cl2>=", "if (f(a1, x) >= 1) and (f(a2, x) >= 2) then x E Cl2>=" });
             rules2.Select(x => x.ToString()).ShouldBe(new[] { "if (f(a1, x) >= 2,3) then x E Cl3>=" });
 
@@ -98,7 +98,7 @@ namespace nRank.DecisionRulesGenerator
 
             var boundary = boundaryGenerator.GetApproximation(upwardUnions[0], table);
             var dRGenerator = new DecisionRuleGenerator();
-            var rules = dRGenerator.GenerateRulesFrom(boundary, table, "Cl1 u Cl2").ToList();
+            var rules = dRGenerator.GenerateRulesFrom(boundary).ToList();
             rules.Select(x => x.ToString()).ShouldBe(new[] { "if (f(a3, x) <= 6) and (f(a1, x) >= 2) then x E Cl1 u Cl2", "if (f(a3, x) <= 5) and (f(a3, x) >= 4,5) then x E Cl1 u Cl2" });
             //rules2.Select(x => x.ToString()).ShouldBe(new[] { "if (f(a1, x) <= 2) then x E Cl2<=" });
 
@@ -117,7 +117,7 @@ namespace nRank.DecisionRulesGenerator
 
             var boundary = boundaryGenerator.GetApproximation(upwardUnions[1], table);
             var dRGenerator = new DecisionRuleGenerator();
-            var rules = dRGenerator.GenerateRulesFrom(boundary, table, "Cl2 u Cl3").ToList();
+            var rules = dRGenerator.GenerateRulesFrom(boundary).ToList();
             rules.Select(x => x.ToString()).ShouldBe(new[] {
                 "if (f(a1, x) >= 2,3) and (f(a2, x) <= 3,3) then x E Cl2 u Cl3",
                 "if (f(a1, x) >= 2,5) and (f(a1, x) <= 2,5) then x E Cl2 u Cl3"

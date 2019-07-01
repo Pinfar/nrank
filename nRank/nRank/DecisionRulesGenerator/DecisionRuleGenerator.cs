@@ -11,10 +11,11 @@ namespace nRank.DecisionRulesGenerator
 {
     class DecisionRuleGenerator
     {
-        public IEnumerable<IDecisionRule> GenerateRulesFrom(IApproximation approximation, IInformationTable _informationTable, string approximationSymbol)
+        public IEnumerable<IDecisionRule> GenerateRulesFrom(IApproximation approximation)
         {
             var informationTable = approximation.OriginalInformationTable;
             var notCoveredYet = approximation.ApproximatedInformationTable;
+            var approximationSymbol = approximation.Symbol;
             var rules = new List<IDecisionRule>();
             while(notCoveredYet.GetAllObjectIdentifiers().Count()!=0)
             {

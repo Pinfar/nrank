@@ -29,7 +29,17 @@ namespace nRank.ApproximationsGenerators
             var lowerItems = lowerApproximation.ApproximatedInformationTable.GetAllObjectIdentifiers();
             var mask = upperApproximation.ApproximatedInformationTable.GetAllObjectIdentifiers().ToDictionary(x => x, x => !lowerItems.Contains(x));
 
-            return new Approximation(upperApproximation.ApproximatedInformationTable.Filter(mask), originalTable, new[] { union.Classes.Max(), union.Classes.Max() + 1 }, new string[] {">=", "<=" }, $"Cl{union.Classes.Max()} u Cl{union.Classes.Max()+1}");
+            IEnumerable<int> classes;
+            if (lowerApproximation.AllowedOperators.Single() == "<=")
+            {
+                classes = new[] { union.Classes.Max(), union.Classes.Max() + 1 };
+            }
+            else
+            {
+                classes = new[] { union.Classes.Min() - 1, union.Classes.Min() };
+            }
+            var symbol = string.Join(" u ", classes.Select(x => "Cl" + x));
+            return new Approximation(upperApproximation.ApproximatedInformationTable.Filter(mask), originalTable, classes, new string[] { ">=", "<=" }, symbol);
         }
     }
 }
