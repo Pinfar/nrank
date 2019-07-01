@@ -11,21 +11,9 @@ namespace nRank.DecisionRulesGenerator
 {
     class DecisionRuleGenerator
     {
-        public List<string> AllowedOperators { get; set; } = new List<string> { "<=" };
-        public string AllowedOperator
+        public IEnumerable<IDecisionRule> GenerateRulesFrom(IApproximation approximation, IInformationTable _informationTable, string approximationSymbol)
         {
-            set
-            {
-                AllowedOperators = new List<string> { value };
-            }
-        }
-
-        public DecisionRuleGenerator()
-        {
-        }
-
-        public IEnumerable<IDecisionRule> GenerateRulesFrom(IApproximation approximation, IInformationTable informationTable, string approximationSymbol)
-        {
+            var informationTable = approximation.OriginalInformationTable;
             var notCoveredYet = approximation.ApproximatedInformationTable;
             var rules = new List<IDecisionRule>();
             while(notCoveredYet.GetAllObjectIdentifiers().Count()!=0)
@@ -34,7 +22,7 @@ namespace nRank.DecisionRulesGenerator
                 var objectsCoveredByCurrentRule = notCoveredYet;
                 while(currentRule.IsEmpty() || !currentRule.IsCreatingSubsetOf(informationTable, approximation.ApproximatedInformationTable) )
                 {
-                    var allPossibleRules = GetAllPossibleDecisionRules(objectsCoveredByCurrentRule, approximationSymbol);
+                    var allPossibleRules = GetAllPossibleDecisionRules(objectsCoveredByCurrentRule, approximationSymbol, approximation.AllowedOperators);
                     var bestLocalRule = FindBestRule(currentRule, allPossibleRules, notCoveredYet, informationTable);
 
                     currentRule = currentRule.And(bestLocalRule);
@@ -51,7 +39,7 @@ namespace nRank.DecisionRulesGenerator
             return rules;
         }
 
-        private IEnumerable<IDecisionRule> GetAllPossibleDecisionRules(IInformationTable objectsCoveredByCurrentRule, string approximation)
+        private IEnumerable<IDecisionRule> GetAllPossibleDecisionRules(IInformationTable objectsCoveredByCurrentRule, string approximation, IEnumerable<string> allowedOperators)
         {
             var attributes = objectsCoveredByCurrentRule
                 .GetAllAttributes()
@@ -62,7 +50,7 @@ namespace nRank.DecisionRulesGenerator
                         .Select(y => new { AttributeName = x, AttributeValue = y } )
                 );
             return attributes.SelectMany(
-                x => AllowedOperators, 
+                x => allowedOperators, 
                 (x, y) => new ImmutableDecisionRule(x.AttributeName, y, x.AttributeValue, approximation)
             );
         }

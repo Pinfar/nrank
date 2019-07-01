@@ -47,7 +47,6 @@ namespace nRank.DecisionRulesGenerator
                 .GetApproximation(upwardUnions[0], table);
 
             var dRGenerator = new DecisionRuleGenerator();
-            dRGenerator.AllowedOperator = ">=";
             var rules1 = dRGenerator.GenerateRulesFrom(approximation1, table, "Cl2>=").ToList();
             var approximation2 = lAOUGenerator
                 .GetApproximation(upwardUnions[1], table);
@@ -77,7 +76,6 @@ namespace nRank.DecisionRulesGenerator
                 .GetApproximation(upwardUnions[0], table);
 
             var dRGenerator = new DecisionRuleGenerator();
-            dRGenerator.AllowedOperator = ">=";
             var rules1 = dRGenerator.GenerateRulesFrom(approximation1, table, "Cl2>=").ToList();
             var approximation2 = lAOUGenerator
                 .GetApproximation(upwardUnions[1], table);
@@ -100,7 +98,6 @@ namespace nRank.DecisionRulesGenerator
 
             var boundary = boundaryGenerator.GetApproximation(upwardUnions[0], table);
             var dRGenerator = new DecisionRuleGenerator();
-            dRGenerator.AllowedOperators = new List<string> { ">=", "<=" };
             var rules = dRGenerator.GenerateRulesFrom(boundary, table, "Cl1 u Cl2").ToList();
             rules.Select(x => x.ToString()).ShouldBe(new[] { "if (f(a3, x) <= 6) and (f(a1, x) >= 2) then x E Cl1 u Cl2", "if (f(a3, x) <= 5) and (f(a3, x) >= 4,5) then x E Cl1 u Cl2" });
             //rules2.Select(x => x.ToString()).ShouldBe(new[] { "if (f(a1, x) <= 2) then x E Cl2<=" });
@@ -120,7 +117,6 @@ namespace nRank.DecisionRulesGenerator
 
             var boundary = boundaryGenerator.GetApproximation(upwardUnions[1], table);
             var dRGenerator = new DecisionRuleGenerator();
-            dRGenerator.AllowedOperators = new List<string> { ">=", "<=" };
             var rules = dRGenerator.GenerateRulesFrom(boundary, table, "Cl2 u Cl3").ToList();
             rules.Select(x => x.ToString()).ShouldBe(new[] {
                 "if (f(a1, x) >= 2,3) and (f(a2, x) <= 3,3) then x E Cl2 u Cl3",
