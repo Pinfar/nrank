@@ -12,5 +12,6 @@ namespace nRank.VCDomLEMAbstractions
         IInformationTable OriginalInformationTable { get; }
         ISet<int> Classes { get; }
         ISet<string> AllowedOperators { get; }
+        string Symbol { get; }
     }
 }
