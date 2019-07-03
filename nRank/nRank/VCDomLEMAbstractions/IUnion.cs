@@ -11,5 +11,7 @@ namespace nRank.VCDomLEMAbstractions
         IInformationTable InformationTable { get; }
         ISet<int> Classes { get; }
         bool IsUpward { get; }
+        string Symbol { get; }
+        string OppositeSymbol { get; }
     }
 }

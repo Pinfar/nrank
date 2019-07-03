@@ -12,10 +12,5 @@ namespace nRank.ApproximationsGenerators
     class LowerApproximationOfUpwardUnionGenerator : AbstractLowerApproximationGenerator<DDominatingSetGenerator>
     {
         protected override IEnumerable<string> _allowedOperators => new[] { ">=" };
-
-        protected override string GetSymbol(IEnumerable<int> classes)
-        {
-            return $"Cl{classes.Min()}{_allowedOperators.Single()}";
-        }
     }
 }

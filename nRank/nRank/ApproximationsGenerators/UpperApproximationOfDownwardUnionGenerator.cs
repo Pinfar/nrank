@@ -10,10 +10,5 @@ namespace nRank.ApproximationsGenerators
     class UpperApproximationOfDownwardUnionGenerator : AbstractUpperApproximationGenerator<DDominatedSetGenerator>
     {
         protected override IEnumerable<string> _allowedOperators => new[] { "<=" };
-
-        protected override string GetSymbol(IEnumerable<int> classes)
-        {
-            return $"Cl{classes.Max()}{_allowedOperators.Single()}";
-        }
     }
 }

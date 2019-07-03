@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace nRank.ApproximationsGenerators
+namespace nRank.ApproximationsGeneratorsVC
 {
-    class LowerApproximationOfDownwardUnionGenerator : AbstractLowerApproximationGenerator<DDominatedSetGenerator>
+    class LowerApproximationOfDownwardUnionGeneratorVC : AbstractLowerApproximationGeneratorVC<DDominatedSetGenerator>
     {
         protected override IEnumerable<string> _allowedOperators => new[] { "<=" };
     }

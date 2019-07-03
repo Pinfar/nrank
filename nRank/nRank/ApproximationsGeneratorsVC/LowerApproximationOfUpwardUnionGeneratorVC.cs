@@ -1,14 +1,13 @@
 ﻿using nRank.DSetGenerators;
-using nRank.VCDomLEMAbstractions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace nRank.ApproximationsGenerators
+namespace nRank.ApproximationsGeneratorsVC
 {
-    class UpperApproximationOfUpwardUnionGenerator : AbstractUpperApproximationGenerator<DDominatingSetGenerator>
+    class LowerApproximationOfUpwardUnionGeneratorVC : AbstractLowerApproximationGeneratorVC<DDominatingSetGenerator>
     {
         protected override IEnumerable<string> _allowedOperators => new[] { ">=" };
     }

@@ -12,7 +12,6 @@ namespace nRank.ApproximationsGenerators
     abstract class AbstractUpperApproximationGenerator<T> : IApproximationsGenerator where T : IDDSetGenerator, new()
     {
         abstract protected IEnumerable<string> _allowedOperators { get; }
-        abstract protected string GetSymbol(IEnumerable<int> classes);
 
         public IApproximation GetApproximation(IUnion union, IInformationTable originalTable)
         {
@@ -26,7 +25,7 @@ namespace nRank.ApproximationsGenerators
                     x => x,
                     x => approximation.Contains(x)
                 );
-            return new Approximation(originalTable.Filter(pattern), originalTable, union.Classes, _allowedOperators, GetSymbol(union.Classes));
+            return new Approximation(originalTable.Filter(pattern), originalTable, union.Classes, _allowedOperators, union.Symbol);
         }
     }
 }

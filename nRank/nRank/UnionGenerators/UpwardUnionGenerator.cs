@@ -12,18 +12,27 @@ namespace nRank.UnionGenerators
     {
         public IEnumerable<IUnion> GenerateUnions(IInformationTable informationTable)
         {
-            var classes = informationTable.GetDecicionClassesWorstFirst();
+            var classes = informationTable.GetDecicionClassesWorstFirst().ToList();
             var decisionAttributeValues = informationTable.GetDecisionAttribute();
             var classesDict = classes
                 .Select((classNr, position) => new { classNr, position })
                 .ToDictionary(x => x.classNr, x => x.position);
 
-            foreach(var classNr in classes.Skip(1))
+            var classesPairs = classes.Skip(1).Zip(classes.Take(classes.Count - 1), Tuple.Create);
+            foreach(var classPair in classesPairs)
             {
+                var classNr = classPair.Item1;
                 var minPosition = classesDict[classNr];
                 var filterPattern = decisionAttributeValues.ToDictionary( x=> x.Key, x => classesDict[x.Value] >= minPosition);
-                yield return new Union(informationTable.Filter(filterPattern), classes.Where(x => classesDict[x] >= minPosition) , true);
+                var classesUnion = classes.Where(x => classesDict[x] >= minPosition);
+                yield return new Union(informationTable.Filter(filterPattern), classesUnion, true, $"Cl{classesUnion.First()}>=", $"Cl{classPair.Item2}<=");
             }
         }
+
+        public IDictionary<string, IUnion> GenerateUnionsAsDict(IInformationTable informationTable)
+        {
+            return GenerateUnions(informationTable).ToDictionary(x => x.Symbol);
+        }
+
     }
 }
