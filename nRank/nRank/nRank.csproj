@@ -63,8 +63,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ApproximationsGeneratorsVC\AbstractLowerApproximationGeneratorVC.cs" />
     <Compile Include="ApproximationsGenerators\AbstractLowerApproximationGenerator.cs" />
     <Compile Include="ApproximationsGenerators\AbstractUpperApproximationGenerator.cs" />
+    <Compile Include="ApproximationsGenerators\ApproximationsGenerator.cs" />
     <Compile Include="ApproximationsGenerators\BoundaryApproximationGenerator.cs" />
     <Compile Include="ApproximationsGenerators\LowerApproximationOfDownwardUnionGenerator.cs" />
     <Compile Include="ApproximationsGenerators\LowerApproximationOfUpwardUnionGenerator.cs" />
@@ -94,6 +96,7 @@
     <Compile Include="UnionGenerators\TestDownwardUnionGenerator.cs" />
     <Compile Include="UnionGenerators\TestUpwardUnionGenerator.cs" />
     <Compile Include="UnionGenerators\UpwardUnionGenerator.cs" />
+    <Compile Include="VCDomLEMAbstractions\IAllApproximationsGenerator.cs" />
     <Compile Include="VCDomLEMAbstractions\IApproximation.cs" />
     <Compile Include="VCDomLEMAbstractions\IApproximationsGenerator.cs" />
     <Compile Include="VCDomLEM.cs" />

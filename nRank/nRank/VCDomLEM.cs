@@ -1,4 +1,6 @@
-﻿using nRank.VCDomLEMAbstractions;
+﻿using nRank.ApproximationsGenerators;
+using nRank.DecisionRulesGenerator;
+using nRank.VCDomLEMAbstractions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,30 +11,23 @@ namespace nRank
 {
     public class VCDomLEM
     {
-        readonly IUnionGenerator unionGenerator;
         readonly IDecisionRuleGenerator decisionRuleGenerator;
-        readonly IApproximationsGenerator objectFilter;
+        readonly IAllApproximationsGenerator approximationsGenerator;
 
-        internal VCDomLEM(
-            IUnionGenerator unionGenerator, 
-            IDecisionRuleGenerator decisionRuleGenerator, 
-            IApproximationsGenerator objectFilter
-        )
+        public VCDomLEM()
         {
-            this.unionGenerator = unionGenerator;
-            this.decisionRuleGenerator = decisionRuleGenerator;
-            this.objectFilter = objectFilter;
+            decisionRuleGenerator = new DecisionRuleGenerator();
+            approximationsGenerator = new ApproximationsGenerator();
         }
 
-        public ISet<IDecisionRule> GenerateDecisionRules(IInformationTable informationTable)
+        public List<IDecisionRule> GenerateDecisionRules(IInformationTable informationTable)
         {
-            var rules = new HashSet<IDecisionRule>();
-            var unions = unionGenerator.GenerateUnions(informationTable);
-            foreach(var union in unions)
+            var rules = new List<IDecisionRule>();
+            var approximations = approximationsGenerator.GetApproximations(informationTable);
+            foreach(var approximation in approximations)
             {
-                var allowedObjects = objectFilter.GetApproximation(union, informationTable);
-                var generatedRules = decisionRuleGenerator.GenerateRulesFrom(allowedObjects);
-                rules.UnionWith(generatedRules);
+                var generatedRules = decisionRuleGenerator.GenerateRulesFrom(approximation);
+                rules.AddRange(generatedRules);
             }
             return rules;
         }

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace nRank.DecisionRulesGenerator
 {
-    class DecisionRuleGenerator
+    class DecisionRuleGenerator : IDecisionRuleGenerator
     {
         public IEnumerable<IDecisionRule> GenerateRulesFrom(IApproximation approximation)
         {

@@ -1,4 +1,5 @@
-﻿using nRank.VCDomLEMAbstractions;
+﻿using nRank.TestCommons;
+using nRank.VCDomLEMAbstractions;
 using NSubstitute;
 using NUnit.Framework;
 using Shouldly;
@@ -16,7 +17,8 @@ namespace nRank
         [Test]
         public void GenerateDecisionRules()
         {
-            true.ShouldBeTrue();
+            var informationTable = new InformationTableGenerator().GetInformationTable();
+            var decisionRules = new VCDomLEM().GenerateDecisionRules(informationTable);
         }
     }
 }
