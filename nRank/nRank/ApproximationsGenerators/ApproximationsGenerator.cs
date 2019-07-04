@@ -10,7 +10,7 @@ namespace nRank.ApproximationsGenerators
 {
     class ApproximationsGenerator : IAllApproximationsGenerator
     {
-        public IEnumerable<IApproximation> GetApproximations(IInformationTable originalTable)
+        public IEnumerable<IApproximation> GetApproximations(IInformationTable originalTable, float consistencyLevel)
         {            
             var uuGenerator = new UpwardUnionGenerator();
             var upwardUnions = uuGenerator.GenerateUnions(originalTable).ToList();

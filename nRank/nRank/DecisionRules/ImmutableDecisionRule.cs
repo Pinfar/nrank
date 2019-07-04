@@ -73,13 +73,15 @@ namespace nRank.DecisionRules
             return _conditionalParts.All(x => x.IsEmpty());
         }
 
-        public bool IsCreatingSubsetOf(IInformationTable source, IInformationTable target)
+        public bool SatisfiesConsistencyLevel(IInformationTable source, IInformationTable target, float consistencyLevel)
         {
             var currentCoverage = Satisfy(source).Where(x => x.Value).Select(x => x.Key);
-            return currentCoverage.IsSubsetOf(target.GetAllObjectIdentifiers());
+            float commonPart = currentCoverage.Intersect(target.GetAllObjectIdentifiers()).Count();
+            float dsetCount = currentCoverage.Count();
+            return (commonPart / dsetCount) >= consistencyLevel;
         }
 
-        public IDecisionRule CreateOptimizedRule(IInformationTable source, IInformationTable target)
+        public IDecisionRule CreateOptimizedRule(IInformationTable source, IInformationTable target, float consistencyLevel)
         {
             var resultList = new List<IConditionalPart>();
             var rule = new ImmutableDecisionRule(_approximation);
@@ -87,7 +89,7 @@ namespace nRank.DecisionRules
             foreach (var part in _conditionalParts)
             {
                 rule._conditionalParts.Remove(part);
-                if(!rule.IsCreatingSubsetOf(source, target))
+                if(!rule.SatisfiesConsistencyLevel(source, target, consistencyLevel))
                 {
                     rule._conditionalParts.Add(part);
                     resultList.Add(part);

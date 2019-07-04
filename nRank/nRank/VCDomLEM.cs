@@ -1,4 +1,5 @@
 ﻿using nRank.ApproximationsGenerators;
+using nRank.ApproximationsGeneratorsVC;
 using nRank.DecisionRulesGenerator;
 using nRank.VCDomLEMAbstractions;
 using System;
@@ -17,16 +18,16 @@ namespace nRank
         public VCDomLEM()
         {
             decisionRuleGenerator = new DecisionRuleGenerator();
-            approximationsGenerator = new ApproximationsGenerator();
+            approximationsGenerator = new ApproximationsGeneratorVC();
         }
 
-        public List<IDecisionRule> GenerateDecisionRules(IInformationTable informationTable)
+        public List<IDecisionRule> GenerateDecisionRules(IInformationTable informationTable, float consistencyLevel)
         {
             var rules = new List<IDecisionRule>();
-            var approximations = approximationsGenerator.GetApproximations(informationTable);
+            var approximations = approximationsGenerator.GetApproximations(informationTable, consistencyLevel);
             foreach(var approximation in approximations)
             {
-                var generatedRules = decisionRuleGenerator.GenerateRulesFrom(approximation);
+                var generatedRules = decisionRuleGenerator.GenerateRulesFrom(approximation, consistencyLevel);
                 rules.AddRange(generatedRules);
             }
             return rules;

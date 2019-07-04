@@ -65,6 +65,7 @@
   <ItemGroup>
     <Compile Include="ApproximationsGeneratorsVC\AbstractLowerApproximationGeneratorVC.cs" />
     <Compile Include="ApproximationsGeneratorsVC\AbstractUpperApproximationGeneratorVC.cs" />
+    <Compile Include="ApproximationsGeneratorsVC\ApproximationsGeneratorVC.cs" />
     <Compile Include="ApproximationsGeneratorsVC\LowerApproximationOfDownwardUnionGeneratorVC.cs" />
     <Compile Include="ApproximationsGeneratorsVC\LowerApproximationOfUpwardUnionGeneratorVC.cs" />
     <Compile Include="ApproximationsGeneratorsVC\TestApproximationGeneratorsVC.cs" />

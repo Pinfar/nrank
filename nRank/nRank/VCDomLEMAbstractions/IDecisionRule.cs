@@ -8,8 +8,8 @@ namespace nRank.VCDomLEMAbstractions
         IDecisionRule And(IDecisionRule decisionRule);
         Dictionary<string, bool> Satisfy(IInformationTable informationTable);
         bool IsEmpty();
-        bool IsCreatingSubsetOf(IInformationTable source, IInformationTable target);
-        IDecisionRule CreateOptimizedRule(IInformationTable source, IInformationTable target);
+        bool SatisfiesConsistencyLevel(IInformationTable source, IInformationTable target, float consistencyLevel);
+        IDecisionRule CreateOptimizedRule(IInformationTable source, IInformationTable target, float consistencyLevel);
         bool Contains(IDecisionRule rule);
     }
 }

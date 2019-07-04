@@ -18,7 +18,7 @@ namespace nRank
         public void GenerateDecisionRules()
         {
             var informationTable = new InformationTableGenerator().GetInformationTable();
-            var decisionRules = new VCDomLEM().GenerateDecisionRules(informationTable);
+            var decisionRules = new VCDomLEM().GenerateDecisionRules(informationTable, 0.8f);
         }
     }
 }

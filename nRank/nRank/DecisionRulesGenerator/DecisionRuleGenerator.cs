@@ -11,7 +11,7 @@ namespace nRank.DecisionRulesGenerator
 {
     class DecisionRuleGenerator : IDecisionRuleGenerator
     {
-        public IEnumerable<IDecisionRule> GenerateRulesFrom(IApproximation approximation)
+        public IEnumerable<IDecisionRule> GenerateRulesFrom(IApproximation approximation, float consistencyLevel = 1)
         {
             var informationTable = approximation.OriginalInformationTable;
             var notCoveredYet = approximation.ApproximatedInformationTable;
@@ -21,7 +21,7 @@ namespace nRank.DecisionRulesGenerator
             {
                 var currentRule = ImmutableDecisionRule.GetAlwaysTrueRule(approximationSymbol);
                 var objectsCoveredByCurrentRule = notCoveredYet;
-                while(currentRule.IsEmpty() || !currentRule.IsCreatingSubsetOf(informationTable, approximation.ApproximatedInformationTable) )
+                while(currentRule.IsEmpty() || !currentRule.SatisfiesConsistencyLevel(informationTable, approximation.ApproximatedInformationTable, consistencyLevel) )
                 {
                     var allPossibleRules = GetAllPossibleDecisionRules(objectsCoveredByCurrentRule, approximationSymbol, approximation.AllowedOperators);
                     var bestLocalRule = FindBestRule(currentRule, allPossibleRules, notCoveredYet, informationTable);
@@ -30,7 +30,7 @@ namespace nRank.DecisionRulesGenerator
                     objectsCoveredByCurrentRule = objectsCoveredByCurrentRule.Filter(currentRule);
                 }
 
-                currentRule = currentRule.CreateOptimizedRule(informationTable, approximation.ApproximatedInformationTable);
+                currentRule = currentRule.CreateOptimizedRule(informationTable, approximation.ApproximatedInformationTable, consistencyLevel);
                 rules.Add(currentRule);
                 var pattern = currentRule.Satisfy(notCoveredYet).ToDictionary(x => x.Key, x => !x.Value);
                 notCoveredYet = notCoveredYet.Filter(pattern);
