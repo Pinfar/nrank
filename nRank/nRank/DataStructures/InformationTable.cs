@@ -50,7 +50,7 @@ Renault_21		21334	28.9	36.7	2	2.25	5
  */
 namespace nRank.DataStructures
 {
-    class InformationTable : IInformationTable
+    public class InformationTable : IInformationTable
     {
         public string DecisionAttributeName { get; }
         private readonly bool _isDecisionAttributeCost;
