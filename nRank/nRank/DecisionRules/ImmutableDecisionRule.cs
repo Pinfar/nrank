@@ -10,12 +10,13 @@ namespace nRank.DecisionRules
     class ImmutableDecisionRule : IDecisionRule
     {
         List<IConditionalPart> _conditionalParts = new List<IConditionalPart>();
-        string _approximation;
+        IApproximation _approximation;
 
-        public ImmutableDecisionRule(string attribute, string operatorStr, float value, string approximation) : this(approximation)
+        public float Accuracy => CalculateAccuracy();
+
+        public ImmutableDecisionRule(string attribute, string operatorStr, float value, IApproximation approximation) : this(approximation)
         {
             _conditionalParts.Add(new ConditionalPart(attribute, operatorStr, value));
-            _approximation = approximation;
         }
 
         private ImmutableDecisionRule(ImmutableDecisionRule decisionRule)
@@ -24,12 +25,12 @@ namespace nRank.DecisionRules
             _approximation = decisionRule._approximation;
         }
 
-        private ImmutableDecisionRule(string approximation)
+        private ImmutableDecisionRule(IApproximation approximation)
         {
             _approximation = approximation;
         }
 
-        public static IDecisionRule GetAlwaysTrueRule(string approximation)
+        public static IDecisionRule GetAlwaysTrueRule(IApproximation approximation)
         {
             var rule = new ImmutableDecisionRule(approximation);
             rule._conditionalParts.Add(new AlwaysTruePart());
@@ -39,7 +40,7 @@ namespace nRank.DecisionRules
         public override string ToString()
         {
             var conditions = string.Join(" and ", _conditionalParts);
-            return $"if {conditions} then x E {_approximation}";
+            return $"if {conditions} then x E {_approximation.Symbol}";
         }
 
         public IDecisionRule And(string attribute, string operatorStr, float value)
@@ -63,7 +64,7 @@ namespace nRank.DecisionRules
             foreach (var identifier in identifiers)
             {
                 var attributes = informationTable.GetObjectAttributes(identifier);
-                result[identifier] = _conditionalParts.All(x => x.IsTrueFor(attributes));
+                result[identifier] = _conditionalParts.Count > 0 && _conditionalParts.All(x => x.IsTrueFor(attributes));
             }
             return result;
         }
@@ -73,15 +74,12 @@ namespace nRank.DecisionRules
             return _conditionalParts.All(x => x.IsEmpty());
         }
 
-        public bool SatisfiesConsistencyLevel(IInformationTable source, IInformationTable target, float consistencyLevel)
+        public bool SatisfiesConsistencyLevel(float consistencyLevel)
         {
-            var currentCoverage = Satisfy(source).Where(x => x.Value).Select(x => x.Key);
-            float commonPart = currentCoverage.Intersect(target.GetAllObjectIdentifiers()).Count();
-            float dsetCount = currentCoverage.Count();
-            return (commonPart / dsetCount) >= consistencyLevel;
+            return Accuracy >= consistencyLevel;
         }
 
-        public IDecisionRule CreateOptimizedRule(IInformationTable source, IInformationTable target, float consistencyLevel)
+        public IDecisionRule CreateOptimizedRule(float consistencyLevel)
         {
             var resultList = new List<IConditionalPart>();
             var rule = new ImmutableDecisionRule(_approximation);
@@ -89,7 +87,7 @@ namespace nRank.DecisionRules
             foreach (var part in _conditionalParts)
             {
                 rule._conditionalParts.Remove(part);
-                if(!rule.SatisfiesConsistencyLevel(source, target, consistencyLevel))
+                if(!rule.SatisfiesConsistencyLevel(consistencyLevel))
                 {
                     rule._conditionalParts.Add(part);
                     resultList.Add(part);
@@ -105,6 +103,31 @@ namespace nRank.DecisionRules
             var immutableRule = (ImmutableDecisionRule)rule;
             var selfRules = _conditionalParts.Select(x => x.ToString()).ToList();
             return immutableRule._conditionalParts.All(x => selfRules.Contains(x.ToString()));
+        }
+
+        public IEnumerable<string> GetCoveredItems()
+        {
+            return _approximation.OriginalInformationTable.Filter(this).GetAllObjectIdentifiers();
+        }
+
+        private float CalculateAccuracy()
+        {
+            var currentCoverage = Satisfy(_approximation.OriginalInformationTable).Where(x => x.Value).Select(x => x.Key).ToList();
+            var union = _approximation
+                .OriginalInformationTable
+                .GetDecisionAttribute()
+                .Where(x => _approximation.Classes.Contains(x.Value))
+                .Select(x => x.Key);
+            float commonPart = currentCoverage.Intersect(union).Count();
+            float dsetCount = currentCoverage.Count();
+            if (dsetCount > 0)
+            {
+                return commonPart / dsetCount;
+            }
+            else
+            {
+                return 0;
+            }
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using nRank.TestCommons;
+using nRank.VCDomLEMAbstractions;
 using NUnit.Framework;
 using Shouldly;
 using System;
@@ -6,23 +7,37 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using NSubstitute;
 
 namespace nRank.DecisionRules
 {
     [TestFixture]
     class TestDecisionRule
     {
+        IApproximation _approximation;
+
+        [SetUp]
+        public void Init()
+        {
+            _approximation = Substitute.For<IApproximation>();
+            _approximation.Symbol.Returns("Cl1<=");
+
+            var generator = new InformationTableGenerator();
+            var table = generator.GetInformationTable();
+            _approximation.OriginalInformationTable.Returns(table);
+        }
+
         [Test]
         public void TestToString()
         {
-            var dr = new ImmutableDecisionRule("att1", "<=",3.5f, "Cl1<=");
+            var dr = new ImmutableDecisionRule("att1", "<=",3.5f, _approximation);
             dr.ToString().ShouldBe("if (f(att1, x) <= 3,5) then x E Cl1<=");
         }
 
         [Test]
         public void TestAnd()
         {
-            var dr = new ImmutableDecisionRule("att1", "<=", 3.5f, "Cl1<=").And("att2", "<=", 4.5f);
+            var dr = new ImmutableDecisionRule("att1", "<=", 3.5f, _approximation).And("att2", "<=", 4.5f);
             dr.ToString().ShouldBe("if (f(att1, x) <= 3,5) and (f(att2, x) <= 4,5) then x E Cl1<=");
         }
 
@@ -31,7 +46,7 @@ namespace nRank.DecisionRules
         {
             var generator = new InformationTableGenerator();
             var table = generator.GetInformationTable();
-            var dr = new ImmutableDecisionRule("a1", "<=", 1.5f, "Cl1<=");
+            var dr = new ImmutableDecisionRule("a1", "<=", 1.5f, _approximation);
 
             dr.Satisfy(table).ShouldBe(new Dictionary<string, bool>
             {
@@ -60,7 +75,7 @@ namespace nRank.DecisionRules
         {
             var generator = new InformationTableGenerator();
             var table = generator.GetInformationTable();
-            var dr = new ImmutableDecisionRule("a1", "<=", 1.5f, "Cl1<=").And("a3", ">=", 12f);
+            var dr = new ImmutableDecisionRule("a1", "<=", 1.5f, _approximation).And("a3", ">=", 12f);
 
             dr.Satisfy(table).ShouldBe(new Dictionary<string, bool>
             {
@@ -89,7 +104,7 @@ namespace nRank.DecisionRules
         {
             var generator = new InformationTableGenerator();
             var table = generator.GetInformationTable();
-            var dr = ImmutableDecisionRule.GetAlwaysTrueRule("Cl1<=");
+            var dr = ImmutableDecisionRule.GetAlwaysTrueRule(_approximation);
 
             dr.Satisfy(table).Values.ShouldAllBe(x => true);
         }
@@ -97,9 +112,9 @@ namespace nRank.DecisionRules
         [Test]
         public void TestIsEmpty()
         {
-            new ImmutableDecisionRule("a1", "<=", 1.5f, "Cl1<=").IsEmpty().ShouldBeFalse();
-            ImmutableDecisionRule.GetAlwaysTrueRule("Cl1<=").IsEmpty().ShouldBeTrue();
-            ImmutableDecisionRule.GetAlwaysTrueRule("Cl1<=").And("a3", ">=", 12f).IsEmpty().ShouldBeFalse();
+            new ImmutableDecisionRule("a1", "<=", 1.5f, _approximation).IsEmpty().ShouldBeFalse();
+            ImmutableDecisionRule.GetAlwaysTrueRule(_approximation).IsEmpty().ShouldBeTrue();
+            ImmutableDecisionRule.GetAlwaysTrueRule(_approximation).And("a3", ">=", 12f).IsEmpty().ShouldBeFalse();
         }
 
         [Test]
@@ -107,8 +122,8 @@ namespace nRank.DecisionRules
         {
             var generator = new InformationTableGenerator();
             var table = generator.GetInformationTable();
-            var dr1 = new ImmutableDecisionRule("a1", "<=", 1.5f, "Cl1<=");
-            var dr2 = new ImmutableDecisionRule("a3", ">=", 12f, "Cl1<=");
+            var dr1 = new ImmutableDecisionRule("a1", "<=", 1.5f, _approximation);
+            var dr2 = new ImmutableDecisionRule("a3", ">=", 12f, _approximation);
             var dr = dr1.And(dr2);
 
             dr.Satisfy(table).ShouldBe(new Dictionary<string, bool>
@@ -138,11 +153,14 @@ namespace nRank.DecisionRules
         {
             var generator = new InformationTableGenerator();
             var table = generator.GetInformationTable();
-            var dr = new ImmutableDecisionRule("a1", "<=", 1.5f, "Cl1<=");
+            var dr = new ImmutableDecisionRule("a1", "<=", 1.5f, _approximation);
             var f1table = table.Filter(dr);
+            _approximation.ApproximatedInformationTable.Returns(f1table);
+            _approximation.Classes.Returns(new HashSet<int>() { 1, 2 });
+            
 
-            var dr1 = new ImmutableDecisionRule("a1", "<=", 1f, "Cl1<=");
-            dr1.SatisfiesConsistencyLevel(table, f1table, 1);
+            var dr1 = new ImmutableDecisionRule("a1", "<=", 1f, _approximation);
+            dr1.SatisfiesConsistencyLevel(1).ShouldBeTrue();
         }
 
         [Test]
@@ -150,11 +168,14 @@ namespace nRank.DecisionRules
         {
             var generator = new InformationTableGenerator();
             var table = generator.GetInformationTable();
-            var dr = new ImmutableDecisionRule("a1", "<=", 1f, "Cl1<=");
+            var dr = new ImmutableDecisionRule("a1", "<=", 1f, _approximation);
             var f1table = table.Filter(dr);
-            var dr1 = new ImmutableDecisionRule("a1", "<=", 1.5f, "Cl1<=");
-            var optimizedRule = dr.And(dr1).CreateOptimizedRule(table, f1table, 1);
-            optimizedRule.ToString().ShouldBe("if (f(a1, x) <= 1) then x E Cl1<=");
+            _approximation.ApproximatedInformationTable.Returns(f1table);
+            _approximation.Classes.Returns(new HashSet<int>() { 1, 2 });
+
+            var dr1 = new ImmutableDecisionRule("a1", "<=", 1.5f, _approximation);
+            var optimizedRule = dr.And(dr1).CreateOptimizedRule(1);
+            optimizedRule.ToString().ShouldBe("if (f(a1, x) <= 1,5) then x E Cl1<=");
         }
     }
 }

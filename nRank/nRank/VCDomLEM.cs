@@ -1,6 +1,7 @@
 ﻿using nRank.ApproximationsGenerators;
 using nRank.ApproximationsGeneratorsVC;
 using nRank.DecisionRulesGenerator;
+using nRank.Extensions;
 using nRank.VCDomLEMAbstractions;
 using System;
 using System.Collections.Generic;
@@ -28,9 +29,24 @@ namespace nRank
             foreach(var approximation in approximations)
             {
                 var generatedRules = decisionRuleGenerator.GenerateRulesFrom(approximation, consistencyLevel);
-                rules.AddRange(generatedRules);
+                var minimalRules = GetMinimalRules(generatedRules);
+                rules.AddRange(minimalRules);
             }
             return rules;
+        }
+
+        private IEnumerable<IDecisionRule> GetMinimalRules(IEnumerable<IDecisionRule> generatedRules)
+        {
+            var minimalRules = generatedRules.ToList();
+            foreach(var rule in generatedRules)
+            {
+                var covered = rule.GetCoveredItems().ToList();
+                if(minimalRules.Any( x => x != rule && covered.IsSubsetOf(x.GetCoveredItems()) ))
+                {
+                    minimalRules.Remove(rule);
+                }
+            }
+            return minimalRules;
         }
     }
 }

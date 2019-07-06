@@ -4,6 +4,6 @@ namespace nRank.VCDomLEMAbstractions
 {
     internal interface IDecisionRuleGenerator
     {
-        IEnumerable<IDecisionRule> GenerateRulesFrom(IApproximation approximation, float consistencyLevel = 1);
+        IEnumerable<IDecisionRule> GenerateRulesFrom(IApproximation approximation, float consistencyLevel);
     }
 }
