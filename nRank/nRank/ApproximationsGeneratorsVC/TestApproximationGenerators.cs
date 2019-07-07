@@ -99,20 +99,15 @@ namespace nRank.ApproximationsGeneratorsVC
             var generator = new InformationTableGenerator();
             return generator.GetInformationTable();
         }
-
-        private void ShouldHave(IApproximation approximation, IEnumerable<string> identifiers, IInformationTable originalTable, string allowedOperator, IEnumerable<int> classes, string symbol="")
-        {
-            ShouldHave(approximation, identifiers, originalTable, new[] { allowedOperator }, classes, symbol);
-        }
         
-        private void ShouldHave(IApproximation approximation, IEnumerable<string> identifiers, IInformationTable originalTable, IEnumerable<string> allowedOperators, IEnumerable<int> classes, string symbol = "")
+        private void ShouldHave(IApproximation approximation, IEnumerable<string> identifiers, IInformationTable originalTable, string allowedOperator, IEnumerable<int> classes, string symbol = "")
         {
             approximation
                 .ApproximatedInformationTable
                 .GetAllObjectIdentifiers()
                 .ShouldBe(identifiers, true);
             approximation.OriginalInformationTable.ShouldBe(originalTable);
-            approximation.AllowedOperators.ShouldBe(allowedOperators);
+            approximation.AllowedGainOperator.ShouldBe(allowedOperator);
             approximation.Classes.ShouldBe(classes);
             approximation.Symbol.ShouldBe(symbol);
         }

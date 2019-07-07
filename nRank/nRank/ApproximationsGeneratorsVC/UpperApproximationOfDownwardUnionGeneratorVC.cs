@@ -13,6 +13,6 @@ namespace nRank.ApproximationsGeneratorsVC
     {
         protected override AbstractLowerApproximationGeneratorVC<DDominatingSetGenerator> _oppositeGenerator => new LowerApproximationOfUpwardUnionGeneratorVC();
 
-        protected override IEnumerable<string> _allowedOperators => new[] { "<=" };
+        protected override string _allowedGainOperator =>  "<=" ;
     }
 }

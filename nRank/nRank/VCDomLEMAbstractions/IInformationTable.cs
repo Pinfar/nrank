@@ -19,5 +19,6 @@ namespace nRank.VCDomLEMAbstractions
         IInformationTable Intersect(IInformationTable table);
         IInformationTable Negation(IInformationTable originalTable);
         int Count();
+        bool IsAttributeCost(string name);
     }
 }

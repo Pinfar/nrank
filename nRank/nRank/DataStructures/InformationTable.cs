@@ -172,5 +172,10 @@ namespace nRank.DataStructures
         {
             return ObjectsStorage.Count();
         }
+
+        public bool IsAttributeCost(string name)
+        {
+            return _isAttributeCost[name];
+        }
     }
 }

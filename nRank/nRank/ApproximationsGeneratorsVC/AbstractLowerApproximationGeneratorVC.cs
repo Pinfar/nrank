@@ -11,7 +11,7 @@ namespace nRank.ApproximationsGeneratorsVC
 {
     abstract class AbstractLowerApproximationGeneratorVC<T> where T : IDDSetGenerator, new()
     {
-        abstract protected IEnumerable<string> _allowedOperators { get; }
+        abstract protected string _allowedGainOperator { get; }
 
         private T dsetGenerator = new T();
 
@@ -29,7 +29,7 @@ namespace nRank.ApproximationsGeneratorsVC
                 .SelectMany(x => dsetGenerator.Generate(originalTable, x).GetAllObjectIdentifiers())
                 .Distinct()
                 .ToList();
-            return new Approximation(approximation, originalTable, union.Classes, _allowedOperators, union.Symbol, union, positiveRegion);
+            return new Approximation(approximation, originalTable, union.Classes, _allowedGainOperator, union.Symbol, union, positiveRegion);
         }
 
         private bool IsInApproximation(IInformationTable originalTable, string objectId, IList<string> objectsInUnion, float consistencyLevel)

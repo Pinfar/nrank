@@ -10,12 +10,12 @@ namespace nRank.DataStructures
     class Approximation : IApproximation
     {
         public Approximation(IInformationTable appriximatedInformationTable, IInformationTable originalInformationTable, IEnumerable<int> classes, 
-                IEnumerable<string> allowedOperators, string symbol, IUnion union, IList<string> positiveRegion)
+                string allowedGainOperator, string symbol, IUnion union, IList<string> positiveRegion)
         {
             ApproximatedInformationTable = appriximatedInformationTable;
             OriginalInformationTable = originalInformationTable;
             Classes = new HashSet<int>(classes);
-            AllowedOperators = new HashSet<string>(allowedOperators);
+            AllowedGainOperator = allowedGainOperator;
             Symbol = symbol;
             Union = union;
             PositiveRegion = positiveRegion;
@@ -24,14 +24,26 @@ namespace nRank.DataStructures
         public IInformationTable ApproximatedInformationTable { get; }
         public IInformationTable OriginalInformationTable { get; }
         public ISet<int> Classes { get; }
-        public ISet<string> AllowedOperators { get; }
+        public string AllowedGainOperator { get; }
         public string Symbol { get; }
         public IUnion Union { get; }
         public IList<string> PositiveRegion { get; }
 
+        public string AllowedCostOperator => RevereseOperator(AllowedGainOperator);
+
         public IInformationTable GetNegatedApproximatedInformationTable()
         {
             return ApproximatedInformationTable.Negation(OriginalInformationTable);
+        }
+
+        private string RevereseOperator(string operatorSign)
+        {
+            switch(operatorSign)
+            {
+                case ">=": return "<=";
+                case "<=": return ">=";
+                default: throw new ArgumentException("Invalid sign", nameof(operatorSign));
+            }
         }
     }
 }

@@ -11,7 +11,8 @@ namespace nRank.VCDomLEMAbstractions
         IInformationTable ApproximatedInformationTable { get; }
         IInformationTable OriginalInformationTable { get; }
         ISet<int> Classes { get; }
-        ISet<string> AllowedOperators { get; }
+        string AllowedGainOperator { get; }
+        string AllowedCostOperator { get; }
         string Symbol { get; }
         IUnion Union { get; }
         IList<string> PositiveRegion { get; }

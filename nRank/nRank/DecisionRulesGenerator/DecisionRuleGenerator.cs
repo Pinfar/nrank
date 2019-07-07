@@ -47,12 +47,16 @@ namespace nRank.DecisionRulesGenerator
                     objectsCoveredByCurrentRule
                         .GetAttribute(x)
                         .Distinct()
-                        .Select(y => new { AttributeName = x, AttributeValue = y } )
+                        .Select(y => new {
+                            AttributeName = x,
+                            AttributeValue = y,
+                            AttributeOperator = objectsCoveredByCurrentRule.IsAttributeCost(x)? approximation.AllowedCostOperator : approximation.AllowedGainOperator
+                        } )
                 );
-            
-            return attributes.SelectMany(
-                x => approximation.AllowedOperators, 
-                (x, y) => new ImmutableDecisionRule(x.AttributeName, y, x.AttributeValue, approximation)
+
+                      
+            return attributes.Select(
+                x => new ImmutableDecisionRule(x.AttributeName, x.AttributeOperator, x.AttributeValue, approximation)
             );
         }
         
