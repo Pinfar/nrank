@@ -23,7 +23,7 @@ namespace nRank.ApproximationsGeneratorsVC
                     x => x,
                     x => IsInApproximation(originalTable, x, objectsInUnion, consistencyLevel)
                 );
-            return new Approximation(originalTable.Filter(pattern), originalTable, union.Classes, _allowedOperators, union.Symbol);
+            return new Approximation(originalTable.Filter(pattern), originalTable, union.Classes, _allowedOperators, union.Symbol, union);
         }
 
         private bool IsInApproximation(IInformationTable originalTable, string objectId, IList<string> objectsInUnion, float consistencyLevel)

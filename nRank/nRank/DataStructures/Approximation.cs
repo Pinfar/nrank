@@ -9,13 +9,14 @@ namespace nRank.DataStructures
 {
     class Approximation : IApproximation
     {
-        public Approximation(IInformationTable appriximatedInformationTable, IInformationTable originalInformationTable, IEnumerable<int> classes, IEnumerable<string> allowedOperators, string symbol)
+        public Approximation(IInformationTable appriximatedInformationTable, IInformationTable originalInformationTable, IEnumerable<int> classes, IEnumerable<string> allowedOperators, string symbol, IUnion union)
         {
             ApproximatedInformationTable = appriximatedInformationTable;
             OriginalInformationTable = originalInformationTable;
             Classes = new HashSet<int>(classes);
             AllowedOperators = new HashSet<string>(allowedOperators);
             Symbol = symbol;
+            Union = union;
         }
 
         public IInformationTable ApproximatedInformationTable { get; }
@@ -23,5 +24,6 @@ namespace nRank.DataStructures
         public ISet<int> Classes { get; }
         public ISet<string> AllowedOperators { get; }
         public string Symbol { get; }
+        public IUnion Union { get; }
     }
 }

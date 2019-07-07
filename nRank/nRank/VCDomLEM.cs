@@ -1,5 +1,4 @@
-﻿using nRank.ApproximationsGenerators;
-using nRank.ApproximationsGeneratorsVC;
+﻿using nRank.ApproximationsGeneratorsVC;
 using nRank.DecisionRulesGenerator;
 using nRank.Extensions;
 using nRank.VCDomLEMAbstractions;

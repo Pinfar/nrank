@@ -23,7 +23,7 @@ namespace nRank.ApproximationsGeneratorsVC
                 filterDict[objectId] = false;
             }
             var approximation = originalTable.Filter(filterDict);
-            return new Approximation(approximation, originalTable, union.Classes, _allowedOperators, union.Symbol);
+            return new Approximation(approximation, originalTable, union.Classes, _allowedOperators, union.Symbol, union);
         }
     }
 }

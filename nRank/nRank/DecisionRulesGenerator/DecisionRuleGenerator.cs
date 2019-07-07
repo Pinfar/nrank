@@ -14,7 +14,8 @@ namespace nRank.DecisionRulesGenerator
         public IEnumerable<IDecisionRule> GenerateRulesFrom(IApproximation approximation, float consistencyLevel)
         {
             var informationTable = approximation.OriginalInformationTable;
-            var notCoveredYet = approximation.ApproximatedInformationTable;
+            //var notCoveredYet = approximation.ApproximatedInformationTable;
+            var notCoveredYet = approximation.Union.InformationTable;
             var rules = new List<IDecisionRule>();
             while(notCoveredYet.GetAllObjectIdentifiers().Count()!=0)
             {
@@ -79,7 +80,8 @@ namespace nRank.DecisionRulesGenerator
             var common = coveredByRule.Intersect(notCoveredYet);
             double commonCount = common.Count();
             double coveredByRuleCount = coveredByRule.Count();
-            return Tuple.Create(commonCount / coveredByRuleCount, commonCount);
+            //return Tuple.Create(commonCount / coveredByRuleCount, commonCount);
+            return Tuple.Create((double)rule.Accuracy, commonCount);
         }
     }
 }

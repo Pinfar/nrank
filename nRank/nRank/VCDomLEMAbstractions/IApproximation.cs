@@ -13,5 +13,6 @@ namespace nRank.VCDomLEMAbstractions
         ISet<int> Classes { get; }
         ISet<string> AllowedOperators { get; }
         string Symbol { get; }
+        IUnion Union { get; }
     }
 }

@@ -15,7 +15,7 @@ namespace nRank.console
             var reader = new InformationTableReader();
             var table = reader.Read(path);
             var vcDomLem = new VCDomLEM();
-            var rules = vcDomLem.GenerateDecisionRules(table, 0.5f);
+            var rules = vcDomLem.GenerateDecisionRules(table, 0.1f);
             var coveredItems = rules
                 .Select(x => x.GetCoveredItems())
                 .Select(x => $"{{ {string.Join(" ,", x)} }}");
