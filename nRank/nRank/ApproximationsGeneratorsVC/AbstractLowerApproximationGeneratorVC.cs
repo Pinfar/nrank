@@ -21,9 +21,15 @@ namespace nRank.ApproximationsGeneratorsVC
             var pattern = originalTable.GetAllObjectIdentifiers()
                 .ToDictionary(
                     x => x,
-                    x => IsInApproximation(originalTable, x, objectsInUnion, consistencyLevel)
+                    x => objectsInUnion.Contains(x) && IsInApproximationEpsilon(originalTable, x, objectsInUnion, consistencyLevel)
                 );
-            return new Approximation(originalTable.Filter(pattern), originalTable, union.Classes, _allowedOperators, union.Symbol, union);
+            var approximation = originalTable.Filter(pattern);
+            var positiveRegion = approximation
+                .GetAllObjectIdentifiers()
+                .SelectMany(x => dsetGenerator.Generate(originalTable, x).GetAllObjectIdentifiers())
+                .Distinct()
+                .ToList();
+            return new Approximation(approximation, originalTable, union.Classes, _allowedOperators, union.Symbol, union, positiveRegion);
         }
 
         private bool IsInApproximation(IInformationTable originalTable, string objectId, IList<string> objectsInUnion, float consistencyLevel)
@@ -32,6 +38,17 @@ namespace nRank.ApproximationsGeneratorsVC
             float commonPart = dset.Intersect(objectsInUnion).Count();
             float dsetCount = dset.Count();
             return (commonPart / dsetCount) >= consistencyLevel;
+        }
+
+        private bool IsInApproximationEpsilon(IInformationTable originalTable, string objectId, IList<string> objectsInUnion, float consistencyLevel)
+        {
+            var dset = dsetGenerator.Generate(originalTable, objectId).GetAllObjectIdentifiers().ToList();
+            var negSet = originalTable.GetAllObjectIdentifiers()
+                .Where(x => !objectsInUnion.Contains(x))
+                .ToList();
+            float commonPart = dset.Intersect(negSet).Count();
+            float negSetCount = negSet.Count();
+            return (commonPart / negSetCount) <= consistencyLevel;
         }
     }
 }

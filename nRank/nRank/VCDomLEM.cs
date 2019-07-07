@@ -27,7 +27,8 @@ namespace nRank
             var approximations = approximationsGenerator.GetApproximations(informationTable, consistencyLevel);
             foreach(var approximation in approximations)
             {
-                var generatedRules = decisionRuleGenerator.GenerateRulesFrom(approximation, consistencyLevel);
+                var consistencyModifier = ((float)approximation.Union.InformationTable.Negation(informationTable).Count()) / approximation.ApproximatedInformationTable.Negation(informationTable).Count();
+                var generatedRules = decisionRuleGenerator.GenerateRulesFrom(approximation, consistencyModifier * consistencyLevel);
                 var minimalRules = GetMinimalRules(generatedRules);
                 rules.AddRange(minimalRules);
             }

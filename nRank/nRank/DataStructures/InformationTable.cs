@@ -160,5 +160,17 @@ namespace nRank.DataStructures
             var pattern = ObjectsStorage.Keys.ToDictionary(x => x, x => true);
             return table.Filter(pattern);
         }
+
+        public IInformationTable Negation(IInformationTable originalTable)
+        {
+            var selfObjects = GetAllObjectIdentifiers().ToList();
+            var filter = originalTable.GetAllObjectIdentifiers().ToDictionary(x => x, x => !selfObjects.Contains(x));
+            return originalTable.Filter(filter);
+        }
+
+        public int Count()
+        {
+            return ObjectsStorage.Count();
+        }
     }
 }

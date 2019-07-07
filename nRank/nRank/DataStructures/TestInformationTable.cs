@@ -157,5 +157,45 @@ namespace nRank.DataStructures
             table.Outranks("0", "1").ShouldBeFalse();
             table.Outranks("1", "0").ShouldBeFalse();
         }
+
+        [Test]
+        public void TestNegaion()
+        {
+            var attributeName = "decisionAttribute";
+            var table = new InformationTable(new Dictionary<string, bool> { { "att1", true }, { "att2", true } }, attributeName, true);
+            var objects = new[]
+            {
+                new { Key = "0", Attributes = new Dictionary<string, float> { { "att1", 1 }, { "att2", 2 } } },
+                new { Key = "1", Attributes = new Dictionary<string, float> { { "att1", 2 }, { "att2", 1 } } },
+            };
+            foreach (var obj in objects)
+            {
+                table.AddObject(obj.Key, obj.Attributes, 1);
+            }
+            var derivatedTable = new InformationTable(new Dictionary<string, bool> { { "att1", true }, { "att2", true } }, attributeName, true);
+            derivatedTable.AddObject(objects[0].Key, objects[0].Attributes, 1);
+
+            var negatedTable = derivatedTable.Negation(table);
+
+            negatedTable.GetAllObjectIdentifiers().ShouldBe(new[] { "1" });
+        }
+
+        [Test]
+        public void TestCount()
+        {
+            var attributeName = "decisionAttribute";
+            var table = new InformationTable(new Dictionary<string, bool> { { "att1", true }, { "att2", true } }, attributeName, true);
+            var objects = new[]
+            {
+                new { Key = "0", Attributes = new Dictionary<string, float> { { "att1", 1 }, { "att2", 2 } } },
+                new { Key = "1", Attributes = new Dictionary<string, float> { { "att1", 2 }, { "att2", 1 } } },
+            };
+            foreach (var obj in objects)
+            {
+                table.AddObject(obj.Key, obj.Attributes, 1);
+            }
+
+            table.Count().ShouldBe(2);
+        }
     }
 }

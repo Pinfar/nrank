@@ -17,5 +17,7 @@ namespace nRank.VCDomLEMAbstractions
         bool Outranks(string identifier1, string identifier2);
         IInformationTable Filter(IDecisionRule rule);
         IInformationTable Intersect(IInformationTable table);
+        IInformationTable Negation(IInformationTable originalTable);
+        int Count();
     }
 }

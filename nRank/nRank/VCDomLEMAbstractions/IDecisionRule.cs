@@ -11,7 +11,7 @@ namespace nRank.VCDomLEMAbstractions
         Dictionary<string, bool> Satisfy(IInformationTable informationTable);
         bool IsEmpty();
         bool SatisfiesConsistencyLevel(float consistencyLevel);
-        IDecisionRule CreateOptimizedRule(float consistencyLevel);
+        IDecisionRule CreateOptimizedRule(float consistencyLevel, IEnumerable<string> notCoveredYet);
         bool Contains(IDecisionRule rule);
         IEnumerable<string> GetCoveredItems();
     }

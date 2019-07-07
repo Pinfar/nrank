@@ -156,8 +156,10 @@ namespace nRank.DecisionRules
             var dr = new ImmutableDecisionRule("a1", "<=", 1.5f, _approximation);
             var f1table = table.Filter(dr);
             _approximation.ApproximatedInformationTable.Returns(f1table);
+            _approximation.OriginalInformationTable.Returns(table);
             _approximation.Classes.Returns(new HashSet<int>() { 1, 2 });
-            
+            _approximation.GetNegatedApproximatedInformationTable().Returns(f1table.Negation(table));
+
 
             var dr1 = new ImmutableDecisionRule("a1", "<=", 1f, _approximation);
             dr1.SatisfiesConsistencyLevel(1).ShouldBeTrue();
@@ -172,9 +174,10 @@ namespace nRank.DecisionRules
             var f1table = table.Filter(dr);
             _approximation.ApproximatedInformationTable.Returns(f1table);
             _approximation.Classes.Returns(new HashSet<int>() { 1, 2 });
+            _approximation.GetNegatedApproximatedInformationTable().Returns(f1table.Negation(table));
 
             var dr1 = new ImmutableDecisionRule("a1", "<=", 1.5f, _approximation);
-            var optimizedRule = dr.And(dr1).CreateOptimizedRule(1);
+            var optimizedRule = dr.And(dr1).CreateOptimizedRule(0.2f, f1table.GetAllObjectIdentifiers());
             optimizedRule.ToString().ShouldBe("if (f(a1, x) <= 1,5) then x E Cl1<=");
         }
     }

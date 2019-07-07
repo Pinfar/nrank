@@ -25,11 +25,11 @@ namespace nRank.ApproximationsGeneratorsVC
             upwardUnions.Count.ShouldBe(2);
 
             var approximation0 = lAOUGenerator
-                .GetApproximation(upwardUnions[0], table, 1);
+                .GetApproximation(upwardUnions[0], table, 0);
             ShouldHave(approximation0, new[] { "1", "2", "5", "8", "10", "11", "12", "13", "15", "16", "17" }, table, ">=", new[] { 2, 3 },"Cl2>=");
 
             var approximation1 = lAOUGenerator
-                .GetApproximation(upwardUnions[1], table, 1);
+                .GetApproximation(upwardUnions[1], table, 0);
             ShouldHave(approximation1, new[] { "5", "16", "17" }, table, ">=", new[] { 3 }, "Cl3>=");
         }
 
@@ -46,11 +46,11 @@ namespace nRank.ApproximationsGeneratorsVC
 
 
             var approximation0 = uAOUGenerator
-                .GetApproximation(upwardUnions[0], table, 1, downwardUnionsDict);
+                .GetApproximation(upwardUnions[0], table, 0, downwardUnionsDict);
             ShouldHave(approximation0, new[] { "1", "2", "5", "6", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17" }, table, ">=", new[] { 2, 3 }, "Cl2>=");
 
             var approximation1 = uAOUGenerator
-                .GetApproximation(upwardUnions[1], table, 1, downwardUnionsDict);
+                .GetApproximation(upwardUnions[1], table, 0, downwardUnionsDict);
             ShouldHave(approximation1, new[] { "5", "8", "11", "16", "17" }, table, ">=", new[] { 3 }, "Cl3>=");
         }
 
@@ -64,11 +64,11 @@ namespace nRank.ApproximationsGeneratorsVC
             upwardUnions.Count.ShouldBe(2);
 
             var approximation0 = lAOUGenerator
-                .GetApproximation(upwardUnions[0], table, 1);
+                .GetApproximation(upwardUnions[0], table, 0);
             ShouldHave(approximation0, new[] { "3", "4", "7" }, table, "<=", new[] { 1 }, "Cl1<=");
 
             var approximation1 = lAOUGenerator
-                .GetApproximation(upwardUnions[1], table, 1);
+                .GetApproximation(upwardUnions[1], table, 0);
             ShouldHave(approximation1, new[] { "1", "2", "3", "4", "6", "7", "9", "10", "12", "13", "14", "15" }, table, "<=", new[] { 1, 2 }, "Cl2<=");
         }
 
@@ -85,11 +85,11 @@ namespace nRank.ApproximationsGeneratorsVC
             downwardUnions.Count.ShouldBe(2);
 
             var approximation0 = lAOUGenerator
-                .GetApproximation(downwardUnions[0], table, 1, upwardUnionsDict);
+                .GetApproximation(downwardUnions[0], table, 0, upwardUnionsDict);
             ShouldHave(approximation0, new[] { "3", "4", "6", "7", "9", "14" }, table, "<=", new[] { 1 }, "Cl1<=");
 
             var approximation1 = lAOUGenerator
-                .GetApproximation(downwardUnions[1], table, 1, upwardUnionsDict);
+                .GetApproximation(downwardUnions[1], table, 0, upwardUnionsDict);
             ShouldHave(approximation1, new[] { "1", "2", "3", "4", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15" }, table, "<=", new[] { 1, 2 }, "Cl2<=");
 
         }

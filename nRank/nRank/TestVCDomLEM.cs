@@ -18,7 +18,7 @@ namespace nRank
         public void GenerateDecisionRules()
         {
             var informationTable = new InformationTableGenerator().GetInformationTable();
-            var decisionRules = new VCDomLEM().GenerateDecisionRules(informationTable, 0.8f);
+            var decisionRules = new VCDomLEM().GenerateDecisionRules(informationTable, 0.3f);
             var coveredItems = decisionRules
                 .Select(x => x.GetCoveredItems())
                 .Select(x => $"{{ {string.Join(" ,", x)} }}");

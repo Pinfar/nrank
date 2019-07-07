@@ -14,5 +14,8 @@ namespace nRank.VCDomLEMAbstractions
         ISet<string> AllowedOperators { get; }
         string Symbol { get; }
         IUnion Union { get; }
+        IList<string> PositiveRegion { get; }
+
+        IInformationTable GetNegatedApproximatedInformationTable();
     }
 }

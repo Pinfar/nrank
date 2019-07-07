@@ -9,7 +9,8 @@ namespace nRank.DataStructures
 {
     class Approximation : IApproximation
     {
-        public Approximation(IInformationTable appriximatedInformationTable, IInformationTable originalInformationTable, IEnumerable<int> classes, IEnumerable<string> allowedOperators, string symbol, IUnion union)
+        public Approximation(IInformationTable appriximatedInformationTable, IInformationTable originalInformationTable, IEnumerable<int> classes, 
+                IEnumerable<string> allowedOperators, string symbol, IUnion union, IList<string> positiveRegion)
         {
             ApproximatedInformationTable = appriximatedInformationTable;
             OriginalInformationTable = originalInformationTable;
@@ -17,6 +18,7 @@ namespace nRank.DataStructures
             AllowedOperators = new HashSet<string>(allowedOperators);
             Symbol = symbol;
             Union = union;
+            PositiveRegion = positiveRegion;
         }
 
         public IInformationTable ApproximatedInformationTable { get; }
@@ -25,5 +27,11 @@ namespace nRank.DataStructures
         public ISet<string> AllowedOperators { get; }
         public string Symbol { get; }
         public IUnion Union { get; }
+        public IList<string> PositiveRegion { get; }
+
+        public IInformationTable GetNegatedApproximatedInformationTable()
+        {
+            return ApproximatedInformationTable.Negation(OriginalInformationTable);
+        }
     }
 }

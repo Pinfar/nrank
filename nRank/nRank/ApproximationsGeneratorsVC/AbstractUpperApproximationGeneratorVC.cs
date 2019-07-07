@@ -23,7 +23,13 @@ namespace nRank.ApproximationsGeneratorsVC
                 filterDict[objectId] = false;
             }
             var approximation = originalTable.Filter(filterDict);
-            return new Approximation(approximation, originalTable, union.Classes, _allowedOperators, union.Symbol, union);
+            var dsetGenerator = new T();
+            var positiveRegion = approximation
+                .GetAllObjectIdentifiers()
+                .SelectMany(x => dsetGenerator.Generate(originalTable, x).GetAllObjectIdentifiers())
+                .Distinct()
+                .ToList();
+            return new Approximation(approximation, originalTable, union.Classes, _allowedOperators, union.Symbol, union, positiveRegion);
         }
     }
 }
