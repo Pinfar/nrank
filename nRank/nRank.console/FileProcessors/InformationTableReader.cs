@@ -39,17 +39,19 @@ namespace nRank.console.FileProcessors
                 .Replace("decision:", "")
                 .Trim();
 
-            var regex = new Regex("^- (?<label>.*):");
+            var regex = new Regex("^[-+] (?<label>.*):");
             var labelLine = attributes
-                .Single(x => x.EndsWith("description"));
-
-            var label = regex.Match(labelLine).Groups["label"].Value;
+                .SingleOrDefault(x => x.EndsWith("description"));
+            if (labelLine != null)
+            {
+                var label = regex.Match(labelLine).Groups["label"].Value;
+                isAttributeCost.Remove(label);
+                _label = label;
+            }
 
             var isDecisionAttributeCost = isAttributeCost[decisionAttribute];
-            isAttributeCost.Remove(label);
             isAttributeCost.Remove(decisionAttribute);
 
-            _label = label;
             _decisionAttribute = decisionAttribute;
             _attributes = isAttributeCost.Select(x => x.Key).ToList();
             
@@ -76,17 +78,27 @@ namespace nRank.console.FileProcessors
                 .Select(x => x.Split(new[] { ": " }, StringSplitOptions.None))
                 .Select(x => x[0])
                 .ToList();
+            var index = 0;
             foreach (var line in examples)
             {
                 var record = line
-                    .Split(new[] { "," }, StringSplitOptions.None)
+                    .Split(new[] { ",","\t" }, StringSplitOptions.None)
                     .Select(x => x.Trim())
                     .Zip(allAttributes, (x, y) => new { Key = y, Value = x })
                     .ToDictionary(x => x.Key, x => x.Value);
-                var label = record[_label];
                 var decisionAttribute = int.Parse(record[_decisionAttribute]);
                 record.Remove(_decisionAttribute);
-                record.Remove(_label);
+                string label;
+                if (_label != null)
+                {
+                    label = record[_label];
+                    record.Remove(_label);
+                }
+                else
+                {
+                    label = index.ToString();
+                    index++;
+                }
                 var values = record.ToDictionary(x => x.Key, x => float.Parse(x.Value.Replace('.', ',')));
                 table.AddObject(label, values, decisionAttribute);
             }

@@ -1,0 +1,40 @@
+**ATTRIBUTES
+- id: (nominal), description
++ price: (integer)
++ LCD: (continuous)
++ weight: (continuous)
++ class: (integer)
+decision: class
+
+**PREFERENCES
+id: none
+price: cost
+lcd: gain
+weight: cost
+class: gain
+
+**EXAMPLES
+n01	865	17.3	3.4	2
+n02	877	17.3	3.4	2
+n03	1066	17.3	3.4	2
+n04	1031	15.6	2.7	2
+n05	1042	15.6	2.84	1
+n06	971	18.4	4.11	1
+n07	1372	15.6	2.51	1
+n08	1254	17.3	3.43	1
+n09	1656	17.3	3.2	1
+n10	1656	17.3	3.81	1
+n11	1161	15.6	3.8	0
+n12	1372	15.6	3.92	0
+n13	1348	15.6	3.92	0
+n14	1538	17.3	3.9	0
+n15	1372	17.3	4.28	0
+n16	1419	17.3	4.28	0
+n17	1538	15.6	3.82	0
+n18	1467	15.6	2.5	0
+n19	1538	15.6	2.61	0
+n20	1467	16	3.1	0
+n21	1419	16.4	3.1	0
+n22	1419	15.5	1.96	0
+
+**END
