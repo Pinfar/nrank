@@ -20,15 +20,26 @@ namespace nRank.console
             }
             else
             {
-                //path = @"AirlinesIntCardinal.isf";
                 file = args[0];
             }
             var path = Path.Combine(".", file);
 
+            string consistency;
+            if (args.Length < 2)
+            {
+                Console.WriteLine("Insert consistency treshold!");
+                consistency = Console.ReadLine();
+            }
+            else
+            {
+                consistency = args[1];
+            }
+            float consistencyValue = float.Parse(consistency);
+
             var reader = new InformationTableReader();
             var table = reader.Read(path);
             var vcDomLem = new VCDomLEM();
-            var rules = vcDomLem.GenerateDecisionRules(table, 0.1f);
+            var rules = vcDomLem.GenerateDecisionRules(table, consistencyValue);
             var coveredItems = rules
                 .Select(x => x.GetCoveredItems())
                 .Select(x => $"{{ {string.Join(", ", x)} }}");
