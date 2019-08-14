@@ -17,11 +17,12 @@ namespace nRank.ApproximationsGeneratorsVC
 
         public IApproximation GetApproximation(IUnion union, IInformationTable originalTable, float consistencyLevel)
         {
-            var objectsInUnion = union.InformationTable.GetAllObjectIdentifiers().ToList();
+            var objectsInUnion = union.InformationTable.GetAllObjectIdentifiers();
+            var objectsInUnionSet = new HashSet<string>(objectsInUnion);
             var pattern = originalTable.GetAllObjectIdentifiers()
                 .ToDictionary(
                     x => x,
-                    x => objectsInUnion.Contains(x) && IsInApproximationEpsilon(originalTable, x, objectsInUnion, consistencyLevel)
+                    x => objectsInUnionSet.Contains(x) && IsInApproximationEpsilon(originalTable, x, objectsInUnionSet, consistencyLevel)
                 );
             var approximation = originalTable.Filter(pattern);
             var positiveRegion = approximation
@@ -40,9 +41,9 @@ namespace nRank.ApproximationsGeneratorsVC
             return (commonPart / dsetCount) >= consistencyLevel;
         }
 
-        private bool IsInApproximationEpsilon(IInformationTable originalTable, string objectId, IList<string> objectsInUnion, float consistencyLevel)
+        private bool IsInApproximationEpsilon(IInformationTable originalTable, string objectId, HashSet<string> objectsInUnion, float consistencyLevel)
         {
-            var dset = dsetGenerator.Generate(originalTable, objectId).GetAllObjectIdentifiers().ToList();
+            var dset = new HashSet<string>(dsetGenerator.Generate(originalTable, objectId).GetAllObjectIdentifiers());
             var negSet = originalTable.GetAllObjectIdentifiers()
                 .Where(x => !objectsInUnion.Contains(x))
                 .ToList();

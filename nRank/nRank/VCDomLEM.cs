@@ -25,14 +25,21 @@ namespace nRank
         {
             var rules = new List<IDecisionRule>();
             var approximations = approximationsGenerator.GetApproximations(informationTable, consistencyLevel);
-            foreach(var approximation in approximations)
-            {
-                var consistencyModifier = ((float)approximation.Union.InformationTable.Negation(informationTable).Count()) / approximation.ApproximatedInformationTable.Negation(informationTable).Count();
-                var generatedRules = decisionRuleGenerator.GenerateRulesFrom(approximation, consistencyModifier * consistencyLevel);
-                var minimalRules = GetMinimalRules(generatedRules);
-                rules.AddRange(minimalRules);
-            }
+            rules = approximations.SelectMany(approximation => GenerateRules(informationTable, consistencyLevel, approximation)).ToList();
+            //foreach(var approximation in approximations)
+            //{
+            //    IEnumerable<IDecisionRule> minimalRules = GenerateRules(informationTable, consistencyLevel, approximation);
+            //    rules.AddRange(minimalRules);
+            //}
             return rules;
+        }
+
+        private IEnumerable<IDecisionRule> GenerateRules(IInformationTable informationTable, float consistencyLevel, IApproximation approximation)
+        {
+            var consistencyModifier = ((float)approximation.Union.InformationTable.Negation(informationTable).Count()) / approximation.ApproximatedInformationTable.Negation(informationTable).Count();
+            var generatedRules = decisionRuleGenerator.GenerateRulesFrom(approximation, consistencyModifier * consistencyLevel);
+            var minimalRules = GetMinimalRules(generatedRules);
+            return minimalRules;
         }
 
         private IEnumerable<IDecisionRule> GetMinimalRules(IEnumerable<IDecisionRule> generatedRules)

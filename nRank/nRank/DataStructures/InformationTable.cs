@@ -163,7 +163,7 @@ namespace nRank.DataStructures
 
         public IInformationTable Negation(IInformationTable originalTable)
         {
-            var selfObjects = GetAllObjectIdentifiers().ToList();
+            var selfObjects = new HashSet<string>(GetAllObjectIdentifiers());
             var filter = originalTable.GetAllObjectIdentifiers().ToDictionary(x => x, x => !selfObjects.Contains(x));
             return originalTable.Filter(filter);
         }

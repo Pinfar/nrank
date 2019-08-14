@@ -8,6 +8,6 @@ namespace nRank.VCDomLEMAbstractions
 {
     interface IAllApproximationsGenerator
     {
-        IEnumerable<IApproximation> GetApproximations(IInformationTable originalTable, float consistencyLevel);
+        ParallelQuery<IApproximation> GetApproximations(IInformationTable originalTable, float consistencyLevel);
     }
 }

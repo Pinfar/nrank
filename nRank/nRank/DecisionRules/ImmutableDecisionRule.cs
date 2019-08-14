@@ -59,8 +59,8 @@ namespace nRank.DecisionRules
 
         public Dictionary<string, bool> Satisfy(IInformationTable informationTable)
         {
-            var identifiers = informationTable.GetAllObjectIdentifiers();
-            var result = new Dictionary<string, bool>();
+            var identifiers = informationTable.GetAllObjectIdentifiers().ToList();
+            var result = new Dictionary<string, bool>(identifiers.Count);
             foreach (var identifier in identifiers)
             {
                 var attributes = informationTable.GetObjectAttributes(identifier);
@@ -109,7 +109,7 @@ namespace nRank.DecisionRules
         {
             if (!(rule is ImmutableDecisionRule)) return false;
             var immutableRule = (ImmutableDecisionRule)rule;
-            var selfRules = _conditionalParts.Select(x => x.ToString()).ToList();
+            var selfRules = new HashSet<string>(_conditionalParts.Select(x => x.ToString()));
             return immutableRule._conditionalParts.All(x => selfRules.Contains(x.ToString()));
         }
 
