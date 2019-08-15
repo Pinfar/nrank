@@ -71,6 +71,26 @@ namespace nRank.DecisionRules
         }
 
         [Test]
+        public void TestSatisfyObjects()
+        {
+            var generator = new InformationTableGenerator();
+            var table = generator.GetInformationTable();
+            var dr = new ImmutableDecisionRule("a1", "<=", 1.5f, _approximation);
+
+            dr.GetSatisfiedObjectsIdentifiers(table).ShouldBe(new []
+            {
+                "1",
+                "3",
+                "4",
+                "6",
+                "7",
+                "9",
+                "12",
+                "13",
+            });
+        }
+
+        [Test]
         public void TestSatisfyWithAnd()
         {
             var generator = new InformationTableGenerator();
@@ -158,7 +178,7 @@ namespace nRank.DecisionRules
             _approximation.ApproximatedInformationTable.Returns(f1table);
             _approximation.OriginalInformationTable.Returns(table);
             _approximation.Classes.Returns(new HashSet<int>() { 1, 2 });
-            _approximation.GetNegatedApproximatedInformationTable().Returns(f1table.Negation(table));
+            _approximation.GetNegatedApproximatedInformationTable().Returns(f1table.Negation(table).GetAllObjectIdentifiers());
 
 
             var dr1 = new ImmutableDecisionRule("a1", "<=", 1f, _approximation);
@@ -174,7 +194,7 @@ namespace nRank.DecisionRules
             var f1table = table.Filter(dr);
             _approximation.ApproximatedInformationTable.Returns(f1table);
             _approximation.Classes.Returns(new HashSet<int>() { 1, 2 });
-            _approximation.GetNegatedApproximatedInformationTable().Returns(f1table.Negation(table));
+            _approximation.GetNegatedApproximatedInformationTable().Returns(f1table.Negation(table).GetAllObjectIdentifiers());
 
             var dr1 = new ImmutableDecisionRule("a1", "<=", 1.5f, _approximation);
             var optimizedRule = dr.And(dr1).CreateOptimizedRule(0.2f, f1table.GetAllObjectIdentifiers());

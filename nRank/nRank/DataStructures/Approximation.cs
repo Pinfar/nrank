@@ -31,9 +31,10 @@ namespace nRank.DataStructures
 
         public string AllowedCostOperator => RevereseOperator(AllowedGainOperator);
 
-        public IInformationTable GetNegatedApproximatedInformationTable()
+        public IEnumerable<string> GetNegatedApproximatedInformationTable()
         {
-            return ApproximatedInformationTable.Negation(OriginalInformationTable);
+            return OriginalInformationTable.GetAllObjectIdentifiers().Except(ApproximatedInformationTable.GetAllObjectIdentifiers());
+            //return ApproximatedInformationTable.Negation(OriginalInformationTable).GetAllObjectIdentifiers();
         }
 
         private string RevereseOperator(string operatorSign)

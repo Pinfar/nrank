@@ -69,6 +69,16 @@ namespace nRank.DecisionRules
             return result;
         }
 
+        public IEnumerable<string> GetSatisfiedObjectsIdentifiers(IInformationTable informationTable)
+        {
+            var identifiers = informationTable.GetAllObjectIdentifiers();
+            foreach (var identifier in identifiers)
+            {
+                var attributes = informationTable.GetObjectAttributes(identifier);
+                if (_conditionalParts.All(x => x.IsTrueFor(attributes))) yield return identifier;
+            }
+        }
+
         public bool IsEmpty()
         {
             return _conditionalParts.All(x => x.IsEmpty());
@@ -140,11 +150,11 @@ namespace nRank.DecisionRules
 
         private float CalculateAccuracyEpsilon()
         {
-            var currentCoverage = Satisfy(_approximation.OriginalInformationTable).Where(x => x.Value).Select(x => x.Key).ToList();
-            var objectsInApproximation = _approximation.ApproximatedInformationTable.GetAllObjectIdentifiers().ToList() ;
-            var negSet = _approximation.GetNegatedApproximatedInformationTable().GetAllObjectIdentifiers().ToList();
+            var currentCoverage = GetSatisfiedObjectsIdentifiers(_approximation.OriginalInformationTable);
+            //var objectsInApproximation = _approximation.ApproximatedInformationTable.GetAllObjectIdentifiers().ToList() ;
+            var negSet = new HashSet<string>(_approximation.GetNegatedApproximatedInformationTable());
             float commonPart = currentCoverage.Intersect(negSet).Count();
-            float negSetCount = negSet.Count();
+            float negSetCount = negSet.Count;
             return commonPart / negSetCount;
  
         }

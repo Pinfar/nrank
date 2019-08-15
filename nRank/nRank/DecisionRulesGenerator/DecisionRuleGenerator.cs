@@ -64,7 +64,7 @@ namespace nRank.DecisionRulesGenerator
         {
             var filteredRules = rules.Where(x => !currentRule.Contains(x)).ToList();
             var best = filteredRules.First();
-            var notCovered = notCoveredYet.GetAllObjectIdentifiers();
+            var notCovered = new HashSet<string>(notCoveredYet.GetAllObjectIdentifiers());
             var bestScore = EvaluateRule(currentRule.And(best), notCovered, informationTable);
             foreach (var rule in filteredRules)
             {
@@ -80,10 +80,11 @@ namespace nRank.DecisionRulesGenerator
 
         private Tuple<double, double> EvaluateRule(IDecisionRule rule, IEnumerable<string> notCoveredYet, IInformationTable informationTable)
         {
-            var coveredByRule = informationTable.Filter(rule).GetAllObjectIdentifiers();
+            var coveredByRule = rule.GetSatisfiedObjectsIdentifiers(informationTable).ToList();
+            //var coveredByRule = informationTable.Filter(rule).GetAllObjectIdentifiers();
             var common = coveredByRule.Intersect(notCoveredYet);
             double commonCount = common.Count();
-            double coveredByRuleCount = coveredByRule.Count();
+            double coveredByRuleCount = coveredByRule.Count;
             //return Tuple.Create(commonCount / coveredByRuleCount, commonCount);
             return Tuple.Create((double)rule.Accuracy, commonCount);
         }

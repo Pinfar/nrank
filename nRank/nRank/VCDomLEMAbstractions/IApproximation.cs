@@ -17,6 +17,6 @@ namespace nRank.VCDomLEMAbstractions
         IUnion Union { get; }
         IList<string> PositiveRegion { get; }
 
-        IInformationTable GetNegatedApproximatedInformationTable();
+        IEnumerable<string> GetNegatedApproximatedInformationTable();
     }
 }

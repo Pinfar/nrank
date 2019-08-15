@@ -40,11 +40,12 @@ namespace nRank.console
             var table = reader.Read(path);
             var vcDomLem = new VCDomLEM();
             var rules = vcDomLem.GenerateDecisionRules(table, consistencyValue);
-            var coveredItems = rules
-                .Select(x => x.GetCoveredItems())
-                .Select(x => $"{{ {string.Join(", ", x)} }}");
+            //var coveredItems = rules
+            //    .Select(x => x.GetCoveredItems())
+            //    .Select(x => $"{{ {string.Join(", ", x)} }}");
             var result = rules
-                .Zip(coveredItems, (x, y) => $"{x.ToString()} z a = {x.Accuracy} {y}")
+                //.Zip(coveredItems, (x, y) => $"{x.ToString()} z a = {x.Accuracy} {y}")
+                .Select(x => $"{x.ToString()} z a = {x.Accuracy}")
                 .ToList();
             var resultDir = Path.GetFileNameWithoutExtension(file);
             Directory.CreateDirectory(Path.Combine(".",resultDir));
