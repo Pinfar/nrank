@@ -72,6 +72,9 @@
     <Compile Include="ApproximationsGeneratorsVC\UpperApproximationOfUpwardUnionGeneratorVC.cs" />
     <Compile Include="ApproximationsGeneratorsVC\TestApproximationGenerators.cs" />
     <Compile Include="DataStructures\Approximation.cs" />
+    <Compile Include="DataStructures\ClassResolver.cs" />
+    <Compile Include="DataStructures\TestClassResolver.cs" />
+    <Compile Include="DataStructures\TrainedModel.cs" />
     <Compile Include="DataStructures\Union.cs" />
     <Compile Include="DecisionRulesGenerator\DecisionRuleGenerator.cs" />
     <Compile Include="DecisionRulesGenerator\TestDecisionRuleGenerator.cs" />
@@ -101,6 +104,7 @@
     <Compile Include="VCDomLEMAbstractions\IDecisionRule.cs" />
     <Compile Include="VCDomLEMAbstractions\IDecisionRuleGenerator.cs" />
     <Compile Include="VCDomLEMAbstractions\IInformationTable.cs" />
+    <Compile Include="VCDomLEMAbstractions\IModel.cs" />
     <Compile Include="VCDomLEMAbstractions\IUnion.cs" />
     <Compile Include="VCDomLEMAbstractions\IUnionGenerator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

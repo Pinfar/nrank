@@ -18,13 +18,17 @@ namespace nRank
         public void GenerateDecisionRules()
         {
             var informationTable = new InformationTableGenerator().GetInformationTable();
-            var decisionRules = new VCDomLEM().GenerateDecisionRules(informationTable, 0.3f);
-            var coveredItems = decisionRules
+            var model = new VCDomLEM().GenerateDecisionRules(informationTable, 0.3f);
+            var coveredItems = model
+                .Rules
                 .Select(x => x.GetCoveredItems())
                 .Select(x => $"{{ {string.Join(" ,", x)} }}");
-            var result = decisionRules
+            var result = model
+                .Rules
                 .Zip(coveredItems, (x, y) => $"{x.ToString()} z a = {x.Accuracy} {y}")
                 .ToList();
+
+            var predicted = model.Predict(informationTable.GetAllObjectIdentifiers().ToList(), informationTable);
          }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using nRank.ApproximationsGeneratorsVC;
+using nRank.DataStructures;
 using nRank.DecisionRulesGenerator;
 using nRank.Extensions;
 using nRank.VCDomLEMAbstractions;
@@ -21,7 +22,7 @@ namespace nRank
             approximationsGenerator = new ApproximationsGeneratorVC();
         }
 
-        public List<IDecisionRule> GenerateDecisionRules(IInformationTable informationTable, float consistencyLevel)
+        public IModel GenerateDecisionRules(IInformationTable informationTable, float consistencyLevel)
         {
             var rules = new List<IDecisionRule>();
             var approximations = approximationsGenerator.GetApproximations(informationTable, consistencyLevel);
@@ -31,7 +32,7 @@ namespace nRank
             //    IEnumerable<IDecisionRule> minimalRules = GenerateRules(informationTable, consistencyLevel, approximation);
             //    rules.AddRange(minimalRules);
             //}
-            return rules;
+            return new TrainedModel(rules);
         }
 
         private IEnumerable<IDecisionRule> GenerateRules(IInformationTable informationTable, float consistencyLevel, IApproximation approximation)

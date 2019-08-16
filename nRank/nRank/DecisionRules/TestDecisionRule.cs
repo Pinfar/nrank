@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using NSubstitute;
+using nRank.DataStructures;
 
 namespace nRank.DecisionRules
 {
@@ -199,6 +200,41 @@ namespace nRank.DecisionRules
             var dr1 = new ImmutableDecisionRule("a1", "<=", 1.5f, _approximation);
             var optimizedRule = dr.And(dr1).CreateOptimizedRule(0.2f, f1table.GetAllObjectIdentifiers());
             optimizedRule.ToString().ShouldBe("if (f(a1, x) <= 1,5) then x E Cl1<=");
+        }
+
+        [Test]
+        public void TestIsSatisfiedFor()
+        {
+            var generator = new InformationTableGenerator();
+            var table = generator.GetInformationTable();
+            var dr = new ImmutableDecisionRule("a1", "<=", 1.5f, _approximation);
+
+            dr.IsSatisfiedFor(table,"1").ShouldBeTrue();
+            dr.IsSatisfiedFor(table,"2").ShouldBeFalse();
+        }
+
+        [Test]
+        public void TestGetValidClasses()
+        {
+            var table = new InformationTable(new Dictionary<string, bool> { { "A", false } }, "b", false);
+            foreach (var i in Enumerable.Range(1, 3))
+            {
+                table.AddObject(i.ToString(), new Dictionary<string, float> { { "A", i } }, i);
+            }
+            var generator = new VCDomLEM();
+            var model = generator.GenerateDecisionRules(table, 0);
+            var result = Enumerable.Range(1, 3)
+                .Select(x => new
+                {
+                    Id = x,
+                    Classes = model.Predict(new[] { x.ToString() }, table).Single()
+                }).ToList();
+
+            foreach(var item in result)
+            {
+                item.Classes.ShouldBe(item.Id);
+            }
+
         }
     }
 }

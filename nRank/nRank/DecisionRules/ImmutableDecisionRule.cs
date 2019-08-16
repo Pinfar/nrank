@@ -14,6 +14,8 @@ namespace nRank.DecisionRules
 
         public float Accuracy => CalculateAccuracyEpsilon();
 
+        public ISet<int> Classes => _approximation.Classes;
+
         public ImmutableDecisionRule(string attribute, string operatorStr, float value, IApproximation approximation) : this(approximation)
         {
             _conditionalParts.Add(new ConditionalPart(attribute, operatorStr, value));
@@ -72,11 +74,13 @@ namespace nRank.DecisionRules
         public IEnumerable<string> GetSatisfiedObjectsIdentifiers(IInformationTable informationTable)
         {
             var identifiers = informationTable.GetAllObjectIdentifiers();
-            foreach (var identifier in identifiers)
-            {
-                var attributes = informationTable.GetObjectAttributes(identifier);
-                if (_conditionalParts.All(x => x.IsTrueFor(attributes))) yield return identifier;
-            }
+            return identifiers.Where(x => IsSatisfiedFor(informationTable, x));
+        }
+
+        public bool IsSatisfiedFor(IInformationTable informationTable, string identifier)
+        {
+            var attributes = informationTable.GetObjectAttributes(identifier);
+            return _conditionalParts.All(x => x.IsTrueFor(attributes));
         }
 
         public bool IsEmpty()

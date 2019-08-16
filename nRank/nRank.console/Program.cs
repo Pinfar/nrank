@@ -39,14 +39,17 @@ namespace nRank.console
             var reader = new InformationTableReader();
             var table = reader.Read(path);
             var vcDomLem = new VCDomLEM();
-            var rules = vcDomLem.GenerateDecisionRules(table, consistencyValue);
+            var model = vcDomLem.GenerateDecisionRules(table, consistencyValue);
             //var coveredItems = rules
             //    .Select(x => x.GetCoveredItems())
             //    .Select(x => $"{{ {string.Join(", ", x)} }}");
-            var result = rules
+            var result = model.Rules
                 //.Zip(coveredItems, (x, y) => $"{x.ToString()} z a = {x.Accuracy} {y}")
                 .Select(x => $"{x.ToString()} z a = {x.Accuracy}")
                 .ToList();
+
+            var predicted = model.Predict(table.GetAllObjectIdentifiers().ToList(), table);
+            var all = table.GetDecisionAttribute().Zip(predicted, (x, y) => new { shouldbe = x, was = y }).ToDictionary(x => x.shouldbe.Key, x => new { shouldbe = x.shouldbe.Value, x.was });
             var resultDir = Path.GetFileNameWithoutExtension(file);
             Directory.CreateDirectory(Path.Combine(".",resultDir));
             File.WriteAllLines(Path.Combine(resultDir, "result.txt"), result);
