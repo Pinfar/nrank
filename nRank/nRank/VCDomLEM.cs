@@ -27,11 +27,6 @@ namespace nRank
             var rules = new List<IDecisionRule>();
             var approximations = approximationsGenerator.GetApproximations(informationTable, consistencyLevel);
             rules = approximations.SelectMany(approximation => GenerateRules(informationTable, consistencyLevel, approximation)).ToList();
-            //foreach(var approximation in approximations)
-            //{
-            //    IEnumerable<IDecisionRule> minimalRules = GenerateRules(informationTable, consistencyLevel, approximation);
-            //    rules.AddRange(minimalRules);
-            //}
             return new TrainedModel(rules);
         }
 

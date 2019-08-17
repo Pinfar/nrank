@@ -1,4 +1,5 @@
 ﻿using nRank.console.FileProcessors;
+using nRank.VCDomLEMAbstractions;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -12,7 +13,49 @@ namespace nRank.console
     {
         static void Main(string[] args)
         {
-            string file;
+            string file, path, consistency;
+            HandleInputParams(args, out file, out path, out consistency);
+            float consistencyValue = float.Parse(consistency);
+
+            var reader = new InformationTableReader();
+            var table = reader.Read(path);
+            var vcDomLem = new VCDomLEM();
+            var model = vcDomLem.GenerateDecisionRules(table, consistencyValue);
+
+            var resultDir = Path.GetFileNameWithoutExtension(file);
+            SaveResultFile(resultDir, model);
+            SaveScoreFile(resultDir, table, model);
+
+        }
+
+        private static void SaveScoreFile(string resultDir, IInformationTable table, IModel model)
+        {
+            var predicted = model.Predict(table.GetAllObjectIdentifiers().ToList(), table);
+            var all = table
+                .GetDecisionAttribute()
+                .Zip(predicted, (x, y) => new { shouldbe = x, was = y })
+                .Select(x => $"{x.shouldbe.Key};{x.shouldbe.Value};{x.was}");
+
+            File.WriteAllLines(Path.Combine(resultDir, "predicted.csv"), all);
+        }
+
+        private static void SaveResultFile(string resultDir, VCDomLEMAbstractions.IModel model)
+        {
+            //var coveredItems = rules
+            //    .Select(x => x.GetCoveredItems())
+            //    .Select(x => $"{{ {string.Join(", ", x)} }}");
+            var result = model.Rules
+                //.Zip(coveredItems, (x, y) => $"{x.ToString()} z a = {x.Accuracy} {y}")
+                .Select(x => $"{x.ToString()} z a = {x.Accuracy}")
+                .ToList();
+
+            
+            Directory.CreateDirectory(Path.Combine(".", resultDir));
+            File.WriteAllLines(Path.Combine(resultDir, "result.txt"), result);
+        }
+
+        private static void HandleInputParams(string[] args, out string file, out string path, out string consistency)
+        {
             if (args.Length < 1)
             {
                 Console.WriteLine("Insert experiment file name!");
@@ -22,9 +65,7 @@ namespace nRank.console
             {
                 file = args[0];
             }
-            var path = Path.Combine(".", file);
-
-            string consistency;
+            path = Path.Combine(".", file);
             if (args.Length < 2)
             {
                 Console.WriteLine("Insert consistency treshold!");
@@ -34,25 +75,6 @@ namespace nRank.console
             {
                 consistency = args[1];
             }
-            float consistencyValue = float.Parse(consistency);
-
-            var reader = new InformationTableReader();
-            var table = reader.Read(path);
-            var vcDomLem = new VCDomLEM();
-            var model = vcDomLem.GenerateDecisionRules(table, consistencyValue);
-            //var coveredItems = rules
-            //    .Select(x => x.GetCoveredItems())
-            //    .Select(x => $"{{ {string.Join(", ", x)} }}");
-            var result = model.Rules
-                //.Zip(coveredItems, (x, y) => $"{x.ToString()} z a = {x.Accuracy} {y}")
-                .Select(x => $"{x.ToString()} z a = {x.Accuracy}")
-                .ToList();
-
-            var predicted = model.Predict(table.GetAllObjectIdentifiers().ToList(), table);
-            var all = table.GetDecisionAttribute().Zip(predicted, (x, y) => new { shouldbe = x, was = y }).ToDictionary(x => x.shouldbe.Key, x => new { shouldbe = x.shouldbe.Value, x.was });
-            var resultDir = Path.GetFileNameWithoutExtension(file);
-            Directory.CreateDirectory(Path.Combine(".",resultDir));
-            File.WriteAllLines(Path.Combine(resultDir, "result.txt"), result);
         }
     }
 }
