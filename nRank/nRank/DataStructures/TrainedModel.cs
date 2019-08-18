@@ -19,6 +19,7 @@ namespace nRank.DataStructures
         public IList<int> Predict(IList<string> identifiers, IInformationTable table)
         {
             var resolvers = identifiers
+                .AsParallel()
                 .Select(x => Rules
                     .Where(y => y.IsSatisfiedFor(table, x))
                     .Select(y => new ClassResolver(y))

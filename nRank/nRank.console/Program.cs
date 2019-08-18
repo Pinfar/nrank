@@ -1,4 +1,5 @@
 ﻿using nRank.console.FileProcessors;
+using nRank.console.Statistics;
 using nRank.VCDomLEMAbstractions;
 using System;
 using System.Collections.Generic;
@@ -19,16 +20,21 @@ namespace nRank.console
 
             var reader = new InformationTableReader();
             var table = reader.Read(path);
+
+            var splitter = new Splitter();
+            var split = splitter.Split(table, 0.75f);
+
             var vcDomLem = new VCDomLEM();
-            var model = vcDomLem.GenerateDecisionRules(table, consistencyValue);
+            var model = vcDomLem.GenerateDecisionRules(split.TrainingTable, consistencyValue);
 
             var resultDir = Path.GetFileNameWithoutExtension(file);
-            SaveResultFile(resultDir, model);
-            SaveScoreFile(resultDir, table, model);
+            SaveRulesFile(resultDir, model);
+            SavePredictedFile(resultDir, table, model);
+            SaveResultFile(resultDir, split, model);
 
         }
 
-        private static void SaveScoreFile(string resultDir, IInformationTable table, IModel model)
+        private static void SavePredictedFile(string resultDir, IInformationTable table, IModel model)
         {
             var predicted = model.Predict(table.GetAllObjectIdentifiers().ToList(), table);
             var all = table
@@ -39,19 +45,32 @@ namespace nRank.console
             File.WriteAllLines(Path.Combine(resultDir, "predicted.csv"), all);
         }
 
-        private static void SaveResultFile(string resultDir, VCDomLEMAbstractions.IModel model)
+        private static void SaveRulesFile(string resultDir, VCDomLEMAbstractions.IModel model)
         {
-            //var coveredItems = rules
-            //    .Select(x => x.GetCoveredItems())
-            //    .Select(x => $"{{ {string.Join(", ", x)} }}");
             var result = model.Rules
-                //.Zip(coveredItems, (x, y) => $"{x.ToString()} z a = {x.Accuracy} {y}")
                 .Select(x => $"{x.ToString()} z a = {x.Accuracy}")
                 .ToList();
 
-            
+
             Directory.CreateDirectory(Path.Combine(".", resultDir));
-            File.WriteAllLines(Path.Combine(resultDir, "result.txt"), result);
+            File.WriteAllLines(Path.Combine(resultDir, "rules.txt"), result);
+        }
+
+        private static void SaveResultFile(string resultDir, SplitInformationTable tables, IModel model)
+        {
+            var predictedTraining = model.Predict(tables.TrainingTable.GetAllObjectIdentifiers().ToList(), tables.TrainingTable);
+            var rmseTraining = Metrics.RMSE(tables.TrainingTable.GetDecisionAttribute().Select(x => x.Value), predictedTraining);
+
+            var predictedTesting = model.Predict(tables.TestingTable.GetAllObjectIdentifiers().ToList(), tables.TestingTable);
+            var rmseTesting = Metrics.RMSE(tables.TestingTable.GetDecisionAttribute().Select(x => x.Value), predictedTesting);
+
+            var resultFileContent = new[]
+            {
+                $"RMSE dla zbioru uczącego: {rmseTraining}",
+                $"RMSE dla zbioru testowego: {rmseTesting}"
+            };
+
+            File.WriteAllLines(Path.Combine(resultDir, "result.txt"), resultFileContent);
         }
 
         private static void HandleInputParams(string[] args, out string file, out string path, out string consistency)
