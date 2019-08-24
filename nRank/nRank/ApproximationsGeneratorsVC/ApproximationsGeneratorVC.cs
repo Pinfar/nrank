@@ -10,7 +10,13 @@ namespace nRank.ApproximationsGeneratorsVC
 {
     class ApproximationsGeneratorVC : IAllApproximationsGenerator
     {
-        public ParallelQuery<IApproximation> GetApproximations(IInformationTable originalTable, float consistencyLevel)
+        public IEnumerable<IApproximation> GetApproximations(IInformationTable originalTable, float consistencyLevel)
+        {
+
+            return GetActionCreators(originalTable, consistencyLevel).Select(x => x());
+        }
+
+        public ParallelQuery<IApproximation> GetApproximationsParallel(IInformationTable originalTable, float consistencyLevel)
         {
 
             return GetActionCreators(originalTable, consistencyLevel).AsParallel().Select(x => x());

@@ -15,18 +15,28 @@ namespace nRank
     {
         readonly IDecisionRuleGenerator decisionRuleGenerator;
         readonly IAllApproximationsGenerator approximationsGenerator;
+        readonly bool parallelizeApproximationProcessing;
 
-        public VCDomLEM()
+        public VCDomLEM(bool parallelizeApproximationProcessing = true, bool parallelizeRuleEvaluation = false)
         {
-            decisionRuleGenerator = new DecisionRuleGenerator();
+            this.parallelizeApproximationProcessing = parallelizeApproximationProcessing;
+            decisionRuleGenerator = new DecisionRuleGenerator(parallelizeRuleEvaluation);
             approximationsGenerator = new ApproximationsGeneratorVC();
         }
 
         public IModel GenerateDecisionRules(IInformationTable informationTable, float consistencyLevel)
         {
             var rules = new List<IDecisionRule>();
-            var approximations = approximationsGenerator.GetApproximations(informationTable, consistencyLevel);
-            rules = approximations.SelectMany(approximation => GenerateRules(informationTable, consistencyLevel, approximation)).ToList();
+            if (parallelizeApproximationProcessing)
+            {
+                var approximations = approximationsGenerator.GetApproximationsParallel(informationTable, consistencyLevel);
+                rules = approximations.SelectMany(approximation => GenerateRules(informationTable, consistencyLevel, approximation)).ToList();
+            }
+            else
+            {
+                var approximations = approximationsGenerator.GetApproximations(informationTable, consistencyLevel);
+                rules = approximations.SelectMany(approximation => GenerateRules(informationTable, consistencyLevel, approximation)).ToList();
+            }
             return new TrainedModel(rules);
         }
 

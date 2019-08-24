@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace nRank.console
 {
@@ -21,16 +22,27 @@ namespace nRank.console
             var reader = new InformationTableReader();
             var table = reader.Read(path);
 
-            var splitter = new Splitter();
-            var split = splitter.Split(table, 0.75f);
+            
 
-            var vcDomLem = new VCDomLEM();
-            var model = vcDomLem.GenerateDecisionRules(split.TrainingTable, consistencyValue);
+            var result = new List<string>
+            {
+                "label;RMSE dla zbioru uczącego;RMSE dla zbioru testowego;Program Wykonywał się;Wygenerowano reguł",
+            };
+            for(var i=0;i<10;i++)
+            {
+                var splitter = new Splitter();
+                var split = splitter.Split(table, 0.75f);
+                result.Add(ConductExperiment(consistencyValue, split, "A", false, false));
+                result.Add(ConductExperiment(consistencyValue, split, "B", true, false));
+                result.Add(ConductExperiment(consistencyValue, split, "C", false, true));
+                result.Add(ConductExperiment(consistencyValue, split, "D", true, true));
+            }
 
             var resultDir = Path.GetFileNameWithoutExtension(file);
-            SaveRulesFile(resultDir, model);
-            SavePredictedFile(resultDir, table, model);
-            SaveResultFile(resultDir, split, model);
+            //SaveRulesFile(resultDir, model);
+            //SavePredictedFile(resultDir, table, model);
+            Directory.CreateDirectory(Path.Combine(".", resultDir));
+            SaveResultFile(resultDir, result);
 
         }
 
@@ -52,11 +64,24 @@ namespace nRank.console
                 .ToList();
 
 
-            Directory.CreateDirectory(Path.Combine(".", resultDir));
+            
             File.WriteAllLines(Path.Combine(resultDir, "rules.txt"), result);
         }
 
-        private static void SaveResultFile(string resultDir, SplitInformationTable tables, IModel model)
+        private static string ConductExperiment(float consistencyValue, SplitInformationTable split, string label, bool parallelizeApproximationProcessing, bool parallelizeRuleEvaluation)
+        {
+            var vcDomLem = new VCDomLEM(parallelizeApproximationProcessing, parallelizeRuleEvaluation);
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+
+            var model = vcDomLem.GenerateDecisionRules(split.TrainingTable, consistencyValue);
+
+            sw.Stop();
+
+            return GetResultMessage(label, split, model, sw.ElapsedMilliseconds);
+        }
+
+        private static string GetResultMessage(string label, SplitInformationTable tables, IModel model, long elapsedMiliseconds)
         {
             var predictedTraining = model.Predict(tables.TrainingTable.GetAllObjectIdentifiers().ToList(), tables.TrainingTable);
             var rmseTraining = Metrics.RMSE(tables.TrainingTable.GetDecisionAttribute().Select(x => x.Value), predictedTraining);
@@ -64,12 +89,11 @@ namespace nRank.console
             var predictedTesting = model.Predict(tables.TestingTable.GetAllObjectIdentifiers().ToList(), tables.TestingTable);
             var rmseTesting = Metrics.RMSE(tables.TestingTable.GetDecisionAttribute().Select(x => x.Value), predictedTesting);
 
-            var resultFileContent = new[]
-            {
-                $"RMSE dla zbioru uczącego: {rmseTraining}",
-                $"RMSE dla zbioru testowego: {rmseTesting}"
-            };
+            return $"{label};{rmseTraining};{rmseTesting};{elapsedMiliseconds};{model.Rules.Count}";
+        }
 
+        private static void SaveResultFile(string resultDir, IEnumerable<string> resultFileContent)
+        {
             File.WriteAllLines(Path.Combine(resultDir, "result.txt"), resultFileContent);
         }
 

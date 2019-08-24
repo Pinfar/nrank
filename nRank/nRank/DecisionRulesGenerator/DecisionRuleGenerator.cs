@@ -11,6 +11,16 @@ namespace nRank.DecisionRulesGenerator
 {
     class DecisionRuleGenerator : IDecisionRuleGenerator
     {
+
+        private delegate RuleResult BestRuleGenerator(IDecisionRule currentRule, IInformationTable informationTable, List<IDecisionRule> filteredRules, HashSet<string> notCovered);
+
+        BestRuleGenerator bestRuleGenerator;
+
+        public DecisionRuleGenerator(bool executeInParallel = false)
+        {
+            bestRuleGenerator = executeInParallel ? (BestRuleGenerator)FindBestRuleParallel: FindBestRuleSequential;
+        }
+
         public IEnumerable<IDecisionRule> GenerateRulesFrom(IApproximation approximation, float consistencyLevel)
         {
             var informationTable = approximation.OriginalInformationTable;
@@ -65,12 +75,24 @@ namespace nRank.DecisionRulesGenerator
         {
             var filteredRules = rules.Where(x => !currentRule.Contains(x)).ToList();
             var notCovered = new HashSet<string>(notCoveredYet.GetAllObjectIdentifiers());
-
-            var best = filteredRules
-                .Select(x => EvaluateRule(currentRule.And(x), notCovered, informationTable))
-                .Aggregate((x, y) => x > y ? x : y);
+            RuleResult best = bestRuleGenerator(currentRule, informationTable, filteredRules, notCovered);
 
             return best.Rule;
+        }
+
+        private RuleResult FindBestRuleParallel(IDecisionRule currentRule, IInformationTable informationTable, List<IDecisionRule> filteredRules, HashSet<string> notCovered)
+        {
+            return filteredRules
+                .AsParallel()
+                .Select(x => EvaluateRule(currentRule.And(x), notCovered, informationTable))
+                .Aggregate((x, y) => x > y ? x : y);
+        }
+
+        private RuleResult FindBestRuleSequential(IDecisionRule currentRule, IInformationTable informationTable, List<IDecisionRule> filteredRules, HashSet<string> notCovered)
+        {
+            return filteredRules
+                .Select(x => EvaluateRule(currentRule.And(x), notCovered, informationTable))
+                .Aggregate((x, y) => x > y ? x : y);
         }
 
         private RuleResult EvaluateRule(IDecisionRule rule, IEnumerable<string> notCoveredYet, IInformationTable informationTable)
