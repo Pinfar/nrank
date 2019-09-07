@@ -17,5 +17,6 @@ namespace nRank.VCDomLEMAbstractions
         IDecisionRule CreateOptimizedRule(float consistencyLevel, IEnumerable<string> notCoveredYet);
         bool Contains(IDecisionRule rule);
         IEnumerable<string> GetCoveredItems();
+        string ToLatexString();
     }
 }

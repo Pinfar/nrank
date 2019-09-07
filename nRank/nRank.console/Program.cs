@@ -21,14 +21,27 @@ namespace nRank.console
 
             var reader = new InformationTableReader();
             var table = reader.Read(path);
+            //RunExperiment(file, consistencyValue, table);
+            RunRuleGenerationTask(file, consistencyValue, table);
 
-            
+        }
 
+        private static void RunRuleGenerationTask(string file, float consistencyValue, IInformationTable table)
+        {
+            var vcDomLem = new VCDomLEM(true, true);
+            var model = vcDomLem.GenerateDecisionRules(table, consistencyValue);
+            var resultDir = Path.GetFileNameWithoutExtension(file);
+            Directory.CreateDirectory(Path.Combine(".", resultDir));
+            SaveRulesFileAsLatex(resultDir, model, consistencyValue);
+        }
+
+        private static void RunExperiment(string file, float consistencyValue, IInformationTable table)
+        {
             var result = new List<string>
             {
                 "label;RMSE dla zbioru uczącego;RMSE dla zbioru testowego;Program Wykonywał się;Wygenerowano reguł",
             };
-            for(var i=0;i<10;i++)
+            for (var i = 0; i < 10; i++)
             {
                 var splitter = new Splitter();
                 var split = splitter.Split(table, 0.75f);
@@ -43,7 +56,6 @@ namespace nRank.console
             //SavePredictedFile(resultDir, table, model);
             Directory.CreateDirectory(Path.Combine(".", resultDir));
             SaveResultFile(resultDir, result);
-
         }
 
         private static void SavePredictedFile(string resultDir, IInformationTable table, IModel model)
@@ -57,15 +69,26 @@ namespace nRank.console
             File.WriteAllLines(Path.Combine(resultDir, "predicted.csv"), all);
         }
 
-        private static void SaveRulesFile(string resultDir, VCDomLEMAbstractions.IModel model)
+        private static void SaveRulesFile(string resultDir, VCDomLEMAbstractions.IModel model, float consistencyValue)
         {
             var result = model.Rules
-                .Select(x => $"{x.ToString()} z a = {x.Accuracy}")
+                .Select(x => $"{x.ToString()} z a = {x.Accuracy} : {{ {string.Join(", ", x.GetCoveredItems())} }}")
                 .ToList();
 
 
             
-            File.WriteAllLines(Path.Combine(resultDir, "rules.txt"), result);
+            File.WriteAllLines(Path.Combine(resultDir, $"rules{consistencyValue}.txt"), result);
+        }
+
+        private static void SaveRulesFileAsLatex(string resultDir, VCDomLEMAbstractions.IModel model, float consistencyValue)
+        {
+            var result = model.Rules
+                .Select(x => $"{x.ToLatexString()} & {x.Accuracy} & {string.Join(", ", x.GetCoveredItems())}")
+                .ToList();
+
+
+
+            File.WriteAllLines(Path.Combine(resultDir, $"rules{consistencyValue}.txt"), result);
         }
 
         private static string ConductExperiment(float consistencyValue, SplitInformationTable split, string label, bool parallelizeApproximationProcessing, bool parallelizeRuleEvaluation)

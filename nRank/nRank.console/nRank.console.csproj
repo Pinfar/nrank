@@ -75,6 +75,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="packages.config" />
+    <None Include="Students.isf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="winequality-red.isf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

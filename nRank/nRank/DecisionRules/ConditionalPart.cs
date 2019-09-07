@@ -36,5 +36,20 @@ namespace nRank.DecisionRules
         {
             return false;
         }
+
+        public string ToLatexString()
+        {
+            return $"(f({_att}, x) \\({GetOperAsLatex()}\\) {_value})";
+        }
+
+        private string GetOperAsLatex()
+        {
+            switch (_oper)
+            {
+                case ">=": return "\\geq";
+                case "<=": return "\\leq";
+                default: throw new InvalidOperationException($"Operator '{_oper}' is not supported in ToLatexString command!");
+            }
+        }
     }
 }

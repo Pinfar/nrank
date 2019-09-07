@@ -18,6 +18,11 @@ namespace nRank.DecisionRules
             return true;
         }
 
+        public string ToLatexString()
+        {
+            return ToString();
+        }
+
         public override string ToString()
         {
             return $"(true)";

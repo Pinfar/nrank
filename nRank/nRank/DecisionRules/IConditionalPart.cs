@@ -7,5 +7,6 @@ namespace nRank.DecisionRules
         bool IsTrueFor(Dictionary<string, float> attributes);
         string ToString();
         bool IsEmpty();
+        string ToLatexString();
     }
 }

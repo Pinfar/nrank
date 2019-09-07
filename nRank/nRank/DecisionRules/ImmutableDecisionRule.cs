@@ -162,5 +162,19 @@ namespace nRank.DecisionRules
             return commonPart / negSetCount;
  
         }
+
+        public string ToLatexString()
+        {
+            var conditions = string.Join(" and ", _conditionalParts.Select(x => x.ToLatexString()));
+            return $"if {conditions} then  \\(x \\in {GetLatexSymbol()} \\)";
+        }
+
+        private string GetLatexSymbol()
+        {
+            return _approximation.Symbol
+                .Replace("Cl", "Cl_{")
+                .Replace(">=", "}^{\\geq}")
+                .Replace("<=", "}^{\\leq}");
+        }
     }
 }
