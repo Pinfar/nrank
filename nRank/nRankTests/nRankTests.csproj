@@ -64,6 +64,8 @@
     <Compile Include="DataStructures\InformationObjectTests.cs" />
     <Compile Include="DataStructures\IntAttributeTests.cs" />
     <Compile Include="DataStructures\StringPreferableTests.cs" />
+    <Compile Include="Generators\LowerApproximationGeneratorVCTest.cs" />
+    <Compile Include="Generators\PSetGeneratorTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

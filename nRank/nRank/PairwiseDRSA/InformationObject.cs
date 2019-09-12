@@ -24,5 +24,22 @@ namespace nRank.PairwiseDRSA
         private List<OrdinalAttribute> _lazyOrdinalAttributes;
         private List<OrdinalAttribute> GetOrdinalAttributes() => Attributes.Where(x => x is OrdinalAttribute).Select(x => (OrdinalAttribute)x).ToList();
         public List<OrdinalAttribute> OrdinalAttributes => _lazyOrdinalAttributes ?? (_lazyOrdinalAttributes = GetOrdinalAttributes());
+
+        public InformationObjectPair Pair(InformationObject second)
+        {
+            return new InformationObjectPair(this, second);
+        }
+
+        public override bool Equals(object obj)
+        {
+            var @object = obj as InformationObject;
+            return @object != null &&
+                   IntIdentifier == @object.IntIdentifier;
+        }
+
+        public override int GetHashCode()
+        {
+            return 988103285 + IntIdentifier.GetHashCode();
+        }
     }
 }

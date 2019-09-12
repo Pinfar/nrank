@@ -103,8 +103,13 @@
     <Compile Include="PairwiseDRSA\IntPreferable.cs" />
     <Compile Include="PairwiseDRSA\IntValue.cs" />
     <Compile Include="PairwiseDRSA\IPreferable.cs" />
+    <Compile Include="PairwiseDRSA\IPSetGenerator.cs" />
+    <Compile Include="PairwiseDRSA\LowerApproximationGeneratorVC.cs" />
     <Compile Include="PairwiseDRSA\NominalAttribute.cs" />
     <Compile Include="PairwiseDRSA\OrdinalAttribute.cs" />
+    <Compile Include="PairwiseDRSA\PApproximation.cs" />
+    <Compile Include="PairwiseDRSA\PDominatedSetGenerator.cs" />
+    <Compile Include="PairwiseDRSA\PDominatingSetGenerator.cs" />
     <Compile Include="PairwiseDRSA\StringPreferable.cs" />
     <Compile Include="TestCommons\InformationTableGenerator.cs" />
     <Compile Include="UnionGenerators\DownwardUnionGenerator.cs" />

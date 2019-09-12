@@ -8,6 +8,11 @@ namespace nRank.PairwiseDRSA
 {
     class InformationTable
     {
-        List<InformationObject> Objects { get; set; } = new List<InformationObject>();
+        public InformationTable(IEnumerable<InformationObject> objects)
+        {
+            Objects = objects.ToList();
+        }
+
+        public List<InformationObject> Objects { get; }
     }
 }
