@@ -97,6 +97,8 @@
     <Compile Include="PairwiseDRSA\FloatValue.cs" />
     <Compile Include="PairwiseDRSA\DecisionRuleGenerator.cs" />
     <Compile Include="PairwiseDRSA\IAttribute.cs" />
+    <Compile Include="PairwiseDRSA\IDecisionRule.cs" />
+    <Compile Include="PairwiseDRSA\ImmutableDecisionRule.cs" />
     <Compile Include="PairwiseDRSA\InformationObject.cs" />
     <Compile Include="PairwiseDRSA\InformationObjectPair.cs" />
     <Compile Include="PairwiseDRSA\InformationTable.cs" />
@@ -113,6 +115,7 @@
     <Compile Include="PairwiseDRSA\PDominatedSetGenerator.cs" />
     <Compile Include="PairwiseDRSA\PDominatingSetGenerator.cs" />
     <Compile Include="PairwiseDRSA\StringPreferable.cs" />
+    <Compile Include="PairwiseDRSA\AttributePair.cs" />
     <Compile Include="TestCommons\InformationTableGenerator.cs" />
     <Compile Include="UnionGenerators\DownwardUnionGenerator.cs" />
     <Compile Include="UnionGenerators\TestDownwardUnionGenerator.cs" />
