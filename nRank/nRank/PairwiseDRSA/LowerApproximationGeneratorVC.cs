@@ -11,19 +11,30 @@ namespace nRank.PairwiseDRSA
         //abstract protected string _allowedGainOperator { get; }
 
         private IPSetGenerator psetGenerator;
+        private PairwiseComparisonTable.RelationType _relation;
 
-        public LowerApproximationGeneratorVC(IPSetGenerator psetGenerator)
+        public LowerApproximationGeneratorVC(PairwiseComparisonTable.RelationType relation)
         {
-            this.psetGenerator = psetGenerator;
+            _relation = relation;
+            if (_relation == PairwiseComparisonTable.RelationType.S)
+            {
+                psetGenerator = new PDominatingSetGenerator();
+            }
+            else
+            {
+                psetGenerator = new PDominatedSetGenerator();
+            }
         }
 
-        public PApproximation GetApproximation(List<InformationObjectPair> positiveDefinedPairs, List<InformationObjectPair> negativeDefinedPairs, InformationTable originalTable, float consistencyLevel)
+        public PApproximation GetApproximation(PairwiseComparisonTable table, InformationTable originalTable, float consistencyLevel)
         {
-            var positiveDefinedPairsSet = new HashSet<InformationObjectPair>(negativeDefinedPairs);
+            List<InformationObjectPair> positiveDefinedPairs = table.Filter(x => x.Relation == _relation).AsInformationObjectPairs();
+            List<InformationObjectPair> negativeDefinedPairs = table.Filter(x => x.Relation != _relation).AsInformationObjectPairs();
+            var negativeDefinedPairsSet = new HashSet<InformationObjectPair>(negativeDefinedPairs);
             var approximation = positiveDefinedPairs
                 .Concat(negativeDefinedPairs)
                 .Where(x => 
-                     IsInApproximationEpsilon(originalTable, x, positiveDefinedPairsSet, consistencyLevel)
+                     IsInApproximationEpsilon(originalTable, x, negativeDefinedPairsSet, consistencyLevel)
                 )
                 .ToList();
 
@@ -31,15 +42,14 @@ namespace nRank.PairwiseDRSA
                 .SelectMany(x => psetGenerator.Generate(originalTable, x))
                 .Distinct()
                 .ToList();
-            return new PApproximation(approximation, positiveRegion);
+            return new PApproximation(approximation, positiveRegion, table);
         }
 
         private bool IsInApproximationEpsilon(InformationTable originalTable, InformationObjectPair obj, HashSet<InformationObjectPair> objectsInNegativeRelation, float consistencyLevel)
         {
             var dset = new HashSet<InformationObjectPair>(psetGenerator.Generate(originalTable, obj));
-            var negSet = objectsInNegativeRelation;
-            float commonPart = dset.Intersect(negSet).Count();
-            float negSetCount = negSet.Count();
+            float commonPart = dset.Intersect(objectsInNegativeRelation).Count();
+            float negSetCount = objectsInNegativeRelation.Count();
             return (commonPart / negSetCount) <= consistencyLevel;
         }
     }

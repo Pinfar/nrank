@@ -22,6 +22,16 @@ namespace nRank.PairwiseDRSA
             return DominatesOrdinal(other) && DominatesNominal(other);
         }
 
+        public List<AttributePair> GetAttributes()
+        {
+            var list = new List<AttributePair>();
+            var ordinals = First.OrdinalAttributes.Zip(Second.OrdinalAttributes, (x, y) => new AttributePair(x, y));
+            list.AddRange(ordinals);
+            var nominals = First.NominalAttributes.Zip(Second.NominalAttributes, (x, y) => new AttributePair(x, y));
+            list.AddRange(nominals);
+            return list;
+        }
+
         private bool DominatesNominal(InformationObjectPair other)
         {
             var first = First.NominalAttributes.Zip(Second.NominalAttributes, (x, y) => x.DifferenceWith(y));
