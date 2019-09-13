@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace nRank.PairwiseDRSA
 {
-    class InformationObject
+    public class InformationObject
     {
         public InformationObject(int intIdentifier, string descriptionIdentifier, List<IAttribute> attributes)
         {

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace nRank.PairwiseDRSA
 {
-    enum AttributeType
+    public enum AttributeType
     {
         Cost,
         Gain

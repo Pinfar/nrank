@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace nRank.PairwiseDRSA
 {
-    class IntValue : INominalValue
+    public class IntValue : INominalValue
     {
         public IntValue(int value, AttributeType type)
         {

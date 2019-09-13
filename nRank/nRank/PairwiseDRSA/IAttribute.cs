@@ -1,6 +1,6 @@
 ﻿namespace nRank.PairwiseDRSA
 {
-    internal interface IAttribute
+    public interface IAttribute
     {
         string Label { get; }
         string StringValue { get; }

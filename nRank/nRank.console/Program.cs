@@ -19,10 +19,11 @@ namespace nRank.console
             HandleInputParams(args, out file, out path, out consistency);
             float consistencyValue = float.Parse(consistency);
 
-            var reader = new InformationTableReader();
-            var table = reader.Read(path);
-            //RunExperiment(file, consistencyValue, table);
-            RunRuleGenerationTask(file, consistencyValue, table);
+            //var reader = new InformationTableReader();
+            //var table = reader.Read(path);
+            ////RunExperiment(file, consistencyValue, table);
+            //RunRuleGenerationTask(file, consistencyValue, table);
+            RunPairRuleGenerationTask(file, consistencyValue);
 
         }
 
@@ -33,6 +34,27 @@ namespace nRank.console
             var resultDir = Path.GetFileNameWithoutExtension(file);
             Directory.CreateDirectory(Path.Combine(".", resultDir));
             SaveRulesFileAsLatex(resultDir, model, consistencyValue);
+        }
+
+        private static void RunPairRuleGenerationTask(string path, float consistencyValue)
+        {
+            var vcDomLem = new PairVCDomLEM(true, true);
+            var reader = new PairInformationTableReader();
+            var configReader = new ConfigurationReader();
+            var config = configReader.ReadConfiguration(Path.Combine(path, "experiment.properties"));
+            var table = reader.Read(Path.Combine(path, config.LearningDataFile));
+
+            var pairwiseCompTab = new nRank.PairwiseDRSA.PairwiseComparisonTable();
+            foreach(var relation in config.Pairs)
+            {
+                pairwiseCompTab.Add(table.Objects[relation.First], relation.Symbol, table.Objects[relation.Second]);
+            }
+
+
+            var model = vcDomLem.GenerateDecisionRules(table, pairwiseCompTab, consistencyValue);
+            var resultDir = path;
+            Directory.CreateDirectory(Path.Combine(".", resultDir));
+            File.WriteAllLines(Path.Combine(path, "rules.txt"), model.Select(x => x.ToString()));
         }
 
         private static void RunExperiment(string file, float consistencyValue, IInformationTable table)

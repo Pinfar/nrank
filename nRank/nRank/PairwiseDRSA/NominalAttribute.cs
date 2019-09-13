@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace nRank.PairwiseDRSA
 {
-    class NominalAttribute : IAttribute
+    public class NominalAttribute : IAttribute
     {
         public NominalAttribute(string label, INominalValue value)
         {

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace nRank.PairwiseDRSA
 {
-    class PairwiseComparisonTable
+    public class PairwiseComparisonTable
     {
         public PairwiseComparisonTable()
         {

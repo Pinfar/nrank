@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace nRank.PairwiseDRSA
 {
-    class InformationTable
+    public class InformationTable
     {
         public InformationTable(IEnumerable<InformationObject> objects)
         {

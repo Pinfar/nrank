@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace nRank.PairwiseDRSA
 {
-    interface IDecisionRule
+    public interface IDecisionRule
     {
         float Accuracy { get; }
         

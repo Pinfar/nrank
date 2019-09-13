@@ -1,6 +1,6 @@
 ﻿namespace nRank.PairwiseDRSA
 {
-    internal interface INominalValue
+    public interface INominalValue
     {
         IPreferable DifferenceWith(INominalValue value);
     }

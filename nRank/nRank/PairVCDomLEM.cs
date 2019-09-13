@@ -8,7 +8,7 @@ using nRank.PairwiseDRSA;
 
 namespace nRank
 {
-    class PairVCDomLEM
+    public class PairVCDomLEM
     {
         readonly DecisionRuleGenerator decisionRuleGenerator;
         readonly IEnumerable<LowerApproximationGeneratorVC> approximationsGenerators;

@@ -1,6 +1,6 @@
 ﻿namespace nRank.PairwiseDRSA
 {
-    internal interface IPreferable
+    public interface IPreferable
     {
         bool IsWeaklyPreferedTo(IPreferable other);
     }
