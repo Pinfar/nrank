@@ -32,6 +32,20 @@ namespace nRank.PairwiseDRSA
             return list;
         }
 
+        public AttributePair GetAttribute(string label)
+        {
+            var first = First.OrdinalAttributes.SingleOrDefault(x => x.Label == label);
+            if(first != null)
+            {
+                var second = Second.OrdinalAttributes.Single(x => x.Label == label);
+                return new AttributePair(first, second);
+            }
+
+            var firstNom = First.NominalAttributes.Single(x => x.Label == label);
+            var secondNom = Second.NominalAttributes.Single(x => x.Label == label);
+            return new AttributePair(firstNom, secondNom);
+        }
+
         private bool DominatesNominal(InformationObjectPair other)
         {
             var first = First.NominalAttributes.Zip(Second.NominalAttributes, (x, y) => x.DifferenceWith(y));

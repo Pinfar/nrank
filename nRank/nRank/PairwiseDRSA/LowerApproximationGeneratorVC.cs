@@ -42,14 +42,14 @@ namespace nRank.PairwiseDRSA
                 .SelectMany(x => psetGenerator.Generate(originalTable, x))
                 .Distinct()
                 .ToList();
-            return new PApproximation(approximation, positiveRegion, table);
+            return new PApproximation(approximation, positiveRegion, table, _relation);
         }
 
         private bool IsInApproximationEpsilon(InformationTable originalTable, InformationObjectPair obj, HashSet<InformationObjectPair> objectsInNegativeRelation, float consistencyLevel)
         {
             var dset = new HashSet<InformationObjectPair>(psetGenerator.Generate(originalTable, obj));
             float commonPart = dset.Intersect(objectsInNegativeRelation).Count();
-            float negSetCount = objectsInNegativeRelation.Count();
+            float negSetCount = objectsInNegativeRelation.Count;
             return (commonPart / negSetCount) <= consistencyLevel;
         }
     }

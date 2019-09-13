@@ -9,15 +9,14 @@ namespace nRank.PairwiseDRSA
     class ImmutableDecisionRule : IDecisionRule
     {
         List<IConditionalPart> _conditionalParts = new List<IConditionalPart>();
-        IApproximation _approximation;
+        PApproximation _approximation;
 
         public float Accuracy => CalculateAccuracyEpsilon();
+        
 
-        public ISet<int> Classes => _approximation.Classes;
-
-        public ImmutableDecisionRule(string attribute, string operatorStr, float value, PApproximation approximation) : this(approximation)
+        public ImmutableDecisionRule(AttributePair x, PApproximation approximation) : this(approximation)
         {
-            _conditionalParts.Add(new ConditionalPart(attribute, operatorStr, value));
+            _conditionalParts.Add(new ConditionalPart(x, approximation.Relation));
         }
 
         private ImmutableDecisionRule(ImmutableDecisionRule decisionRule)
@@ -41,7 +40,7 @@ namespace nRank.PairwiseDRSA
         public override string ToString()
         {
             var conditions = string.Join(" and ", _conditionalParts);
-            return $"if {conditions} then x E {_approximation.Symbol}";
+            return $"if {conditions} then x {_approximation.Relation.ToString("G")} y";
         }
 
         public IDecisionRule And(IDecisionRule decisionRule)
@@ -67,14 +66,14 @@ namespace nRank.PairwiseDRSA
             var rule = new ImmutableDecisionRule(_approximation);
             rule._conditionalParts.AddRange(_conditionalParts);
 
-            var coveredByRule = _approximation.OriginalInformationTable.Filter(rule).GetAllObjectIdentifiers();
+            var coveredByRule = _approximation.OriginalTable.Filter(rule.AsFunc()).AsInformationObjectPairs();
             var common = coveredByRule.Intersect(notCoveredYet);
             double commonCount = common.Count();
 
             foreach (var part in _conditionalParts)
             {
                 rule._conditionalParts.Remove(part);
-                var coveredByRulePartial = _approximation.OriginalInformationTable.Filter(rule).GetAllObjectIdentifiers();
+                var coveredByRulePartial = _approximation.OriginalTable.Filter(rule.AsFunc()).AsInformationObjectPairs();
                 var commonPartial = coveredByRule.Intersect(notCoveredYet);
                 double commonCountPartial = common.Count();
                 if (!rule.SatisfiesConsistencyLevel(consistencyLevel) || commonCountPartial < commonCount)
@@ -94,37 +93,12 @@ namespace nRank.PairwiseDRSA
             var selfRules = new HashSet<string>(_conditionalParts.Select(x => x.ToString()));
             return immutableRule._conditionalParts.All(x => selfRules.Contains(x.ToString()));
         }
-
-        public IEnumerable<string> GetCoveredItems()
-        {
-            return _approximation.OriginalInformationTable.Filter(this).GetAllObjectIdentifiers();
-        }
-
-        private float CalculateAccuracy()
-        {
-            var currentCoverage = Satisfy(_approximation.OriginalInformationTable).Where(x => x.Value).Select(x => x.Key).ToList();
-            var union = _approximation
-                .OriginalInformationTable
-                .GetDecisionAttribute()
-                .Where(x => _approximation.Classes.Contains(x.Value))
-                .Select(x => x.Key);
-            float commonPart = currentCoverage.Intersect(union).Count();
-            float dsetCount = currentCoverage.Count();
-            if (dsetCount > 0)
-            {
-                return commonPart / dsetCount;
-            }
-            else
-            {
-                return 0;
-            }
-        }
+        
 
         private float CalculateAccuracyEpsilon()
         {
-            var currentCoverage = GetSatisfiedObjectsIdentifiers(_approximation.OriginalInformationTable);
-            //var objectsInApproximation = _approximation.ApproximatedInformationTable.GetAllObjectIdentifiers().ToList() ;
-            var negSet = new HashSet<string>(_approximation.GetNegatedApproximatedInformationTable());
+            var currentCoverage = _approximation.OriginalTable.Filter(AsFunc()).AsInformationObjectPairs();
+            var negSet = _approximation.NegativeApproximation;
             float commonPart = currentCoverage.Intersect(negSet).Count();
             float negSetCount = negSet.Count;
             return commonPart / negSetCount;
@@ -139,20 +113,17 @@ namespace nRank.PairwiseDRSA
 
         private string GetLatexSymbol()
         {
-            return _approximation.Symbol
-                .Replace("Cl", "Cl_{")
-                .Replace(">=", "}^{\\geq}")
-                .Replace("<=", "}^{\\leq}");
+            return _approximation.Relation.ToString("G");
         }
 
         public Func<PairwiseComparisonTable.PairwiseComparisonTableEntry, bool> AsFunc()
         {
-            throw new NotImplementedException();
+            return x => AsListFilterFunc()(x.ObjectPair);
         }
 
         public Func<InformationObjectPair, bool> AsListFilterFunc()
         {
-            throw new NotImplementedException();
+            return x => _conditionalParts.All(y => y.IsTrueFor(x));
         }
     }
 }

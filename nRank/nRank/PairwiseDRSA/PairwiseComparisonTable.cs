@@ -45,6 +45,22 @@ namespace nRank.PairwiseDRSA
             public InformationObjectPair ObjectPair { get; }
             public RelationType Relation { get; }
 
+            public override bool Equals(object obj)
+            {
+                var entry = obj as PairwiseComparisonTableEntry;
+                return entry != null &&
+                       EqualityComparer<InformationObjectPair>.Default.Equals(ObjectPair, entry.ObjectPair) &&
+                       Relation == entry.Relation;
+            }
+
+            public override int GetHashCode()
+            {
+                var hashCode = -1883596917;
+                hashCode = hashCode * -1521134295 + EqualityComparer<InformationObjectPair>.Default.GetHashCode(ObjectPair);
+                hashCode = hashCode * -1521134295 + Relation.GetHashCode();
+                return hashCode;
+            }
+
             public override string ToString()
             {
                 return $"{ObjectPair.First.IntIdentifier} {Relation.ToString("g")} {ObjectPair.Second.IntIdentifier}";

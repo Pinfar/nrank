@@ -92,11 +92,15 @@
     <Compile Include="DSetGenerators\TestDDSetGenerators.cs" />
     <Compile Include="Extensions\IEnumerableExtensions.cs" />
     <Compile Include="Extensions\TestIEnumerableExtensions.cs" />
+    <Compile Include="PairVCDomLEM.cs" />
+    <Compile Include="PairwiseDRSA\AlwaysTruePart.cs" />
     <Compile Include="PairwiseDRSA\AttributeType.cs" />
+    <Compile Include="PairwiseDRSA\ConditionalPart.cs" />
     <Compile Include="PairwiseDRSA\FloatPreferable.cs" />
     <Compile Include="PairwiseDRSA\FloatValue.cs" />
     <Compile Include="PairwiseDRSA\DecisionRuleGenerator.cs" />
     <Compile Include="PairwiseDRSA\IAttribute.cs" />
+    <Compile Include="PairwiseDRSA\IConditionalPart.cs" />
     <Compile Include="PairwiseDRSA\IDecisionRule.cs" />
     <Compile Include="PairwiseDRSA\ImmutableDecisionRule.cs" />
     <Compile Include="PairwiseDRSA\InformationObject.cs" />
