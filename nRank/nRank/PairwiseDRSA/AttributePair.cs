@@ -38,6 +38,34 @@ namespace nRank.PairwiseDRSA
             return $"{First.Label}: {First.StringValue} , {Second.StringValue}";
         }
 
+        public string ToString(PairwiseComparisonTable.RelationType relation)
+        {
+            if (First is OrdinalAttribute firstOrdinal && Second is OrdinalAttribute secondOrdinal)
+            {
+
+                var labelPart = $"PAIR(Evaluations_on_{First.Label})";
+                var valuePart = $"({First.StringValue},{Second.StringValue})";
+                if(relation == PairwiseComparisonTable.RelationType.S )
+                {
+                    return $"{{{labelPart} D {valuePart} }}";
+                }
+                return $"{{{valuePart} D {labelPart} }}";
+            }
+            else if (First is NominalAttribute firstNominal && Second is NominalAttribute secondNominal)
+            {
+                var symbol = ">=";
+                if ((relation == PairwiseComparisonTable.RelationType.S) == (firstNominal.Value.Type == AttributeType.Cost) )
+                {
+                    symbol = "<=";
+                }
+                return $"[DIFF(Evaluations_difference_on_{First.Label}) {symbol} {firstNominal.DifferenceWith(secondNominal).ToString()} ]";
+            }
+            else
+            {
+                throw new NotImplementedException("This attribute type is not supported");
+            }
+        }
+
         public bool IsWeaklyPreferredTo(AttributePair other)
         {
             return _isWeaklyPreferredFunc(other);

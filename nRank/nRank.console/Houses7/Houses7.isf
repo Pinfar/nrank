@@ -1,0 +1,21 @@
+**ATTRIBUTES
++ location: (nominal) description
++ distance: (integer)
++ price: (integer)
++ comfort: [Basic, Medium, Good]
+
+**PREFERENCES
+distance: cost
+price: cost
+comfort: gain
+
+**EXAMPLES
+Poznan		3	60	Good
+Kapalica	35	30	Good
+Krakow		7	85	Medium
+Warszawa	10	90	Basic
+Wroclaw		5	60	Medium
+Malbork		50	50	Medium
+Gdansk		5	70	Medium
+
+**END

@@ -47,7 +47,7 @@ namespace nRank.PairwiseDRSA
 
         public override string ToString()
         {
-            return $"{_attributes.ToString()} {_relation.ToString("G")}";
+            return _attributes.ToString(_relation);
         }
     }
 }

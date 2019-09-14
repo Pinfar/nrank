@@ -80,6 +80,12 @@
     <None Include="Houses11\Houses11.isf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Houses7\experiment.properties">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Houses7\Houses7.isf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Notebooks.isf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

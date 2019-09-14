@@ -24,20 +24,71 @@ namespace nRank.console.FileProcessors
         private List<Relation> GetPairs(List<string> lines)
         {
             var linePrefix = "pairs = ";
-            var pairsLine = lines.First(x => x.StartsWith(linePrefix)).Replace(linePrefix, "").Trim();
+            if (lines.Any(x => x.StartsWith(linePrefix)))
+            {
+                var pairsLine = lines.First(x => x.StartsWith(linePrefix)).Replace(linePrefix, "").Trim();
 
-            var regex = new Regex( "\\{(?<n1>[0-9]+),(?<n2>[0-9]+)\\} (?<s>(Sc)|S)");
-            var pairs = pairsLine.Split(new[] { ", " }, StringSplitOptions.None)
-                .Select(x => regex.Match(x))
-                .Select(x => new Relation
+                var regex = new Regex("\\{(?<n1>[0-9]+),(?<n2>[0-9]+)\\} (?<s>(Sc)|S)");
+                var pairs = pairsLine.Split(new[] { ", " }, StringSplitOptions.None)
+                    .Select(x => regex.Match(x))
+                    .Select(x => new Relation
+                    {
+                        First = int.Parse(x.Groups["n1"].Value),
+                        Second = int.Parse(x.Groups["n2"].Value),
+                        Symbol = (x.Groups["s"].Value == "S") ? PairwiseDRSA.PairwiseComparisonTable.RelationType.S : PairwiseDRSA.PairwiseComparisonTable.RelationType.Sc
+                    })
+                    .ToList();
+
+                return pairs;
+            }
+            else
+            {
+                var otherlinePrefix = "referenceRanking = ";
+                var pairsLine = lines.First(x => x.StartsWith(otherlinePrefix)).Replace(otherlinePrefix, "").Trim();
+
+                var numbers = pairsLine.Split(new[] { ", " }, StringSplitOptions.None)
+                    .Select(x => x.Split(new[] { " " }, StringSplitOptions.None).Select(int.Parse).ToList())
+                    .ToList();
+
+                var preferedItems = new List<int>();
+                var relations = new List<Relation>();
+
+
+                foreach (var line in numbers)
                 {
-                    First = int.Parse(x.Groups["n1"].Value),
-                    Second = int.Parse(x.Groups["n2"].Value),
-                    Symbol = (x.Groups["s"].Value == "S")? PairwiseDRSA.PairwiseComparisonTable.RelationType.S : PairwiseDRSA.PairwiseComparisonTable.RelationType.Sc
-                })
-                .ToList();
+                    var tempRelations = line.SelectMany(x => preferedItems, (x, y) => new[] {
+                        new Relation
+                        {
+                            First = x,
+                            Second = y,
+                            Symbol = PairwiseDRSA.PairwiseComparisonTable.RelationType.Sc
+                        },
+                            new Relation
+                        {
+                            First = y,
+                            Second = x,
+                            Symbol = PairwiseDRSA.PairwiseComparisonTable.RelationType.S
+                        }
+                    }).SelectMany(x => x);
+                    relations.AddRange(tempRelations);
+                    preferedItems.AddRange(line);
 
-            return pairs;
+                    var newRelations = line
+                        .SelectMany(x => line, (x, y) => new { x, y })
+                        .Where(x => x.x != x.y)
+                        .Select(x => new Relation
+                            {
+                                First = x.x,
+                                Second = x.y,
+                                Symbol = PairwiseDRSA.PairwiseComparisonTable.RelationType.S
+                            }
+                        );
+
+                    relations.AddRange(newRelations);
+                }
+
+                return relations;
+            }
         }
 
         private string GetLearningFileName(List<string> lines)
