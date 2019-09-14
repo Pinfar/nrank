@@ -38,7 +38,7 @@ namespace nRank.console
 
         private static void RunPairRuleGenerationTask(string path, float consistencyValue)
         {
-            var vcDomLem = new PairVCDomLEM(true, true);
+            var vcDomLem = new PairVCDomLEM(false, false);
             var reader = new PairInformationTableReader();
             var configReader = new ConfigurationReader();
             var config = configReader.ReadConfiguration(Path.Combine(path, "experiment.properties"));
@@ -47,7 +47,7 @@ namespace nRank.console
             var pairwiseCompTab = new nRank.PairwiseDRSA.PairwiseComparisonTable();
             foreach(var relation in config.Pairs)
             {
-                pairwiseCompTab.Add(table.Objects[relation.First], relation.Symbol, table.Objects[relation.Second]);
+                pairwiseCompTab.Add(table.Objects[relation.First-1], relation.Symbol, table.Objects[relation.Second-1]);
             }
 
 
