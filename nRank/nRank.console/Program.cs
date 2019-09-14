@@ -49,12 +49,18 @@ namespace nRank.console
             {
                 pairwiseCompTab.Add(table.Objects[relation.First-1], relation.Symbol, table.Objects[relation.Second-1]);
             }
+            var presentItems =  new HashSet<int>(config.Pairs.SelectMany(x => new[] { x.First-1, x.Second-1 }));
+            foreach (var obj in table.Objects.Where((x,i) => presentItems.Contains(i)))
+            {
+                pairwiseCompTab.Add(obj, PairwiseDRSA.PairwiseComparisonTable.RelationType.S, obj);
+            }
 
 
-            var model = vcDomLem.GenerateDecisionRules(table, pairwiseCompTab, consistencyValue);
+            var model = vcDomLem.GenerateDecisionRules(pairwiseCompTab, consistencyValue);
             var resultDir = path;
             Directory.CreateDirectory(Path.Combine(".", resultDir));
             File.WriteAllLines(Path.Combine(path, "rules.txt"), model.Select(x => x.ToString()));
+            File.WriteAllLines(Path.Combine(path, "debug.txt"), vcDomLem.GetDebugData(pairwiseCompTab, consistencyValue));
         }
 
         private static void RunExperiment(string file, float consistencyValue, IInformationTable table)

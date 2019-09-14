@@ -4,6 +4,6 @@ namespace nRank.PairwiseDRSA
 {
     interface IPSetGenerator
     {
-        List<InformationObjectPair> Generate(InformationTable table, InformationObjectPair pair);
+        List<InformationObjectPair> Generate(PairwiseComparisonTable table, InformationObjectPair pair);
     }
 }

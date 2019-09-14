@@ -8,25 +8,30 @@ namespace nRank.PairwiseDRSA
 {
     public class PairwiseComparisonTable
     {
+
         public PairwiseComparisonTable()
         {
+            _counter = 1;
         }
 
-        protected PairwiseComparisonTable(List<PairwiseComparisonTableEntry> entries)
+        protected PairwiseComparisonTable(List<PairwiseComparisonTableEntry> entries, int counterState)
         {
             Entries = entries;
+            _counter = counterState;
         }
 
         public List<PairwiseComparisonTableEntry> Entries { get; } = new List<PairwiseComparisonTableEntry>();
+        private int _counter;
 
         public void Add(InformationObject obj1, RelationType relation, InformationObject obj2)
         {
-            Entries.Add(new PairwiseComparisonTableEntry(obj1.Pair(obj2), relation));
+            Entries.Add(new PairwiseComparisonTableEntry(obj1.Pair(obj2), relation, _counter.ToString()));
+            _counter++;
         }
 
         public PairwiseComparisonTable Filter(Func<PairwiseComparisonTableEntry, bool> predicate)
         {
-            return new PairwiseComparisonTable(Entries.Where(predicate).ToList());
+            return new PairwiseComparisonTable(Entries.Where(predicate).ToList(), _counter);
         }
 
         public List<InformationObjectPair> AsInformationObjectPairs()
@@ -36,14 +41,17 @@ namespace nRank.PairwiseDRSA
 
         public class PairwiseComparisonTableEntry
         {
-            public PairwiseComparisonTableEntry(InformationObjectPair objectPair, RelationType relation)
+            public PairwiseComparisonTableEntry(InformationObjectPair objectPair, RelationType relation, string id)
             {
                 ObjectPair = objectPair;
                 Relation = relation;
+                Id = id;
+                ObjectPair.Id = id;
             }
 
             public InformationObjectPair ObjectPair { get; }
             public RelationType Relation { get; }
+            public string Id { get; }
 
             public override bool Equals(object obj)
             {

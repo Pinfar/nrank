@@ -22,7 +22,7 @@ namespace nRankTests.Generators
             table.Add(obj1, PairwiseComparisonTable.RelationType.S, obj2);
             table.Add(obj2, PairwiseComparisonTable.RelationType.Sc, obj1);
             InformationTable originalTable = new InformationTable(new[] { obj1, obj2 });
-            var approximation = appGenerator.GetApproximation(table, originalTable, 0.0f);
+            var approximation = appGenerator.GetApproximation(table, 0.0f);
             var rulesGenerator = new DecisionRuleGenerator();
             var rules = rulesGenerator.GenerateRulesFrom(approximation, 0.0f).ToList();
             rules.Count.ShouldBe(1);

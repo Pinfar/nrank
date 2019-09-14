@@ -16,6 +16,7 @@ namespace nRank.PairwiseDRSA
 
         public InformationObject First { get; }
         public InformationObject Second { get; }
+        public string Id { get; set; }
 
         public bool Dominates(InformationObjectPair other)
         {

@@ -25,7 +25,7 @@ namespace nRankTests.Generators
             table.Add(obj2, PairwiseComparisonTable.RelationType.Sc, obj1);
             table.Add(obj3, PairwiseComparisonTable.RelationType.Sc, obj2);
             InformationTable originalTable = new InformationTable(new[] { obj1, obj2, obj3 });
-            var rules = domLem.GenerateDecisionRules(originalTable, table, 0.4f);
+            var rules = domLem.GenerateDecisionRules(table, 0.4f);
             rules.Count.ShouldBe(2);
         }
 

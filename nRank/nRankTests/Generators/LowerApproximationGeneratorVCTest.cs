@@ -25,9 +25,9 @@ namespace nRankTests.Generators
             var pct = new PairwiseComparisonTable();
             pct.Add(obj3, Relation.S, obj1);
             pct.Add(obj3, Relation.Sc, obj2);
-            var approx = generator.GetApproximation(pct, table, 0.0f);
+            var approx = generator.GetApproximation(pct, 0.0f);
             approx.Approximation.ShouldBe(new[] { obj3.Pair(obj1) }, true);
-            approx.PositiveRegion.ShouldBe(new[] { obj3.Pair(obj1), obj4.Pair(obj1) }, true);
+            approx.PositiveRegion.ShouldBe(new[] { obj3.Pair(obj1) }, true);
         }
 
         [Test]
@@ -43,7 +43,7 @@ namespace nRankTests.Generators
             pct.Add(obj3, Relation.S, obj1);
             pct.Add(obj3, Relation.Sc, obj2);
             pct.Add(obj4, Relation.Sc, obj1);
-            var approx = generator.GetApproximation(pct, table, 0.5f);
+            var approx = generator.GetApproximation(pct, 0.5f);
             approx.Approximation.ShouldBe(new[] { obj3.Pair(obj1), obj4.Pair(obj1) }, true);
             approx.PositiveRegion.ShouldBe(new[] { obj3.Pair(obj1), obj4.Pair(obj1) }, true);
         }
@@ -62,7 +62,7 @@ namespace nRankTests.Generators
             pct.Add(obj4, Relation.S, obj3);
             pct.Add(obj1, Relation.S, obj4);
             pct.Add(obj1, Relation.Sc, obj3);
-            var approx = generator.GetApproximation(pct, table, 0.5f);
+            var approx = generator.GetApproximation(pct, 0.5f);
             approx.Approximation.ShouldBe(new[] { obj1.Pair(obj3), obj1.Pair(obj4) }, true);
             approx.PositiveRegion.ShouldBe(new[] { obj1.Pair(obj3), obj1.Pair(obj4) }, true);
         }
@@ -79,9 +79,9 @@ namespace nRankTests.Generators
             var pct = new PairwiseComparisonTable();
             pct.Add(obj4, Relation.S, obj3);
             pct.Add(obj1, Relation.Sc, obj3);
-            var approx = generator.GetApproximation(pct, table, 0.0f);
+            var approx = generator.GetApproximation(pct, 0.0f);
             approx.Approximation.ShouldBe(new[] { obj1.Pair(obj3) }, true);
-            approx.PositiveRegion.ShouldBe(new[] { obj1.Pair(obj3), obj1.Pair(obj4) }, true);
+            approx.PositiveRegion.ShouldBe(new[] { obj1.Pair(obj3) }, true);
         }
 
         private InformationObject CreateObject(int id, float value)

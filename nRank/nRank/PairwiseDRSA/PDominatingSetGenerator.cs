@@ -8,11 +8,9 @@ namespace nRank.PairwiseDRSA
 {
     class PDominatingSetGenerator : IPSetGenerator
     {
-        public List<InformationObjectPair> Generate(InformationTable table, InformationObjectPair pair )
+        public List<InformationObjectPair> Generate(PairwiseComparisonTable table, InformationObjectPair pair )
         {
-            return table.Objects
-                .SelectMany(x => table.Objects, (x, y) => new InformationObjectPair(x, y))
-                .Where(x => x.First.IntIdentifier != x.Second.IntIdentifier)
+            return table.AsInformationObjectPairs()
                 .Where(x => x.Dominates(pair))
                 .ToList();
         }
