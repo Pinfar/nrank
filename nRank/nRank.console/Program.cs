@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
+using System.Globalization;
 
 namespace nRank.console
 {
@@ -15,6 +16,9 @@ namespace nRank.console
     {
         static void Main(string[] args)
         {
+            CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
+            CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.InvariantCulture;
+
             string file, path, consistency;
             HandleInputParams(args, out file, out path, out consistency);
             float consistencyValue = float.Parse(consistency);

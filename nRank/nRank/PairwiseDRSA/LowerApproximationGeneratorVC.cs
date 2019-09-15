@@ -41,7 +41,8 @@ namespace nRank.PairwiseDRSA
                 .SelectMany(x => psetGenerator.Generate(table, x))
                 .Distinct()
                 .ToList();
-            return new PApproximation(approximation, positiveRegion, table, _relation);
+            
+            return new PApproximation(approximation, positiveRegion, table, _relation, negativeDefinedPairs.Count);
         }
 
         private bool IsInApproximationEpsilon(PairwiseComparisonTable originalTable, InformationObjectPair obj, HashSet<InformationObjectPair> objectsInNegativeRelation, float consistencyLevel)

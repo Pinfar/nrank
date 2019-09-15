@@ -40,9 +40,9 @@ namespace nRank.console.FileProcessors
             var preferences = GetSection(lines, "**PREFERENCES");
             var attributes = GetSection(lines, "**ATTRIBUTES");
 
-            var regex = new Regex("^[-+] (?<label>.*): (?<type>[\\(\\[].*[\\]\\)])");
+            var regex = new Regex("^[-+] (?<label>.*):\\s+(?<type>[\\(\\[].*[\\]\\)])");
 
-            _columns = attributes.Select(x => regex.Match(x).Groups["label"].Value).ToList();
+            _columns = attributes.Where(x => regex.IsMatch(x)).Select(x => regex.Match(x).Groups["label"].Value).ToList();
 
             var labelLine = attributes
                 .SingleOrDefault(x => x.EndsWith("description"));
@@ -54,12 +54,23 @@ namespace nRank.console.FileProcessors
                 attributes.Remove(labelLine);
             }
 
+            var decisionLine = attributes
+                .SingleOrDefault(x => x.StartsWith("decision"));
+
+            if (decisionLine != null)
+            {
+                var label = decisionLine.Replace("decision:", "").Trim();
+                attributes.Remove(decisionLine);
+                attributes = attributes.Where(x => !x.StartsWith("+ " + label) && !x.StartsWith("- " + label)).ToList();
+            }
+
             _builders = attributes.Select(x => Split(x, regex)).ToDictionary(x => x.Item1, x => x.Item2);
         }
 
         private Tuple<string, Func<string, IAttribute>> Split(string value, Regex regex)
         {
             var match = regex.Match(value);
+
             var label = match.Groups["label"].Value;
             var type = match.Groups["type"].Value;
             Func<string, IAttribute> creator = null;
@@ -139,7 +150,7 @@ namespace nRank.console.FileProcessors
             foreach (var line in examples)
             {
                 var record = line
-                    .Split(new[] { " ", "\t" }, StringSplitOptions.RemoveEmptyEntries)
+                    .Split(new[] { " ", "\t", "," }, StringSplitOptions.RemoveEmptyEntries)
                     .Select(x => x.Trim())
                     .Zip(_columns, (x, y) => new { Key = y, Value = x })
                     .ToDictionary(x => x.Key, x => x.Value);
@@ -155,7 +166,7 @@ namespace nRank.console.FileProcessors
                 {
                     label = index.ToString();
                 }
-                var attributes = record.Select(x => _builders[x.Key](x.Value)).ToList();
+                var attributes = record.Where(x => _builders.ContainsKey(x.Key)).Select(x => _builders[x.Key](x.Value)).ToList();
 
                 //var attributes = new List<IAttribute>();
                 var item = new InformationObject(index, label, attributes);

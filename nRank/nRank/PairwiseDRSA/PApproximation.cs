@@ -9,7 +9,7 @@ namespace nRank.PairwiseDRSA
     class PApproximation
     {
         public PApproximation(List<InformationObjectPair> approximation, List<InformationObjectPair> positiveRegion, 
-            PairwiseComparisonTable originalTable, PairwiseComparisonTable.RelationType relation)
+            PairwiseComparisonTable originalTable, PairwiseComparisonTable.RelationType relation, int negativeRelationCount)
         {
             Approximation = approximation;
             PositiveRegion = positiveRegion;
@@ -17,6 +17,7 @@ namespace nRank.PairwiseDRSA
             var approxHashset = new HashSet<InformationObjectPair>(approximation);
             NegativeApproximation = new HashSet<InformationObjectPair>(originalTable.AsInformationObjectPairs().Where(x => !approxHashset.Contains(x)).ToList());
             Relation = relation;
+            EpsilonCoef = NegativeApproximation.Count / (float)negativeRelationCount;
         }
 
         public PairwiseComparisonTable.RelationType Relation { get; }
@@ -24,5 +25,6 @@ namespace nRank.PairwiseDRSA
         public List<InformationObjectPair> PositiveRegion { get; }
         public PairwiseComparisonTable OriginalTable { get; }
         public HashSet<InformationObjectPair> NegativeApproximation { get; }
+        public float EpsilonCoef { get; }
     }
 }

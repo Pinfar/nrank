@@ -101,7 +101,7 @@ namespace nRank.PairwiseDRSA
             var negSet = _approximation.NegativeApproximation;
             float commonPart = currentCoverage.Intersect(negSet).Count();
             float negSetCount = negSet.Count;
-            return commonPart / negSetCount;
+            return commonPart / negSetCount * _approximation.EpsilonCoef;
 
         }
 
