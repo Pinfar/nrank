@@ -19,15 +19,14 @@ namespace nRank.console
             CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
             CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.InvariantCulture;
 
-            string file, path, consistency;
-            HandleInputParams(args, out file, out path, out consistency);
-            float consistencyValue = float.Parse(consistency);
+            string file, path;
+            HandleInputParams(args, out file, out path);
 
             //var reader = new InformationTableReader();
             //var table = reader.Read(path);
             ////RunExperiment(file, consistencyValue, table);
             //RunRuleGenerationTask(file, consistencyValue, table);
-            RunPairRuleGenerationTask(file, consistencyValue);
+            RunPairRuleGenerationTask(file);
 
         }
 
@@ -40,7 +39,7 @@ namespace nRank.console
             SaveRulesFileAsLatex(resultDir, model, consistencyValue);
         }
 
-        private static void RunPairRuleGenerationTask(string path, float consistencyValue)
+        private static void RunPairRuleGenerationTask(string path)
         {
             var vcDomLem = new PairVCDomLEM(false, false);
             var reader = new PairInformationTableReader();
@@ -60,11 +59,11 @@ namespace nRank.console
             }
 
 
-            var model = vcDomLem.GenerateDecisionRules(pairwiseCompTab, consistencyValue);
+            var model = vcDomLem.GenerateDecisionRules(pairwiseCompTab, config.Consistency);
             var resultDir = path;
             Directory.CreateDirectory(Path.Combine(".", resultDir));
             File.WriteAllLines(Path.Combine(path, "rules.txt"), model.Select(x => x.ToString()));
-            File.WriteAllLines(Path.Combine(path, "debug.txt"), vcDomLem.GetDebugData(pairwiseCompTab, consistencyValue));
+            File.WriteAllLines(Path.Combine(path, "debug.txt"), vcDomLem.GetDebugData(pairwiseCompTab, config.Consistency));
         }
 
         private static void RunExperiment(string file, float consistencyValue, IInformationTable table)
@@ -152,7 +151,7 @@ namespace nRank.console
             File.WriteAllLines(Path.Combine(resultDir, "result.txt"), resultFileContent);
         }
 
-        private static void HandleInputParams(string[] args, out string file, out string path, out string consistency)
+        private static void HandleInputParams(string[] args, out string file, out string path)
         {
             if (args.Length < 1)
             {
@@ -164,15 +163,6 @@ namespace nRank.console
                 file = args[0];
             }
             path = Path.Combine(".", file);
-            if (args.Length < 2)
-            {
-                Console.WriteLine("Insert consistency treshold!");
-                consistency = Console.ReadLine();
-            }
-            else
-            {
-                consistency = args[1];
-            }
         }
     }
 }

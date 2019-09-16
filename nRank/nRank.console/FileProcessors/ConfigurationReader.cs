@@ -16,9 +16,19 @@ namespace nRank.console.FileProcessors
             var config = new Configuration
             {
                 LearningDataFile = GetLearningFileName(lines),
-                Pairs = GetPairs(lines)
+                Pairs = GetPairs(lines),
+                Consistency = GetConsistency(lines)
             };
             return config;
+        }
+
+        private float GetConsistency(List<string> lines)
+        {
+            var linePrefix = "consistencyMeasureThreshold = ";
+            var consistenctString = lines.FirstOrDefault(x => x.StartsWith(linePrefix));
+            if (consistenctString == null) throw new InvalidOperationException("ConsistencyMeasureThreshold in settings file is not set!");
+            consistenctString = consistenctString.Replace(linePrefix, "").Trim();
+            return float.Parse(consistenctString);
         }
 
         private List<Relation> GetPairs(List<string> lines)

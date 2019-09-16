@@ -9,6 +9,7 @@ namespace nRank.console.FileProcessors
     public class Configuration
     {
         public string LearningDataFile { get; set; }
+        public float Consistency { get; set; }
         public List<Relation> Pairs { get; set; }
     }
 
