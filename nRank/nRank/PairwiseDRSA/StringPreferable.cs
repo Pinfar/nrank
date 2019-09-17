@@ -10,6 +10,9 @@ namespace nRank.PairwiseDRSA
     {
         public string Value { get; }
         public int Index { get; }
+
+        public AttributeType Type => AttributeType.Gain;
+
         private List<string> _preferenceOrder;
 
         public StringPreferable(string value, List<string> preferenceOrder)

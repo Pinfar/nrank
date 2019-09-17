@@ -19,8 +19,8 @@ namespace nRankTests.DataStructures
             var att2 = CreateAttA(2);
             var att3 = CreateAttA(1);
             var att4 = CreateAttA(0);
-            new AttributePair(att1, att4)
-                .IsWeaklyPreferredTo(new AttributePair(att2, att3))
+            new OrdinalAttributePair(att1, att4)
+                .IsWeaklyPreferredTo(new OrdinalAttributePair(att2, att3))
                 .ShouldBeTrue();
         }
 
@@ -31,8 +31,8 @@ namespace nRankTests.DataStructures
             var att2 = CreateAttA(2);
             var att3 = CreateAttA(1);
             var att4 = CreateAttA(0);
-            new AttributePair(att1, att2)
-                .IsWeaklyPreferredTo(new AttributePair(att3, att4))
+            new OrdinalAttributePair(att1, att2)
+                .IsWeaklyPreferredTo(new OrdinalAttributePair(att3, att4))
                 .ShouldBeFalse();
         }
 
@@ -50,8 +50,8 @@ namespace nRankTests.DataStructures
             var att2 = CreateFloatAttA(2.5f);
             var att3 = CreateFloatAttA(3.5f);
             var att4 = CreateFloatAttA(4.5f);
-            new AttributePair(att1, att4)
-                .IsWeaklyPreferredTo(new AttributePair(att2, att3))
+            new NominalAttributePair(att1.Label, att1.DifferenceWith(att4))
+                .IsWeaklyPreferredTo(new NominalAttributePair(att2.Label, att2.DifferenceWith(att3)))
                 .ShouldBeTrue();
         }
 
@@ -62,8 +62,8 @@ namespace nRankTests.DataStructures
             var att2 = CreateFloatAttA(2.5f);
             var att3 = CreateFloatAttA(3.5f);
             var att4 = CreateFloatAttA(4.5f);
-            new AttributePair(att1, att2)
-                .IsWeaklyPreferredTo(new AttributePair(att2, att4))
+            new NominalAttributePair(att1.Label, att1.DifferenceWith(att2))
+                .IsWeaklyPreferredTo(new NominalAttributePair(att2.Label, att2.DifferenceWith(att4)))
                 .ShouldBeFalse();
         }
 

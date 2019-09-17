@@ -23,28 +23,28 @@ namespace nRank.PairwiseDRSA
             return DominatesOrdinal(other) && DominatesNominal(other);
         }
 
-        public List<AttributePair> GetAttributes()
+        public List<IAttributePair> GetAttributes()
         {
-            var list = new List<AttributePair>();
-            var ordinals = First.OrdinalAttributes.Zip(Second.OrdinalAttributes, (x, y) => new AttributePair(x, y));
+            var list = new List<IAttributePair>();
+            var ordinals = First.OrdinalAttributes.Zip(Second.OrdinalAttributes, (x, y) => new OrdinalAttributePair(x, y));
             list.AddRange(ordinals);
-            var nominals = First.NominalAttributes.Zip(Second.NominalAttributes, (x, y) => new AttributePair(x, y));
+            var nominals = First.NominalAttributes.Zip(Second.NominalAttributes, (x, y) => new NominalAttributePair(x.Label,x.DifferenceWith(y)));
             list.AddRange(nominals);
             return list;
         }
 
-        public AttributePair GetAttribute(string label)
+        public IAttributePair GetAttribute(string label)
         {
             var first = First.OrdinalAttributes.SingleOrDefault(x => x.Label == label);
             if(first != null)
             {
                 var second = Second.OrdinalAttributes.Single(x => x.Label == label);
-                return new AttributePair(first, second);
+                return new OrdinalAttributePair(first, second);
             }
 
             var firstNom = First.NominalAttributes.Single(x => x.Label == label);
             var secondNom = Second.NominalAttributes.Single(x => x.Label == label);
-            return new AttributePair(firstNom, secondNom);
+            return new NominalAttributePair(firstNom.Label, firstNom.DifferenceWith(secondNom));
         }
 
         private bool DominatesNominal(InformationObjectPair other)

@@ -8,10 +8,10 @@ namespace nRank.PairwiseDRSA
 {
     class ConditionalPart : IConditionalPart
     {
-        private readonly AttributePair _attributes;
+        private readonly IAttributePair _attributes;
         private readonly PairwiseComparisonTable.RelationType _relation;
 
-        public ConditionalPart(AttributePair attributePair, PairwiseComparisonTable.RelationType relation)
+        public ConditionalPart(IAttributePair attributePair, PairwiseComparisonTable.RelationType relation)
         {
             _attributes = attributePair;
             _relation = relation;

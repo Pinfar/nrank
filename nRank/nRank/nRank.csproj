@@ -100,6 +100,7 @@
     <Compile Include="PairwiseDRSA\FloatValue.cs" />
     <Compile Include="PairwiseDRSA\DecisionRuleGenerator.cs" />
     <Compile Include="PairwiseDRSA\IAttribute.cs" />
+    <Compile Include="PairwiseDRSA\IAttributePair.cs" />
     <Compile Include="PairwiseDRSA\IConditionalPart.cs" />
     <Compile Include="PairwiseDRSA\IDecisionRule.cs" />
     <Compile Include="PairwiseDRSA\ImmutableDecisionRule.cs" />
@@ -112,14 +113,15 @@
     <Compile Include="PairwiseDRSA\IPreferable.cs" />
     <Compile Include="PairwiseDRSA\IPSetGenerator.cs" />
     <Compile Include="PairwiseDRSA\LowerApproximationGeneratorVC.cs" />
+    <Compile Include="PairwiseDRSA\NominalAttributePair.cs" />
     <Compile Include="PairwiseDRSA\NominalAttribute.cs" />
     <Compile Include="PairwiseDRSA\OrdinalAttribute.cs" />
+    <Compile Include="PairwiseDRSA\OrdinalAttributePair.cs" />
     <Compile Include="PairwiseDRSA\PairwiseComparisonTable.cs" />
     <Compile Include="PairwiseDRSA\PApproximation.cs" />
     <Compile Include="PairwiseDRSA\PDominatedSetGenerator.cs" />
     <Compile Include="PairwiseDRSA\PDominatingSetGenerator.cs" />
     <Compile Include="PairwiseDRSA\StringPreferable.cs" />
-    <Compile Include="PairwiseDRSA\AttributePair.cs" />
     <Compile Include="TestCommons\InformationTableGenerator.cs" />
     <Compile Include="UnionGenerators\DownwardUnionGenerator.cs" />
     <Compile Include="UnionGenerators\TestDownwardUnionGenerator.cs" />

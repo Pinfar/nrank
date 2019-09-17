@@ -14,7 +14,7 @@ namespace nRank.PairwiseDRSA
         public float Accuracy => CalculateAccuracyEpsilon();
         
 
-        public ImmutableDecisionRule(AttributePair x, PApproximation approximation) : this(approximation)
+        public ImmutableDecisionRule(IAttributePair x, PApproximation approximation) : this(approximation)
         {
             _conditionalParts.Add(new ConditionalPart(x, approximation.Relation));
         }
