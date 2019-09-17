@@ -53,6 +53,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FileProcessors\Configuration.cs" />
+    <Compile Include="FileProcessors\PCTReader.cs" />
     <Compile Include="FileProcessors\PairInformationTableReader.cs" />
     <Compile Include="FileProcessors\InformationTableReader.cs" />
     <Compile Include="FileProcessors\ConfigurationReader.cs" />
@@ -80,10 +81,16 @@
     <None Include="Houses11\Houses11.isf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Houses11\Houses11_partialPCT.isf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Houses7\experiment.properties">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Houses7\Houses7.isf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Houses7\Houses7_partialPCT.isf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Notebooks.isf">

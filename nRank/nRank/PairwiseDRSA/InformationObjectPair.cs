@@ -17,6 +17,15 @@ namespace nRank.PairwiseDRSA
             _allAttributes = _ordinals.Cast<IAttributePair>().Concat(_nominals).ToList();
         }
 
+        public InformationObjectPair(List<IAttributePair> attributes, int firstIdentifier, int secondIdentifier)
+        {
+            FirstIdentifier = firstIdentifier;
+            SecondIdentifier = secondIdentifier;
+            _allAttributes = attributes;
+            _ordinals = attributes.Where(x => x is OrdinalAttributePair).Cast<OrdinalAttributePair>().ToList();
+            _nominals = attributes.Where(x => x is NominalAttributePair).Cast<NominalAttributePair>().ToList();
+        }
+
         public int FirstIdentifier { get; }
         public int SecondIdentifier { get; }
 

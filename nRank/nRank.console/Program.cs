@@ -26,7 +26,7 @@ namespace nRank.console
             //var table = reader.Read(path);
             ////RunExperiment(file, consistencyValue, table);
             //RunRuleGenerationTask(file, consistencyValue, table);
-            RunPairRuleGenerationTask(file);
+            RunPairRuleGenerationTaskPCT(file);
 
         }
 
@@ -64,6 +64,21 @@ namespace nRank.console
             Directory.CreateDirectory(Path.Combine(".", resultDir));
             File.WriteAllLines(Path.Combine(path, "rules.txt"), model.Select(x => x.ToString()));
             File.WriteAllLines(Path.Combine(path, "debug.txt"), vcDomLem.GetDebugData(pairwiseCompTab, config.Consistency));
+        }
+
+        private static void RunPairRuleGenerationTaskPCT(string path)
+        {
+            var vcDomLem = new PairVCDomLEM(false, false);
+            var reader = new PCTReader();
+            var configReader = new ConfigurationReader();
+            var config = configReader.ReadConfiguration(Path.Combine(path, "experiment.properties"));
+            var table = reader.Read(Path.Combine(path, config.LearningDataFile));
+
+            var model = vcDomLem.GenerateDecisionRules(table, config.Consistency);
+            var resultDir = path;
+            Directory.CreateDirectory(Path.Combine(".", resultDir));
+            File.WriteAllLines(Path.Combine(path, "rules.txt"), model.Select(x => x.ToString()));
+            File.WriteAllLines(Path.Combine(path, "debug.txt"), vcDomLem.GetDebugData(table, config.Consistency));
         }
 
         private static void RunExperiment(string file, float consistencyValue, IInformationTable table)

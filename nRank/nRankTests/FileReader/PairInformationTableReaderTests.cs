@@ -25,6 +25,16 @@ namespace nRankTests.FileReader
         }
 
         [Test]
+        public void DummyTest2()
+        {
+            var reader = new PCTReader();
+
+            string executableLocation = Path.GetDirectoryName(
+    Assembly.GetExecutingAssembly().Location);
+            reader.Read(Path.Combine(executableLocation, "Houses7_partialPCT.isf"));
+        }
+
+        [Test]
         public void ConfigReadTest()
         {
 

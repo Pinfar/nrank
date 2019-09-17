@@ -29,6 +29,14 @@ namespace nRank.PairwiseDRSA
             _counter++;
         }
 
+        public void Add(List<IAttributePair> attributes, int firstIdentifier, int secondIdentifier, RelationType relation)
+        {
+            var objectPair = new InformationObjectPair(attributes, firstIdentifier, secondIdentifier);
+            var entry = new PairwiseComparisonTableEntry(objectPair, relation, _counter.ToString());
+            Entries.Add(entry);
+            _counter++;
+        }
+
         public PairwiseComparisonTable Filter(Func<PairwiseComparisonTableEntry, bool> predicate)
         {
             return new PairwiseComparisonTable(Entries.Where(predicate).ToList(), _counter);

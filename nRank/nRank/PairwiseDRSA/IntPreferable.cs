@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace nRank.PairwiseDRSA
 {
-    class IntPreferable : IPreferable
+    public class IntPreferable : IPreferable
     {
         public IntPreferable(int value, AttributeType type)
         {
