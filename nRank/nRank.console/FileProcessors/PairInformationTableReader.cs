@@ -1,6 +1,7 @@
 ﻿using nRank.PairwiseDRSA;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -105,7 +106,7 @@ namespace nRank.console.FileProcessors
             var attType = _isAttributeCost[name] ? AttributeType.Cost : AttributeType.Gain;
             return x =>
             {
-                var val = float.Parse(x);
+                var val = float.Parse(x, CultureInfo.InvariantCulture);
                 return new NominalAttribute(name, new FloatValue(val, attType));
             };
         }

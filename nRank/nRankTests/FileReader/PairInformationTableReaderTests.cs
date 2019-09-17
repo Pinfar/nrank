@@ -2,6 +2,7 @@
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -26,6 +27,9 @@ namespace nRankTests.FileReader
         [Test]
         public void ConfigReadTest()
         {
+
+            CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
+            CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.InvariantCulture;
             var reader = new ConfigurationReader();
             string executableLocation = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             var config = reader.ReadConfiguration(Path.Combine(executableLocation, "Houses11\\experiment.properties"));

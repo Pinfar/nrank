@@ -2,6 +2,7 @@
 using nRank.VCDomLEMAbstractions;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -99,7 +100,7 @@ namespace nRank.console.FileProcessors
                     label = index.ToString();
                     index++;
                 }
-                var values = record.ToDictionary(x => x.Key, x => float.Parse(x.Value.Replace('.', ',')));
+                var values = record.ToDictionary(x => x.Key, x => float.Parse(x.Value, CultureInfo.InvariantCulture));
                 table.AddObject(label, values, decisionAttribute);
             }
         }

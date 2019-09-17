@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -28,7 +29,7 @@ namespace nRank.console.FileProcessors
             var consistenctString = lines.FirstOrDefault(x => x.StartsWith(linePrefix));
             if (consistenctString == null) throw new InvalidOperationException("ConsistencyMeasureThreshold in settings file is not set!");
             consistenctString = consistenctString.Replace(linePrefix, "").Trim();
-            return float.Parse(consistenctString);
+            return float.Parse(consistenctString, CultureInfo.InvariantCulture);
         }
 
         private List<Relation> GetPairs(List<string> lines)

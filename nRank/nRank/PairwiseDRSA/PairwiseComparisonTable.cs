@@ -71,7 +71,7 @@ namespace nRank.PairwiseDRSA
 
             public override string ToString()
             {
-                return $"{ObjectPair.First.IntIdentifier} {Relation.ToString("g")} {ObjectPair.Second.IntIdentifier}";
+                return $"{ObjectPair.FirstIdentifier} {Relation.ToString("g")} {ObjectPair.SecondIdentifier}";
             }
         }
 

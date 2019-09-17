@@ -10,78 +10,57 @@ namespace nRank.PairwiseDRSA
     {
         public InformationObjectPair(InformationObject first, InformationObject second)
         {
-            First = first;
-            Second = second;
+            FirstIdentifier = first.IntIdentifier;
+            SecondIdentifier = second.IntIdentifier;
+            _ordinals = first.OrdinalAttributes.Zip(second.OrdinalAttributes, (x, y) => new OrdinalAttributePair(x, y)).ToList();
+            _nominals = first.NominalAttributes.Zip(second.NominalAttributes, (x, y) => new NominalAttributePair(x.Label, x.DifferenceWith(y))).ToList();
+            _allAttributes = _ordinals.Cast<IAttributePair>().Concat(_nominals).ToList();
         }
 
-        public InformationObject First { get; }
-        public InformationObject Second { get; }
+        public int FirstIdentifier { get; }
+        public int SecondIdentifier { get; }
+
+        private List<OrdinalAttributePair> _ordinals;
+        private List<NominalAttributePair> _nominals;
+        private List<IAttributePair> _allAttributes;
+
         public string Id { get; set; }
 
         public bool Dominates(InformationObjectPair other)
         {
-            return DominatesOrdinal(other) && DominatesNominal(other);
+            return _allAttributes.Zip(other._allAttributes, (x, y) => x.IsWeaklyPreferredTo(y)).All(x => x);
         }
 
         public List<IAttributePair> GetAttributes()
         {
-            var list = new List<IAttributePair>();
-            var ordinals = First.OrdinalAttributes.Zip(Second.OrdinalAttributes, (x, y) => new OrdinalAttributePair(x, y));
-            list.AddRange(ordinals);
-            var nominals = First.NominalAttributes.Zip(Second.NominalAttributes, (x, y) => new NominalAttributePair(x.Label,x.DifferenceWith(y)));
-            list.AddRange(nominals);
-            return list;
+            return _allAttributes;
         }
 
         public IAttributePair GetAttribute(string label)
         {
-            var first = First.OrdinalAttributes.SingleOrDefault(x => x.Label == label);
-            if(first != null)
-            {
-                var second = Second.OrdinalAttributes.Single(x => x.Label == label);
-                return new OrdinalAttributePair(first, second);
-            }
-
-            var firstNom = First.NominalAttributes.Single(x => x.Label == label);
-            var secondNom = Second.NominalAttributes.Single(x => x.Label == label);
-            return new NominalAttributePair(firstNom.Label, firstNom.DifferenceWith(secondNom));
+            return _allAttributes.Single(x => x.Label == label);
         }
 
-        private bool DominatesNominal(InformationObjectPair other)
+
+        public override string ToString()
         {
-            var first = First.NominalAttributes.Zip(Second.NominalAttributes, (x, y) => x.DifferenceWith(y));
-            var second = other.First.NominalAttributes.Zip(other.Second.NominalAttributes, (x, y) => x.DifferenceWith(y));
-            return first.Zip(second, (x, y) => x.IsWeaklyPreferedTo(y)).All(x => x);
+            return $"{FirstIdentifier} : {SecondIdentifier}";
         }
-
-        private bool DominatesOrdinal(InformationObjectPair other)
-        {
-            var first = First.OrdinalAttributes.Zip(other.First.OrdinalAttributes, (x,y) => x.IsWeaklyPreferedTo(y)).All(x => x);
-            var second = Second.OrdinalAttributes.Zip(other.Second.OrdinalAttributes, (x, y) => y.IsWeaklyPreferedTo(x)).All(x => x);
-            return first && second;
-        }
-
-
 
         public override bool Equals(object obj)
         {
             var pair = obj as InformationObjectPair;
             return pair != null &&
-                   EqualityComparer<InformationObject>.Default.Equals(First, pair.First) &&
-                   EqualityComparer<InformationObject>.Default.Equals(Second, pair.Second);
+                   FirstIdentifier == pair.FirstIdentifier &&
+                   SecondIdentifier == pair.SecondIdentifier;
         }
 
         public override int GetHashCode()
         {
-            var hashCode = 43270662;
-            hashCode = hashCode * -1521134295 + EqualityComparer<InformationObject>.Default.GetHashCode(First);
-            hashCode = hashCode * -1521134295 + EqualityComparer<InformationObject>.Default.GetHashCode(Second);
+            var hashCode = 343520272;
+            hashCode = hashCode * -1521134295 + FirstIdentifier.GetHashCode();
+            hashCode = hashCode * -1521134295 + SecondIdentifier.GetHashCode();
             return hashCode;
-        }
-
-        public override string ToString()
-        {
-            return $"{First.IntIdentifier} : {Second.IntIdentifier}";
         }
     }
 }
