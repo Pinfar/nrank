@@ -47,6 +47,11 @@ namespace nRank.PairwiseDRSA
             return Entries.Select(x => x.ObjectPair).ToList();
         }
 
+        public List<string> ToLabelList()
+        {
+            return Entries.Select(x => $"\\{{{ x.ToString().Replace(' ', '~') }\\}}").ToList();
+        }
+
         public class PairwiseComparisonTableEntry
         {
             public PairwiseComparisonTableEntry(InformationObjectPair objectPair, RelationType relation, string id)

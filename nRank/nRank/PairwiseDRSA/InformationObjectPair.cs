@@ -53,7 +53,7 @@ namespace nRank.PairwiseDRSA
 
         public override string ToString()
         {
-            return $"{FirstIdentifier} : {SecondIdentifier}";
+            return $"{{{FirstIdentifier}:{SecondIdentifier}}}";
         }
 
         public override bool Equals(object obj)

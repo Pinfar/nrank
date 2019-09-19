@@ -62,7 +62,7 @@ namespace nRank.console
             var model = vcDomLem.GenerateDecisionRules(pairwiseCompTab, config.Consistency);
             var resultDir = path;
             Directory.CreateDirectory(Path.Combine(".", resultDir));
-            File.WriteAllLines(Path.Combine(path, "rules.txt"), model.Select(x => x.ToString()));
+            File.WriteAllLines(Path.Combine(path, "rules.txt"), RulesToString(model, pairwiseCompTab));
             File.WriteAllLines(Path.Combine(path, "debug.txt"), vcDomLem.GetDebugData(pairwiseCompTab, config.Consistency));
         }
 
@@ -77,8 +77,19 @@ namespace nRank.console
             var model = vcDomLem.GenerateDecisionRules(table, config.Consistency);
             var resultDir = path;
             Directory.CreateDirectory(Path.Combine(".", resultDir));
-            File.WriteAllLines(Path.Combine(path, "rules.txt"), model.Select(x => x.ToString()));
+            File.WriteAllLines(Path.Combine(path, "rules.txt"), RulesToString(model, table));
             File.WriteAllLines(Path.Combine(path, "debug.txt"), vcDomLem.GetDebugData(table, config.Consistency));
+        }
+
+        private static IEnumerable<string> RulesToString(List<PairwiseDRSA.IDecisionRule> model, PairwiseDRSA.PairwiseComparisonTable table)
+        {
+            return model.Select(x => $"{x.ToString()} {ToSupportList(table, x)}");
+        }
+
+        private static string ToSupportList(PairwiseDRSA.PairwiseComparisonTable table, PairwiseDRSA.IDecisionRule rule)
+        {
+            var supportPairs = table.Filter(rule.AsFunc()).ToLabelList();
+            return string.Join(", ", supportPairs);
         }
 
         private static void RunExperiment(string file, float consistencyValue, IInformationTable table)
