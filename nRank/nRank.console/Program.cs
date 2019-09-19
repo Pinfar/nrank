@@ -26,7 +26,7 @@ namespace nRank.console
             //var table = reader.Read(path);
             ////RunExperiment(file, consistencyValue, table);
             //RunRuleGenerationTask(file, consistencyValue, table);
-            RunPairRuleGenerationTaskPCT(file);
+            RunPairRuleGenerationTask(file);
 
         }
 
@@ -72,7 +72,7 @@ namespace nRank.console
             var reader = new PCTReader();
             var configReader = new ConfigurationReader();
             var config = configReader.ReadConfiguration(Path.Combine(path, "experiment.properties"));
-            var table = reader.Read(Path.Combine(path, config.LearningDataFile));
+            var table = reader.Read(Path.Combine(path, config.PCTDataFile));
 
             var model = vcDomLem.GenerateDecisionRules(table, config.Consistency);
             var resultDir = path;

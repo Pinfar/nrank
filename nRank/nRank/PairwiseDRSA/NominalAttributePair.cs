@@ -33,7 +33,12 @@ namespace nRank.PairwiseDRSA
             {
                 symbol = "<=";
             }
-            return $"[DIFF(Evaluations_difference_on_{Label}) {symbol} {_preferable.ToString()} ]";
+            var label = Label;
+
+            if(!label.ToLower().StartsWith("evaluations_difference_on_"))
+                 label = $"Evaluations_difference_on_{Label}";
+
+            return $"[DIFF({label}) {symbol} {_preferable.ToString()} ]";
         }
     }
 }

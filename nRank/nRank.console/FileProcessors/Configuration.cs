@@ -11,6 +11,7 @@ namespace nRank.console.FileProcessors
         public string LearningDataFile { get; set; }
         public float Consistency { get; set; }
         public List<Relation> Pairs { get; set; }
+        public string PCTDataFile { get; set; }
     }
 
     public class Relation

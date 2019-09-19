@@ -30,7 +30,12 @@ namespace nRank.PairwiseDRSA
 
         public string ToString(PairwiseComparisonTable.RelationType relation)
         {
-            var labelPart = $"PAIR(Evaluations_on_{_first.Label})";
+            var label = _first.Label;
+            if(!label.ToLower().StartsWith("evaluations_on_"))
+            {
+                label = $"Evaluations_on_{label}";
+            }
+            var labelPart = $"PAIR({label})";
             var valuePart = $"({_first.StringValue},{_second.StringValue})";
             if (relation == PairwiseComparisonTable.RelationType.S)
             {

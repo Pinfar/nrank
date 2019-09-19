@@ -18,7 +18,8 @@ namespace nRank.console.FileProcessors
             {
                 LearningDataFile = GetLearningFileName(lines),
                 Pairs = GetPairs(lines),
-                Consistency = GetConsistency(lines)
+                Consistency = GetConsistency(lines),
+                PCTDataFile = GetPCTFileName(lines)
             };
             return config;
         }
@@ -105,7 +106,14 @@ namespace nRank.console.FileProcessors
         private string GetLearningFileName(List<string> lines)
         {
             var linePrefix = "learningDataFile = ";
-            return lines.First(x => x.StartsWith(linePrefix)).Replace(linePrefix, "").Trim();
+            return lines.FirstOrDefault(x => x.StartsWith(linePrefix))?.Replace(linePrefix, "").Trim();
         }
+        
+        private string GetPCTFileName(List<string> lines)
+        {
+            var linePrefix = "PCTDataFile = ";
+            return lines.FirstOrDefault(x => x.StartsWith(linePrefix))?.Replace(linePrefix, "").Trim();
+        }
+
     }
 }

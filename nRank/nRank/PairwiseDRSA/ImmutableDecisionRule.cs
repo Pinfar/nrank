@@ -40,7 +40,7 @@ namespace nRank.PairwiseDRSA
         public override string ToString()
         {
             var conditions = string.Join(" & ", _conditionalParts);
-            return $"{conditions} => {_approximation.Relation.ToString("G")}  (Acc = {Accuracy} )";
+            return $"{conditions} => {_approximation.Relation.ToString("G")}  (Epsilon = {Accuracy} )";
         }
 
         public IDecisionRule And(IDecisionRule decisionRule)
