@@ -41,29 +41,52 @@ namespace nRank.console
 
         private static void RunPairRuleGenerationTask(string path)
         {
-            var vcDomLem = new PairVCDomLEM(false, false);
+            var vcDomLem = new PairVCDomLEM(true, true);
             var reader = new PairInformationTableReader();
             var configReader = new ConfigurationReader();
             var config = configReader.ReadConfiguration(Path.Combine(path, "experiment.properties"));
             var table = reader.Read(Path.Combine(path, config.LearningDataFile));
 
             var pairwiseCompTab = new nRank.PairwiseDRSA.PairwiseComparisonTable();
-            foreach(var relation in config.Pairs)
+            foreach (var relation in config.Pairs)
             {
-                pairwiseCompTab.Add(table.Objects[relation.First-1], relation.Symbol, table.Objects[relation.Second-1]);
+                pairwiseCompTab.Add(table.Objects[relation.First - 1], relation.Symbol, table.Objects[relation.Second - 1]);
             }
-            var presentItems =  new HashSet<int>(config.Pairs.SelectMany(x => new[] { x.First-1, x.Second-1 }));
-            foreach (var obj in table.Objects.Where((x,i) => presentItems.Contains(i)))
+            var presentItems = new HashSet<int>(config.Pairs.SelectMany(x => new[] { x.First - 1, x.Second - 1 }));
+            foreach (var obj in table.Objects.Where((x, i) => presentItems.Contains(i)))
             {
                 pairwiseCompTab.Add(obj, PairwiseDRSA.PairwiseComparisonTable.RelationType.S, obj);
             }
 
+            Stopwatch sw = new Stopwatch();
 
-            var model = vcDomLem.GenerateDecisionRules(pairwiseCompTab, config.Consistency);
+            sw.Start();
+            var res = Enumerable.Repeat(1, 10).Select(x =>
+            {
+                Stopwatch s = new Stopwatch();
+
+                s.Start();
+                var model = vcDomLem.GenerateDecisionRules(pairwiseCompTab, config.Consistency);
+                s.Stop();
+                return $"{s.ElapsedMilliseconds}, {model.Count}";
+            });
+            sw.Stop();
+
             var resultDir = path;
             Directory.CreateDirectory(Path.Combine(".", resultDir));
-            File.WriteAllLines(Path.Combine(path, "rules.txt"), RulesToString(model, pairwiseCompTab));
-            File.WriteAllLines(Path.Combine(path, "debug.txt"), vcDomLem.GetDebugData(pairwiseCompTab, config.Consistency));
+            //File.WriteAllLines(Path.Combine(path, "rules.txt"), RulesToString(model, pairwiseCompTab));
+            IEnumerable<string> otherDebug = new List<string> 
+            {
+                $"Time elapsed: {sw.ElapsedMilliseconds }" ,
+                $"PCT size: {pairwiseCompTab.AsInformationObjectPairs().Count}",
+                $"S relation items count: {pairwiseCompTab.Filter(x => x.Relation == PairwiseDRSA.PairwiseComparisonTable.RelationType.S).AsInformationObjectPairs().Count}",
+                $"Sc relation items count: {pairwiseCompTab.Filter(x => x.Relation == PairwiseDRSA.PairwiseComparisonTable.RelationType.Sc).AsInformationObjectPairs().Count}",
+                //$"Generated rules count: {model.Count}"
+            };
+            otherDebug = otherDebug.Concat(res);
+            var writeDebug = false;
+            var debugData = writeDebug? vcDomLem.GetDebugData(pairwiseCompTab, config.Consistency) : new List<string>();
+            File.WriteAllLines(Path.Combine(path, "debug.txt"), otherDebug.Concat(debugData));
         }
 
         private static void RunPairRuleGenerationTaskPCT(string path)

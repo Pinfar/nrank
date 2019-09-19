@@ -32,12 +32,14 @@ namespace nRank.PairwiseDRSA
             List<InformationObjectPair> negativeDefinedPairs = table.Filter(x => x.Relation != _relation).AsInformationObjectPairs();
             var negativeDefinedPairsSet = new HashSet<InformationObjectPair>(negativeDefinedPairs);
             var approximation = positiveDefinedPairs
+                .AsParallel()
                 .Where(x => 
                      IsInApproximationEpsilon(table, x, negativeDefinedPairsSet, consistencyLevel)
                 )
                 .ToList();
 
             var positiveRegion = approximation
+                .AsParallel()
                 .SelectMany(x => psetGenerator.Generate(table, x))
                 .Distinct()
                 .ToList();
@@ -47,7 +49,7 @@ namespace nRank.PairwiseDRSA
 
         private bool IsInApproximationEpsilon(PairwiseComparisonTable originalTable, InformationObjectPair obj, HashSet<InformationObjectPair> objectsInNegativeRelation, float consistencyLevel)
         {
-            var dset = new HashSet<InformationObjectPair>(psetGenerator.Generate(originalTable, obj));
+            var dset = psetGenerator.Generate(originalTable, obj);
             float commonPart = dset.Intersect(objectsInNegativeRelation).Count();
             float negSetCount = objectsInNegativeRelation.Count;
             return (commonPart / negSetCount) <= consistencyLevel;

@@ -103,7 +103,10 @@
     <None Include="Students\Students.isf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="winequality-red.isf">
+    <None Include="Winequality\experiment.properties">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Winequality\winequality.isf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
