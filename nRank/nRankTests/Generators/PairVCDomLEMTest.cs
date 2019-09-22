@@ -13,10 +13,13 @@ namespace nRankTests.Generators
     [TestFixture]
     class PairVCDomLEMTest
     {
-        [Test]
-        public void CheckIfRuleGeneratingWorks()
+        [TestCase(false, false)]
+        [TestCase(true, false)]
+        [TestCase(false, true)]
+        [TestCase(true, true)]
+        public void CheckIfRuleGeneratingWorks(bool parallelizeApproximationProcessing, bool parallelizeRuleEvaluation)
         {
-            var domLem = new PairVCDomLEM(false, false);
+            var domLem = new PairVCDomLEM(parallelizeApproximationProcessing, parallelizeRuleEvaluation);
             var obj1 = CreateIO(1, 10);
             var obj2 = CreateIO(2, 8);
             var obj3 = CreateIO(3, 7);
