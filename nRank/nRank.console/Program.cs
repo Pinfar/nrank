@@ -1,6 +1,4 @@
 ﻿using nRank.console.FileProcessors;
-using nRank.console.Statistics;
-using nRank.VCDomLEMAbstractions;
 using System;
 using System.Collections.Generic;
 using System.IO;
