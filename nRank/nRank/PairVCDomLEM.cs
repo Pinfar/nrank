@@ -14,7 +14,7 @@ namespace nRank
         readonly IEnumerable<LowerApproximationGeneratorVC> approximationsGenerators;
         readonly bool parallelizeApproximationProcessing;
 
-        public PairVCDomLEM(bool parallelizeApproximationProcessing = true, bool parallelizeRuleEvaluation = false)
+        public PairVCDomLEM(bool parallelizeApproximationProcessing = true, bool parallelizeRuleEvaluation = true)
         {
             this.parallelizeApproximationProcessing = parallelizeApproximationProcessing;
             decisionRuleGenerator = new DecisionRuleGenerator(parallelizeRuleEvaluation);
