@@ -49,7 +49,22 @@ namespace nRank.PairwiseDRSA
 
         public List<string> ToLabelList()
         {
-            return Entries.Select(x => $"\\{{{ x.ToString().Replace(' ', '~') }\\}}").ToList();
+            return Entries.Select(x => $"{{{ x.ToString() }}}").ToList();
+        }
+
+        public List<string> ToDisplayableTable()
+        {
+            if (Entries.Count == 0) return new List<string> { "(PCT is Empty)" };
+            var entry = Entries.First();
+            var labels = entry.ObjectPair.GetAttributes().Select(x => x.Label);
+            var header = $"ID, Pair, {string.Join(", ", labels)}, Relation";
+            var values = Entries.Select(x => x.ToRowString());
+            var resultList = new List<string>(Entries.Count + 1)
+            {
+                header
+            };
+            resultList.AddRange(values);
+            return resultList;
         }
 
         public class PairwiseComparisonTableEntry
@@ -85,6 +100,12 @@ namespace nRank.PairwiseDRSA
             public override string ToString()
             {
                 return $"{ObjectPair.FirstIdentifier} {Relation.ToString("g")} {ObjectPair.SecondIdentifier}";
+            }
+
+            public string ToRowString()
+            {
+                var attValues = ObjectPair.GetAttributes().Select(x => x.GetValueAsString());
+                return $"{Id}, {{{ObjectPair.FirstIdentifier}, {ObjectPair.SecondIdentifier}}}, {string.Join(", ", attValues)}, {Relation.ToString("g")}";
             }
         }
 

@@ -40,5 +40,10 @@ namespace nRank.PairwiseDRSA
 
             return $"[DIFF({label}) {symbol} {_preferable.ToString()} ]";
         }
+
+        public string GetValueAsString()
+        {
+            return _preferable.ToString();
+        }
     }
 }

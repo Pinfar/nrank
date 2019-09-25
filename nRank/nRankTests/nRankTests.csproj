@@ -64,6 +64,7 @@
     <Compile Include="DataStructures\FloatAttributeTests.cs" />
     <Compile Include="DataStructures\InformationObjectTests.cs" />
     <Compile Include="DataStructures\IntAttributeTests.cs" />
+    <Compile Include="DataStructures\PairwiseComparisonTableTests.cs" />
     <Compile Include="DataStructures\StringPreferableTests.cs" />
     <Compile Include="Extensions\TestIEnumerableExtensions.cs" />
     <Compile Include="FileReader\PairInformationTableReaderTests.cs" />

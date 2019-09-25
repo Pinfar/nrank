@@ -43,5 +43,10 @@ namespace nRank.PairwiseDRSA
             }
             return $"{{{valuePart} D {labelPart} }}";
         }
+
+        public string GetValueAsString()
+        {
+            return $"({_first.StringValue}, {_second.StringValue})";
+        }
     }
 }

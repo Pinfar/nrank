@@ -50,6 +50,11 @@ namespace nRank.console
                 {
                     pairwiseCompTab.Add(obj, PairwiseDRSA.PairwiseComparisonTable.RelationType.S, obj);
                 }
+
+                if (writeDebug)
+                {
+                    File.WriteAllLines(Path.Combine(path, "pct.txt"), pairwiseCompTab.ToDisplayableTable());
+                }
             }
             else
             {

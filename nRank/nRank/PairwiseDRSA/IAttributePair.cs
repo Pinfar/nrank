@@ -6,5 +6,6 @@
 
         bool IsWeaklyPreferredTo(IAttributePair other);
         string ToString(PairwiseComparisonTable.RelationType relation);
+        string GetValueAsString();
     }
 }
