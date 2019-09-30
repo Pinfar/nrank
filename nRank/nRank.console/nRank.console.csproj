@@ -75,6 +75,12 @@
     <None Include="breast-cancer-wisconsin-data.isf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Company\experiment.properties">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Company\Company.isf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="grm.isf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

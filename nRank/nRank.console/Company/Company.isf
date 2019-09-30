@@ -1,0 +1,22 @@
+**ATTRIBUTES
++ klient: (nominal) description
++ roczneZakupy: (integer)
++ terminowePlatnosci: [czasami, przewaznie, zawsze]
++ wielkoscFirmy: [mala, srednia, duza]
++ marza: (continuous)
+
+**PREFERENCES
+roczneZakupy: gain
+terminowePlatnosci: gain
+wielkoscFirmy: gain
+marza: gain
+
+**EXAMPLES
+1 30000 zawsze mala 10  
+2 2500 przewaznie srednia 20  
+3 125000 czasami duza 7.5  
+4 100000 zawsze srednia 8  
+5 23000 zawsze mala 15  
+6 135000 przewaznie duza 9
+
+**END
